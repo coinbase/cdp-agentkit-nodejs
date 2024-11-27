@@ -72,7 +72,7 @@ describe("Get Balance Action", () => {
     wallet.listAddresses = mockReturnRejectedValue(error);
 
     const response = await getBalance(wallet, MOCK_ASSET_ID);
-    const expected = `Error getting balance for all addresses in the wallet: ${error instanceof Error ? error.message : String(error)}`;
+    const expected = `Error getting balance for all addresses in the wallet: ${error.message}`;
 
     expect(response).toEqual(expected);
   });

@@ -1,14 +1,33 @@
-import { Coinbase, SmartContract, SmartContractType, Wallet } from "@coinbase/coinbase-sdk";
+import {
+  Coinbase,
+  ContractInvocation,
+  CreateContractInvocationOptions,
+  SmartContract,
+  SmartContractType,
+  Wallet,
+} from "@coinbase/coinbase-sdk";
 
 import { mintNft, MintNftInput } from "../../actions/cdp/actions/mint_nft";
 
+import { newContractInvocationFactory } from "../factories/contract_invocation";
 import { newSmartContractFactory } from "../factories/smart_contract";
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
+import {
+  generateContractInvocationData,
+  generateContractInvocationFromData,
+} from "../utils/contract_invocation";
+import {
+  generateERC721SmartContractData,
+  generateERC721SmartContractFromData,
+} from "../utils/smart_contract";
+import { mockReturnValue, mockReturnRejectedValue } from "../utils/mock";
 import { generateWalletData } from "../utils/wallet";
 
-const MOCK_NFT_CONTRACT_ADDRESS = "0x000";
-const MOCK_NFT_CONTRACT_DESTINATION = "0x000";
+import { MOCK_OPTIONS as MOCK_DEPLOY_NFT_OPTIONS } from "./deploy_nft_test";
+
+const MOCK_NFT_CONTRACT_ADDRESS = "0x123";
+const MOCK_NFT_CONTRACT_DESTINATION = "0x321";
 
 const MOCK_OPTIONS = {
   contractAddress: MOCK_NFT_CONTRACT_ADDRESS,
@@ -32,7 +51,9 @@ describe("Mint NFT Input", () => {
 });
 
 describe("Mint NFT Action", () => {
-  let contract: SmartContract;
+  // let contract: SmartContract;
+  let contractInvocation: ContractInvocation;
+  let contractInvocationOptions: CreateContractInvocationOptions;
   let wallet: Wallet;
 
   beforeAll(async () => {
@@ -44,8 +65,67 @@ describe("Mint NFT Action", () => {
     Coinbase.useServerSigner = false;
 
     wallet = await Wallet.create();
+
+    contractInvocationOptions = {
+      contractAddress: MOCK_NFT_CONTRACT_ADDRESS,
+      method: "mint",
+      args: {
+        to: MOCK_NFT_CONTRACT_DESTINATION,
+        quantity: "1",
+      },
+    };
+
+    const contractInvocationData = generateContractInvocationData(
+      wallet,
+      contractInvocationOptions,
+    );
+
+    contractInvocation = generateContractInvocationFromData(contractInvocationData);
+
+    console.log("CONTRACT INVOCATION DATA:", contractInvocationData);
+
+    Coinbase.apiClients.contractInvocation = newContractInvocationFactory();
+    Coinbase.apiClients.contractInvocation.getContractInvocation =
+      mockReturnValue(contractInvocationData);
   });
 
-  it("should successfully respond", async () => {});
-  it("should fail with an error", async () => {});
+  beforeEach(async () => {
+    (await wallet.getDefaultAddress()).invokeContract = jest
+      .fn()
+      .mockResolvedValue(contractInvocation);
+  });
+
+  it("should successfully respond", async () => {
+    const response = await mintNft(
+      wallet,
+      MOCK_NFT_CONTRACT_ADDRESS,
+      MOCK_NFT_CONTRACT_DESTINATION,
+    );
+    const expected = `Minted NFT from contract ${MOCK_NFT_CONTRACT_ADDRESS} to address ${MOCK_NFT_CONTRACT_DESTINATION} on network ${wallet.getNetworkId()}.\nTransaction hash for the mint: ${contractInvocation.getTransaction().getTransactionHash()}\nTransaction link for the mint: ${contractInvocation.getTransaction().getTransactionLink()}`;
+
+    expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledTimes(1);
+    expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledWith(
+      contractInvocationOptions,
+    );
+    expect(response).toBe(expected);
+  });
+  it("should fail with an error", async () => {
+    const error = new Error("Failed to mint NFT");
+
+    Coinbase.apiClients.contractInvocation.getContractInvocation = mockReturnRejectedValue(error);
+
+    const response = await mintNft(
+      wallet,
+      MOCK_NFT_CONTRACT_ADDRESS,
+      MOCK_NFT_CONTRACT_DESTINATION,
+    );
+
+    const expected = `Error minting NFT: ${error.message}`;
+
+    expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledTimes(1);
+    expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledWith(
+      contractInvocationOptions,
+    );
+    expect(response).toBe("Error minting NFT: Failed to mint NFT");
+  });
 });

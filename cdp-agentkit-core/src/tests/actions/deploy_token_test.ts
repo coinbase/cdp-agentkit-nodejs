@@ -2,12 +2,11 @@ import { Coinbase, SmartContract, SmartContractType, Wallet } from "@coinbase/co
 
 import { deployToken, DeployTokenInput } from "../../actions/cdp/actions/deploy_token";
 
-import { newSmartContractFactory } from "../factories/smart_contract";
+import { newSmartContractFactory, TransactionStatusEnum } from "../factories/smart_contract";
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
 import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
 import {
-  TransactionStatusEnum,
   generateERC20SmartContractData,
   generateERC20SmartContractFromData,
 } from "../utils/smart_contract";
@@ -92,7 +91,7 @@ describe("Deploy NFT Action", () => {
       MOCK_OPTIONS.totalSupply,
     );
 
-    const expected = `Error deploying token: ${error instanceof Error ? error.message : String(error)}`;
+    const expected = `Error deploying token: ${error.message}`;
 
     expect((await wallet.getDefaultAddress()).deployToken).toHaveBeenCalledTimes(1);
     expect((await wallet.getDefaultAddress()).deployToken).toHaveBeenCalledWith(MOCK_OPTIONS);

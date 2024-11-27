@@ -16,7 +16,7 @@ const MOCK_NFT_NAME = "Test Token";
 const MOCK_NFT_SYMBOL = "TEST";
 const MOCK_NFT_URI = "https://www.test.xyz/metadata/";
 
-const MOCK_OPTIONS = {
+export const MOCK_OPTIONS = {
   name: MOCK_NFT_NAME,
   symbol: MOCK_NFT_SYMBOL,
   baseURI: MOCK_NFT_URI,
@@ -53,7 +53,6 @@ describe("Deploy NFT Action", () => {
     wallet = await Wallet.create();
 
     const contractData = generateERC721SmartContractData(wallet, MOCK_OPTIONS);
-
     contract = generateERC721SmartContractFromData(contractData);
 
     Coinbase.apiClients.smartContract = newSmartContractFactory();
@@ -90,7 +89,9 @@ describe("Deploy NFT Action", () => {
       MOCK_OPTIONS.symbol,
       MOCK_OPTIONS.baseURI,
     );
-    const expected = `Error deploying NFT: ${error instanceof Error ? error.message : String(error)}`;
+
+    const expected = `Error deploying NFT: ${error.message}`;
+
     expect((await wallet.getDefaultAddress()).deployNFT).toHaveBeenCalledTimes(1);
     expect((await wallet.getDefaultAddress()).deployNFT).toHaveBeenCalledWith(MOCK_OPTIONS);
     expect(response).toEqual(expected);
