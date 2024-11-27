@@ -41,7 +41,6 @@ describe("Request Faucet Funds Input", () => {
 
 describe("Request Faucet Funds Action", () => {
   let faucetTransaction: FaucetTransaction;
-  let faucetTransactionOptions: FaucetTransactionOptions;
   let wallet: Wallet;
 
   beforeAll(async () => {
@@ -54,7 +53,11 @@ describe("Request Faucet Funds Action", () => {
 
     wallet = await Wallet.create();
 
-    faucetTransactionOptions = { transactionHash: "0x123" };
+    const faucetTransactionOptions = {
+      ...MOCK_OPTIONS,
+      transactionHash: "0x123",
+    };
+
     const faucetTransactionData = generateFaucetTransactionData(wallet, faucetTransactionOptions);
 
     Coinbase.apiClients.externalAddress = newExternalAddressFactory();
@@ -70,7 +73,7 @@ describe("Request Faucet Funds Action", () => {
 
   it("should successfully request faucet funds", async () => {
     const response = await requestFaucetFunds(wallet);
-    const expected = `Received ${faucetTransactionOptions.assetId || "ETH"} from the faucet. Transaction: ${faucetTransaction.getTransactionLink()}`;
+    const expected = `Received ETH from the faucet. Transaction: ${faucetTransaction.getTransactionLink()}`;
 
     expect((await wallet.getDefaultAddress()).faucet).toHaveBeenCalledTimes(1);
     expect(response).toEqual(expected);
