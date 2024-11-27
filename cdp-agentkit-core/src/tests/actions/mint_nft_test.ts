@@ -106,6 +106,7 @@ describe("Mint NFT Action", () => {
     );
     expect(response).toBe(expected);
   });
+
   it("should fail with an error", async () => {
     const error = new Error("Failed to mint NFT");
 
