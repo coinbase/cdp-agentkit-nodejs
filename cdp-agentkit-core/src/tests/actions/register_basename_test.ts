@@ -53,5 +53,5 @@ describe("Register Basename Action", () => {
 
   it("should successfully register basename", async () => {});
 
-  it("should handle registration failure", async () => {});
+  it("should fail with an error", async () => {});
 });

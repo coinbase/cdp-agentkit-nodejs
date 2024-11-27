@@ -25,11 +25,11 @@ describe("Request Faucet Funds Input", () => {
     expect(result.data).toEqual(MOCK_OPTIONS);
   });
 
-  it("should fail parsing empty input", () => {
+  it("should successfully parsing empty input", () => {
     const emptyInput = {};
     const result = RequestFaucetFundsInput.safeParse(emptyInput);
 
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 });
 
@@ -52,5 +52,5 @@ describe("Request Faucet Funds Action", () => {
 
   it("should successfully request faucet funds", async () => {});
 
-  it("should handle request failure", async () => {});
+  it("should fail with an error", async () => {});
 });

@@ -11,7 +11,7 @@ from another wallet and provide the user with your wallet details.`;
 /**
  * Input schema for request faucet funds action.
  */
-const RequestFaucetFundsInput = z
+export const RequestFaucetFundsInput = z
   .object({
     assetId: z.string().optional().describe("The optional asset ID to request from faucet"),
   })
@@ -25,7 +25,7 @@ const RequestFaucetFundsInput = z
  * @param args - The input arguments for the action.
  * @returns A confirmation message with transaction details.
  */
-async function requestFaucetFunds(
+export async function requestFaucetFunds(
   wallet: Wallet,
   args: z.infer<typeof RequestFaucetFundsInput>,
 ): Promise<string> {
