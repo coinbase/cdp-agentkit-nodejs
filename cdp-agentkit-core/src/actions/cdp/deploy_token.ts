@@ -8,7 +8,7 @@ This tool will deploy an ERC20 token smart contract. It takes the token name, sy
 /**
  * Input schema for deploy token action.
  */
-const DeployTokenInput = z
+export const DeployTokenInput = z
   .object({
     name: z.string().describe("The name of the token"),
     symbol: z.string().describe("The token symbol"),
@@ -24,7 +24,7 @@ const DeployTokenInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the deployed token contract address and details.
  */
-async function deployToken(
+export async function deployToken(
   wallet: Wallet,
   args: z.infer<typeof DeployTokenInput>,
 ): Promise<string> {

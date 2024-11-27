@@ -15,7 +15,7 @@ const GetWalletDetailsInput = z.object({});
  * @param _ - The input arguments for the action.
  * @returns A message containing the wallet details.
  */
-async function getWalletDetails(
+export async function getWalletDetails(
   wallet: Wallet,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _: z.infer<typeof GetWalletDetailsInput>,
