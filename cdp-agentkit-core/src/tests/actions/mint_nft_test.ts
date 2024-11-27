@@ -51,7 +51,6 @@ describe("Mint NFT Input", () => {
 });
 
 describe("Mint NFT Action", () => {
-  // let contract: SmartContract;
   let contractInvocation: ContractInvocation;
   let contractInvocationOptions: CreateContractInvocationOptions;
   let wallet: Wallet;
@@ -82,10 +81,8 @@ describe("Mint NFT Action", () => {
 
     contractInvocation = generateContractInvocationFromData(contractInvocationData);
 
-    console.log("CONTRACT INVOCATION DATA:", contractInvocationData);
-
     Coinbase.apiClients.contractInvocation = newContractInvocationFactory();
-    Coinbase.apiClients.contractInvocation.getContractInvocation =
+    Coinbase.apiClients.contractInvocation!.getContractInvocation =
       mockReturnValue(contractInvocationData);
   });
 
