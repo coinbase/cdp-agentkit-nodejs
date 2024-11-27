@@ -17,7 +17,7 @@ import {
 import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
 import { generateWalletData } from "../utils/wallet";
 
-const MOCK_ASSET_ID = Coinbase.assets.Eth;
+const MOCK_ASSET_ID = Coinbase.assets.Usdc;
 
 const MOCK_OPTIONS = {
   assetId: MOCK_ASSET_ID,
@@ -72,10 +72,28 @@ describe("Request Faucet Funds Action", () => {
     const response = await requestFaucetFunds(wallet);
     const expected = `Received ${faucetTransactionOptions.assetId || "ETH"} from the faucet. Transaction: ${faucetTransaction.getTransactionLink()}`;
 
+    expect((await wallet.getDefaultAddress()).faucet).toHaveBeenCalledTimes(1);
     expect(response).toEqual(expected);
   });
 
-  it("should successfully request faucet funds with an asset id", async () => {});
+  it("should successfully request faucet funds for the asset id", async () => {
+    const response = await requestFaucetFunds(wallet, MOCK_ASSET_ID);
+    const expected = `Received ${MOCK_ASSET_ID} from the faucet. Transaction: ${faucetTransaction.getTransactionLink()}`;
 
-  it("should fail with an error", async () => {});
+    expect((await wallet.getDefaultAddress()).faucet).toHaveBeenCalledTimes(1);
+    expect((await wallet.getDefaultAddress()).faucet).toHaveBeenCalledWith(MOCK_ASSET_ID);
+    expect(response).toEqual(expected);
+  });
+
+  it("should fail with an error", async () => {
+    const error = new Error("Failed to request funds");
+
+    Coinbase.apiClients.externalAddress!.getFaucetTransaction = mockReturnRejectedValue(error);
+
+    const response = await requestFaucetFunds(wallet);
+    const expected = `Error requesting faucet funds: ${error.message}`;
+
+    expect((await wallet.getDefaultAddress()).faucet).toHaveBeenCalledTimes(1);
+    expect(response).toEqual(expected);
+  });
 });
