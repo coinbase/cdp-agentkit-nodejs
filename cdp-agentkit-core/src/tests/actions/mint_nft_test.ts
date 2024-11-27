@@ -82,7 +82,7 @@ describe("Mint NFT Action", () => {
     contractInvocation = generateContractInvocationFromData(contractInvocationData);
 
     Coinbase.apiClients.contractInvocation = newContractInvocationFactory();
-    Coinbase.apiClients.contractInvocation!.getContractInvocation =
+    Coinbase.apiClients.contractInvocation.getContractInvocation =
       mockReturnValue(contractInvocationData);
   });
 
@@ -109,7 +109,7 @@ describe("Mint NFT Action", () => {
   it("should fail with an error", async () => {
     const error = new Error("Failed to mint NFT");
 
-    Coinbase.apiClients.contractInvocation.getContractInvocation = mockReturnRejectedValue(error);
+    Coinbase.apiClients.contractInvocation!.getContractInvocation = mockReturnRejectedValue(error);
 
     const response = await mintNft(
       wallet,
