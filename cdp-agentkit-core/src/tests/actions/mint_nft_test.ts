@@ -123,6 +123,6 @@ describe("Mint NFT Action", () => {
     expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledWith(
       contractInvocationOptions,
     );
-    expect(response).toBe("Error minting NFT: Failed to mint NFT");
+    expect(response).toEqual(expected);
   });
 });

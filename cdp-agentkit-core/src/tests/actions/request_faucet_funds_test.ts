@@ -1,13 +1,19 @@
-import { Coinbase, SmartContract, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, FaucetTransaction, SmartContract, Wallet } from "@coinbase/coinbase-sdk";
 
 import {
   requestFaucetFunds,
   RequestFaucetFundsInput,
 } from "../../actions/cdp/actions/request_faucet_funds";
 
+import { newExternalAddressFactory } from "../factories/external_address";
 import { newSmartContractFactory } from "../factories/smart_contract";
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
+import {
+  generateFaucetTransactionData,
+  generateFaucetTransactionFromData,
+  FaucetTransactionOptions,
+} from "../utils/faucet_transaction";
 import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
 import { generateWalletData } from "../utils/wallet";
 
@@ -34,7 +40,8 @@ describe("Request Faucet Funds Input", () => {
 });
 
 describe("Request Faucet Funds Action", () => {
-  let contract: SmartContract;
+  let faucetTransaction: FaucetTransaction;
+  let faucetTransactionOptions: FaucetTransactionOptions;
   let wallet: Wallet;
 
   beforeAll(async () => {
@@ -46,11 +53,29 @@ describe("Request Faucet Funds Action", () => {
     Coinbase.useServerSigner = false;
 
     wallet = await Wallet.create();
+
+    faucetTransactionOptions = { transactionHash: "0x123" };
+    const faucetTransactionData = generateFaucetTransactionData(wallet, faucetTransactionOptions);
+
+    Coinbase.apiClients.externalAddress = newExternalAddressFactory();
+    Coinbase.apiClients.externalAddress.getFaucetTransaction =
+      mockReturnValue(faucetTransactionData);
+
+    faucetTransaction = generateFaucetTransactionFromData(faucetTransactionData);
   });
 
-  beforeEach(() => {});
+  beforeEach(async () => {
+    (await wallet.getDefaultAddress()).faucet = jest.fn().mockResolvedValue(faucetTransaction);
+  });
 
-  it("should successfully request faucet funds", async () => {});
+  it("should successfully request faucet funds", async () => {
+    const response = await requestFaucetFunds(wallet);
+    const expected = `Received ${faucetTransactionOptions.assetId || "ETH"} from the faucet. Transaction: ${faucetTransaction.getTransactionLink()}`;
+
+    expect(response).toEqual(expected);
+  });
+
+  it("should successfully request faucet funds with an asset id", async () => {});
 
   it("should fail with an error", async () => {});
 });
