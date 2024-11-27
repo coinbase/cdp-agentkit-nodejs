@@ -6,7 +6,6 @@ import {
   SmartContractType,
   Wallet,
 } from "@coinbase/coinbase-sdk";
-export const VALID_ERC721_SMART_CONTRACT = {};
 
 export const TransactionStatusEnum = {
   Pending: "pending",
