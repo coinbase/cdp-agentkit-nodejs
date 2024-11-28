@@ -1,4 +1,4 @@
-import { Coinbase, SmartContract, Trade, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, Trade, Wallet } from "@coinbase/coinbase-sdk";
 
 import { trade as createTrade, TradeInput } from "../../actions/cdp/actions/trade";
 
@@ -84,5 +84,9 @@ describe("Trade Action", () => {
 
     const response = await createTrade(wallet, MOCK_AMOUNT, MOCK_ASSET_ID_FROM, MOCK_ASSET_ID_TO);
     const expected = `Error trading assets: ${error.message}`;
+
+    expect((await wallet.getDefaultAddress()).createTrade).toHaveBeenCalledTimes(1);
+    expect((await wallet.getDefaultAddress()).createTrade).toHaveBeenCalledWith(MOCK_OPTIONS);
+    expect(response).toEqual(expected);
   });
 });

@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import { TransactionStatusEnum } from "../factories/smart_contract";
 
 export interface TransferDataOptions extends CreateTransferOptions {
-  transactionHash: string;
+  transactionHash?: string;
 }
 
 const PAYLOAD_UNSIGNED =

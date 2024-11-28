@@ -2,7 +2,7 @@ import { Coinbase, SmartContract, SmartContractType, Wallet } from "@coinbase/co
 
 import { deployToken, DeployTokenInput } from "../../actions/cdp/actions/deploy_token";
 
-import { newSmartContractFactory, TransactionStatusEnum } from "../factories/smart_contract";
+import { newSmartContractFactory } from "../factories/smart_contract";
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
 import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
@@ -67,9 +67,9 @@ describe("Deploy NFT Action", () => {
   it("should successfully respond", async () => {
     const response = await deployToken(
       wallet,
-      MOCK_OPTIONS.name,
-      MOCK_OPTIONS.symbol,
-      MOCK_OPTIONS.totalSupply,
+      MOCK_TOKEN_NAME,
+      MOCK_TOKEN_SYMBOL,
+      MOCK_TOKEN_SUPPLY,
     );
 
     const expected = `Deployed ERC20 token contract ${MOCK_TOKEN_NAME} (${MOCK_TOKEN_SYMBOL}) with total supply of ${MOCK_TOKEN_SUPPLY} tokens at address ${contract.getContractAddress()}. Transaction link: ${contract.getTransaction().getTransactionLink()}`;
@@ -86,9 +86,9 @@ describe("Deploy NFT Action", () => {
 
     const response = await deployToken(
       wallet,
-      MOCK_OPTIONS.name,
-      MOCK_OPTIONS.symbol,
-      MOCK_OPTIONS.totalSupply,
+      MOCK_TOKEN_NAME,
+      MOCK_TOKEN_SYMBOL,
+      MOCK_TOKEN_SUPPLY,
     );
 
     const expected = `Error deploying token: ${error.message}`;

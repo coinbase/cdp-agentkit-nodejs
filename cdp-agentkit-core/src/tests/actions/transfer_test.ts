@@ -1,4 +1,4 @@
-import { Coinbase, SmartContract, Transfer, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, Transfer, Wallet } from "@coinbase/coinbase-sdk";
 
 import { transfer as createTransfer, TransferInput } from "../../actions/cdp/actions/transfer";
 

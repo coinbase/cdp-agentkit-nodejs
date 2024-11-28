@@ -1,14 +1,9 @@
-import { Coinbase, SmartContract, SmartContractType, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
 
-import {
-  registerBasename,
-  RegisterBasenameInput,
-} from "../../actions/cdp/actions/register_basename";
+import { RegisterBasenameInput } from "../../actions/cdp/actions/register_basename";
 
-import { newSmartContractFactory } from "../factories/smart_contract";
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
-import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
 import { generateWalletData } from "../utils/wallet";
 
 const MOCK_AMMOUNT = 0.123;

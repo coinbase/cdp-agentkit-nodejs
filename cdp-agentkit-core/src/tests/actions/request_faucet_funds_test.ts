@@ -6,13 +6,12 @@ import {
 } from "../../actions/cdp/actions/request_faucet_funds";
 
 import { newExternalAddressFactory } from "../factories/external_address";
-import { newSmartContractFactory } from "../factories/smart_contract";
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
 import {
   generateFaucetTransactionData,
   generateFaucetTransactionFromData,
-  FaucetTransactionOptions,
+  FaucetTransactionDataOptions,
 } from "../utils/faucet_transaction";
 import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
 import { generateWalletData } from "../utils/wallet";
@@ -53,12 +52,12 @@ describe("Request Faucet Funds Action", () => {
 
     wallet = await Wallet.create();
 
-    const faucetTransactionOptions = {
+    const faucetTransactionDataOptions = {
       ...MOCK_OPTIONS,
       transactionHash: "0x123",
     };
 
-    const faucetTransactionData = generateFaucetTransactionData(wallet, faucetTransactionOptions);
+    const faucetTransactionData = generateFaucetTransactionData(wallet, faucetTransactionDataOptions);
 
     Coinbase.apiClients.externalAddress = newExternalAddressFactory();
     Coinbase.apiClients.externalAddress.getFaucetTransaction =

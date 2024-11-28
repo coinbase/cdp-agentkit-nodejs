@@ -2,7 +2,6 @@ import { Coinbase, Wallet, WalletAddress } from "@coinbase/coinbase-sdk";
 
 import { getBalance, GetBalanceInput } from "../../actions/cdp/actions/get_balance";
 
-import { newExternalAddressFactory } from "../factories/external_address";
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
 import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
@@ -47,9 +46,8 @@ describe("Get Balance Action", () => {
     walletAddresses = generateWalletAddresses(walletAddressesData);
   });
 
-  beforeEach(async () => {});
-
   // TODO: test with multiple addresses
+  // TODO: test with multiple assets
   it("should successfully respond", async () => {
     let expectedLines: string[] = [];
 
@@ -74,6 +72,7 @@ describe("Get Balance Action", () => {
     const response = await getBalance(wallet, MOCK_ASSET_ID);
     const expected = `Error getting balance for all addresses in the wallet: ${error.message}`;
 
+    expect(wallet.listAddresses).toHaveBeenCalledTimes(1);
     expect(response).toEqual(expected);
   });
 });

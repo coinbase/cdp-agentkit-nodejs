@@ -1,4 +1,3 @@
-import { generateWalletData } from "../utils/wallet";
 import { mockFn } from "../utils/mock";
 import { WalletAddressData } from "./wallet_address";
 
@@ -10,10 +9,6 @@ export interface WalletData {
 }
 
 export const newWalletFactory = (data: WalletData) => {
-  const createAddressFn = mockFn(request => {
-    return { data: data.address };
-  });
-
   const createWalletFn = mockFn(request => {
     const response = {
       id: data.id,

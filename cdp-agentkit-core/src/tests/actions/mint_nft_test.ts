@@ -2,29 +2,20 @@ import {
   Coinbase,
   ContractInvocation,
   CreateContractInvocationOptions,
-  SmartContract,
-  SmartContractType,
   Wallet,
 } from "@coinbase/coinbase-sdk";
 
 import { mintNft, MintNftInput } from "../../actions/cdp/actions/mint_nft";
 
 import { newContractInvocationFactory } from "../factories/contract_invocation";
-import { newSmartContractFactory } from "../factories/smart_contract";
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
 import {
   generateContractInvocationData,
   generateContractInvocationFromData,
 } from "../utils/contract_invocation";
-import {
-  generateERC721SmartContractData,
-  generateERC721SmartContractFromData,
-} from "../utils/smart_contract";
 import { mockReturnValue, mockReturnRejectedValue } from "../utils/mock";
 import { generateWalletData } from "../utils/wallet";
-
-import { MOCK_OPTIONS as MOCK_DEPLOY_NFT_OPTIONS } from "./deploy_nft_test";
 
 const MOCK_NFT_CONTRACT_ADDRESS = "0x123";
 const MOCK_NFT_CONTRACT_DESTINATION = "0x321";
@@ -74,9 +65,13 @@ describe("Mint NFT Action", () => {
       },
     };
 
+    const contractInvocationDataOptions = {
+      ...contractInvocationOptions,
+    };
+
     const contractInvocationData = generateContractInvocationData(
       wallet,
-      contractInvocationOptions,
+      contractInvocationDataOptions,
     );
 
     contractInvocation = generateContractInvocationFromData(contractInvocationData);
@@ -98,6 +93,7 @@ describe("Mint NFT Action", () => {
       MOCK_NFT_CONTRACT_ADDRESS,
       MOCK_NFT_CONTRACT_DESTINATION,
     );
+
     const expected = `Minted NFT from contract ${MOCK_NFT_CONTRACT_ADDRESS} to address ${MOCK_NFT_CONTRACT_DESTINATION} on network ${wallet.getNetworkId()}.\nTransaction hash for the mint: ${contractInvocation.getTransaction().getTransactionHash()}\nTransaction link for the mint: ${contractInvocation.getTransaction().getTransactionLink()}`;
 
     expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledTimes(1);

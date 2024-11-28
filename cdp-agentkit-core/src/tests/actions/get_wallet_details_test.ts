@@ -5,7 +5,7 @@ import {
   GetWalletDetailsInput,
 } from "../../actions/cdp/actions/get_wallet_details";
 
-import { newWalletFactory, WalletData } from "../factories/wallet";
+import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
 import { generateWalletData } from "../utils/wallet";
 

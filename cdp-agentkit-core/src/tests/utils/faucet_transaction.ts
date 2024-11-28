@@ -2,18 +2,18 @@ import { FaucetTransaction, Wallet } from "@coinbase/coinbase-sdk";
 import { ethers } from "ethers";
 import { TransactionStatusEnum } from "../factories/smart_contract";
 
-export interface FaucetTransactionOptions {
+export interface FaucetTransactionDataOptions {
   assetId?: string;
   transactionHash: string;
 }
 
-export const generateFaucetTransaction = (wallet: Wallet, options: FaucetTransactionOptions) => {
+export const generateFaucetTransaction = (wallet: Wallet, options: FaucetTransactionDataOptions) => {
   return new FaucetTransaction(generateFaucetTransactionData(wallet, options));
 };
 
 export const generateFaucetTransactionData = (
   wallet: Wallet,
-  options: FaucetTransactionOptions,
+  options: FaucetTransactionDataOptions,
 ) => {
   return {
     transaction_hash: options.transactionHash,
