@@ -1,6 +1,6 @@
 import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
 
-import { RegisterBasenameInput } from "../../actions/cdp/actions/register_basename";
+import { RegisterBasenameInput } from "../../actions/cdp/register_basename";
 
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";

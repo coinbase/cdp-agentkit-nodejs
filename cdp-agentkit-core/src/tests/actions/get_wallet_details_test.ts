@@ -3,7 +3,7 @@ import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
 import {
   getWalletDetails,
   GetWalletDetailsInput,
-} from "../../actions/cdp/actions/get_wallet_details";
+} from "../../actions/cdp/get_wallet_details";
 
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";

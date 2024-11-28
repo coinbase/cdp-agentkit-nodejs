@@ -3,7 +3,7 @@ import { Coinbase, FaucetTransaction, SmartContract, Wallet } from "@coinbase/co
 import {
   requestFaucetFunds,
   RequestFaucetFundsInput,
-} from "../../actions/cdp/actions/request_faucet_funds";
+} from "../../actions/cdp/request_faucet_funds";
 
 import { newExternalAddressFactory } from "../factories/external_address";
 import { newWalletFactory } from "../factories/wallet";

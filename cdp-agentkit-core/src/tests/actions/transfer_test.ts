@@ -1,6 +1,6 @@
 import { Coinbase, Transfer, Wallet } from "@coinbase/coinbase-sdk";
 
-import { transfer as createTransfer, TransferInput } from "../../actions/cdp/actions/transfer";
+import { transfer as createTransfer, TransferInput } from "../../actions/cdp/transfer";
 
 import { newTransferFactory } from "../factories/transfer";
 import { newWalletFactory } from "../factories/wallet";

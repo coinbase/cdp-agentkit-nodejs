@@ -1,6 +1,6 @@
 import { Coinbase, SmartContract, Wallet } from "@coinbase/coinbase-sdk";
 
-import { deployNft, DeployNftInput } from "../../actions/cdp/actions/deploy_nft";
+import { deployNft, DeployNftInput } from "../../actions/cdp/deploy_nft";
 
 import { newSmartContractFactory } from "../factories/smart_contract";
 import { newWalletFactory } from "../factories/wallet";

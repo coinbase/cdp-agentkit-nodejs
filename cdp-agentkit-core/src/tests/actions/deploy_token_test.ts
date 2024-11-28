@@ -1,6 +1,6 @@
 import { Coinbase, SmartContract, SmartContractType, Wallet } from "@coinbase/coinbase-sdk";
 
-import { deployToken, DeployTokenInput } from "../../actions/cdp/actions/deploy_token";
+import { deployToken, DeployTokenInput } from "../../actions/cdp/deploy_token";
 
 import { newSmartContractFactory } from "../factories/smart_contract";
 import { newWalletFactory } from "../factories/wallet";

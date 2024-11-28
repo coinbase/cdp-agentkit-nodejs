@@ -5,7 +5,7 @@ import {
   Wallet,
 } from "@coinbase/coinbase-sdk";
 
-import { mintNft, MintNftInput } from "../../actions/cdp/actions/mint_nft";
+import { mintNft, MintNftInput } from "../../actions/cdp/mint_nft";
 
 import { newContractInvocationFactory } from "../factories/contract_invocation";
 import { newWalletFactory } from "../factories/wallet";

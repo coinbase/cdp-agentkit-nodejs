@@ -1,10 +1,10 @@
 import { Coinbase, Wallet, WalletAddress } from "@coinbase/coinbase-sdk";
 
-import { getBalance, GetBalanceInput } from "../../actions/cdp/actions/get_balance";
+import { getBalance, GetBalanceInput } from "../../actions/cdp/get_balance";
 
 import { newWalletFactory } from "../factories/wallet";
 import { newWalletAddressFactory } from "../factories/wallet_address";
-import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
+import { mockReturnRejectedValue } from "../utils/mock";
 import { generateWalletData } from "../utils/wallet";
 import { generateWalletAddresses } from "../utils/wallet_address";
 

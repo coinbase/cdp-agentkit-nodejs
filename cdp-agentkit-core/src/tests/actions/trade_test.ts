@@ -1,6 +1,6 @@
 import { Coinbase, Trade, Wallet } from "@coinbase/coinbase-sdk";
 
-import { trade as createTrade, TradeInput } from "../../actions/cdp/actions/trade";
+import { trade as createTrade, TradeInput } from "../../actions/cdp/trade";
 
 import { newTradeFactory } from "../factories/trade";
 import { newWalletFactory } from "../factories/wallet";
