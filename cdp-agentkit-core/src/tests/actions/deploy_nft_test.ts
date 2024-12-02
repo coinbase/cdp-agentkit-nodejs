@@ -1,4 +1,4 @@
-import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
+import { Wallet } from "@coinbase/coinbase-sdk";
 
 import { deployNft, DeployNftInput } from "../../actions/cdp/deploy_nft";
 
@@ -85,7 +85,7 @@ describe("Deploy NFT Action", () => {
       baseURI: MOCK_NFT_BASE_URI,
     };
 
-    const error = new Error("Invalid model type");
+    const error = new Error("An error has occured");
     mockWallet.deployNFT.mockRejectedValue(error);
 
     const response = await deployNft(mockWallet, args);
