@@ -20,31 +20,39 @@ describe("CdpToolkit", () => {
     Coinbase.useServerSigner = false;
 
     wallet = await Wallet.create();
+  });
 
-    const agentkitOptions = {
+  describe("initialization", () => {
+    it("should successfully init with env", async () => {
+      const options = {
+        cdpApiKeyName: "test-key",
+        cdpApiKeyPrivateKey: "test-private-key",
+        wallet: wallet,
+      };
+
+      await expect(CdpAgentkit.configureWithWallet(options)).resolves.toBeDefined();
+    });
+
+    it("should fail init without env", async () => {
+      const options = {
+        wallet: wallet,
+      };
+
+      await expect(CdpAgentkit.configureWithWallet(options)).rejects.toThrow();
+    });
+  });
+
+  it("should successfully return tools for CDP actions", async () => {
+    const options = {
       cdpApiKeyName: "test-key",
       cdpApiKeyPrivateKey: "test-private-key",
       wallet: wallet,
-      // cdpWalletData: JSON.stringify({
-      //   ...walletData,
-      //   defaultAddressId: (await wallet.getDefaultAddress()).getId(),
-      // }),
     };
 
-    agentkit = await CdpAgentkit.configureWithWallet(agentkitOptions);
-    toolkit = new CdpToolkit(agentkit);
-  });
-
-  describe("ENV", () => {
-    beforeAll(async () => {});
-
-    it("should successfully init", () => {});
-
-    it("should fail init", () => {});
-  });
-
-  it("should create tools from CDP actions", () => {
+    const agentkit = await CdpAgentkit.configureWithWallet(options);
+    const toolkit = new CdpToolkit(agentkit);
     const tools = toolkit.getTools();
+
     expect(tools).toBeDefined();
     expect(tools.length).toBeGreaterThan(0);
   });
