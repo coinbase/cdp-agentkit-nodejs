@@ -6,7 +6,7 @@ import { Wallet } from "@coinbase/coinbase-sdk";
  * Input schema for get wallet details action.
  * This schema intentionally accepts no parameters as the wallet is injected separately.
  */
-const GetWalletDetailsInput = z.object({});
+export const GetWalletDetailsInput = z.object({});
 
 /**
  * Gets a wallet's details.

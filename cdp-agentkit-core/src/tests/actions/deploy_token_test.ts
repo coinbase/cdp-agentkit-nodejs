@@ -65,13 +65,7 @@ describe("Deploy NFT Action", () => {
   });
 
   it("should successfully respond", async () => {
-    const response = await deployToken(
-      wallet,
-      MOCK_TOKEN_NAME,
-      MOCK_TOKEN_SYMBOL,
-      MOCK_TOKEN_SUPPLY,
-    );
-
+    const response = await deployToken(wallet, MOCK_OPTIONS);
     const expected = `Deployed ERC20 token contract ${MOCK_TOKEN_NAME} (${MOCK_TOKEN_SYMBOL}) with total supply of ${MOCK_TOKEN_SUPPLY} tokens at address ${contract.getContractAddress()}. Transaction link: ${contract.getTransaction().getTransactionLink()}`;
 
     expect((await wallet.getDefaultAddress()).deployToken).toHaveBeenCalledTimes(1);
@@ -84,13 +78,7 @@ describe("Deploy NFT Action", () => {
 
     Coinbase.apiClients.smartContract!.getSmartContract = mockReturnRejectedValue(error);
 
-    const response = await deployToken(
-      wallet,
-      MOCK_TOKEN_NAME,
-      MOCK_TOKEN_SYMBOL,
-      MOCK_TOKEN_SUPPLY,
-    );
-
+    const response = await deployToken(wallet, MOCK_OPTIONS);
     const expected = `Error deploying token: ${error.message}`;
 
     expect((await wallet.getDefaultAddress()).deployToken).toHaveBeenCalledTimes(1);

@@ -57,7 +57,7 @@ describe("Get Balance Action", () => {
       expectedLines.push(`${address.getId()}: 1`);
     });
 
-    const response = await getBalance(wallet, MOCK_ASSET_ID);
+    const response = await getBalance(wallet, MOCK_OPTIONS);
     const expected = `Balances for wallet ${wallet.getId()}:\n${expectedLines.join("\n")}`;
 
     expect(wallet.listAddresses).toHaveBeenCalledTimes(1);
@@ -69,7 +69,7 @@ describe("Get Balance Action", () => {
 
     wallet.listAddresses = mockReturnRejectedValue(error);
 
-    const response = await getBalance(wallet, MOCK_ASSET_ID);
+    const response = await getBalance(wallet, MOCK_OPTIONS);
     const expected = `Error getting balance for all addresses in the wallet: ${error.message}`;
 
     expect(wallet.listAddresses).toHaveBeenCalledTimes(1);

@@ -64,7 +64,7 @@ describe("Deploy NFT Action", () => {
   });
 
   it("should successfully respond", async () => {
-    const response = await deployNft(wallet, MOCK_NFT_NAME, MOCK_NFT_SYMBOL, MOCK_NFT_URI);
+    const response = await deployNft(wallet, MOCK_OPTIONS);
     const expected = `Deployed NFT Collection ${MOCK_NFT_NAME} to address ${contract.getContractAddress()} on network ${wallet.getNetworkId()}.\nTransaction hash for the deployment: ${contract.getTransaction().getTransactionHash()}\nTransaction link for the deployment: ${contract.getTransaction().getTransactionLink()}`;
 
     expect((await wallet.getDefaultAddress()).deployNFT).toHaveBeenCalledTimes(1);
@@ -77,7 +77,7 @@ describe("Deploy NFT Action", () => {
 
     Coinbase.apiClients.smartContract!.getSmartContract = mockReturnRejectedValue(error);
 
-    const response = await deployNft(wallet, MOCK_NFT_NAME, MOCK_NFT_SYMBOL, MOCK_NFT_URI);
+    const response = await deployNft(wallet, MOCK_OPTIONS);
     const expected = `Error deploying NFT: ${error.message}`;
 
     expect((await wallet.getDefaultAddress()).deployNFT).toHaveBeenCalledTimes(1);

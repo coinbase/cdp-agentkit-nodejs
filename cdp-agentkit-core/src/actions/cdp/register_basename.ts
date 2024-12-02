@@ -1,5 +1,5 @@
 import { CdpAction } from "./cdp_action";
-import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
+import { Amount, Coinbase, Wallet } from "@coinbase/coinbase-sdk";
 import { encodeFunctionData, namehash } from "viem";
 import { z } from "zod";
 import { Decimal } from "decimal.js";
@@ -98,7 +98,7 @@ const REGISTRAR_ABI = [
 export const RegisterBasenameInput = z
   .object({
     basename: z.string().describe("The Basename to assign to the agent"),
-    amount: z.string().default("0.002").describe("The amount of ETH to pay for registration"),
+    amount: z.custom<Amount>().default(0.002).describe("The amount of the from asset to trade"),
   })
   .strip()
   .describe("Instructions for registering a Basename");
@@ -175,7 +175,7 @@ export async function registerBasename(
       method: "register",
       args: registerArgs,
       abi: REGISTRAR_ABI,
-      amount: new Decimal(args.amount),
+      amount: args.amount,
       assetId: "eth",
     });
 

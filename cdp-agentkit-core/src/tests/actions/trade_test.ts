@@ -69,7 +69,7 @@ describe("Trade Action", () => {
   });
 
   it("should successfully execute the trade", async () => {
-    const response = await createTrade(wallet, MOCK_AMOUNT, MOCK_ASSET_ID_FROM, MOCK_ASSET_ID_TO);
+    const response = await createTrade(wallet, MOCK_OPTIONS);
     const expected = `Traded ${MOCK_AMOUNT} of ${MOCK_ASSET_ID_FROM} for ${trade.getToAmount()} of ${MOCK_ASSET_ID_TO}.\nTransaction hash for the trade: ${trade.getTransaction().getTransactionHash()}\nTransaction link for the trade: ${trade.getTransaction().getTransactionLink()}`;
 
     expect((await wallet.getDefaultAddress()).createTrade).toHaveBeenCalledTimes(1);
@@ -82,7 +82,7 @@ describe("Trade Action", () => {
 
     Coinbase.apiClients.trade!.getTrade = mockReturnRejectedValue(error);
 
-    const response = await createTrade(wallet, MOCK_AMOUNT, MOCK_ASSET_ID_FROM, MOCK_ASSET_ID_TO);
+    const response = await createTrade(wallet, MOCK_OPTIONS);
     const expected = `Error trading assets: ${error.message}`;
 
     expect((await wallet.getDefaultAddress()).createTrade).toHaveBeenCalledTimes(1);

@@ -88,12 +88,7 @@ describe("Mint NFT Action", () => {
   });
 
   it("should successfully respond", async () => {
-    const response = await mintNft(
-      wallet,
-      MOCK_NFT_CONTRACT_ADDRESS,
-      MOCK_NFT_CONTRACT_DESTINATION,
-    );
-
+    const response = await mintNft(wallet, MOCK_OPTIONS);
     const expected = `Minted NFT from contract ${MOCK_NFT_CONTRACT_ADDRESS} to address ${MOCK_NFT_CONTRACT_DESTINATION} on network ${wallet.getNetworkId()}.\nTransaction hash for the mint: ${contractInvocation.getTransaction().getTransactionHash()}\nTransaction link for the mint: ${contractInvocation.getTransaction().getTransactionLink()}`;
 
     expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledTimes(1);
@@ -108,12 +103,7 @@ describe("Mint NFT Action", () => {
 
     Coinbase.apiClients.contractInvocation!.getContractInvocation = mockReturnRejectedValue(error);
 
-    const response = await mintNft(
-      wallet,
-      MOCK_NFT_CONTRACT_ADDRESS,
-      MOCK_NFT_CONTRACT_DESTINATION,
-    );
-
+    const response = await mintNft(wallet, MOCK_OPTIONS);
     const expected = `Error minting NFT: ${error.message}`;
 
     expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledTimes(1);

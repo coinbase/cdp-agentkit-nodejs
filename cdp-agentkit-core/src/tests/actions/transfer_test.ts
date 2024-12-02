@@ -69,14 +69,7 @@ describe("Transfer Action", () => {
   });
 
   it("should successfully transfer token", async () => {
-    const response = await createTransfer(
-      wallet,
-      MOCK_AMOUNT,
-      MOCK_ASSET_ID,
-      MOCK_DESTINATION,
-      MOCK_GASLESS,
-    );
-
+    const response = await createTransfer(wallet, MOCK_OPTIONS);
     const expected = `Transferred ${MOCK_AMOUNT} of ${MOCK_ASSET_ID} to ${MOCK_DESTINATION}.\nTransaction hash for the transfer: ${transfer.getTransactionHash()}\nTransaction link for the transfer: ${transfer.getTransactionLink()}`;
 
     expect((await wallet.getDefaultAddress()).createTransfer).toHaveBeenCalledTimes(1);
@@ -89,14 +82,7 @@ describe("Transfer Action", () => {
 
     Coinbase.apiClients.transfer!.getTransfer = mockReturnRejectedValue(error);
 
-    const response = await createTransfer(
-      wallet,
-      MOCK_AMOUNT,
-      MOCK_ASSET_ID,
-      MOCK_DESTINATION,
-      MOCK_GASLESS,
-    );
-
+    const response = await createTransfer(wallet, MOCK_OPTIONS);
     const expected = `Error transferring the asset: ${error.message}`;
 
     expect((await wallet.getDefaultAddress()).createTransfer).toHaveBeenCalledTimes(1);
