@@ -1,7 +1,6 @@
-import { CdpAction } from "../cdp_action";
-import { Wallet } from "@coinbase/coinbase-sdk";
-import { Web3 } from "web3";
-import { namehash } from "../../../utils";
+import { CdpAction } from "./cdp_action";
+import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
+import { encodeFunctionData, namehash } from "viem";
 import { z } from "zod";
 import { Decimal } from "decimal.js";
 
@@ -20,13 +19,86 @@ const L2_RESOLVER_ADDRESS_TESTNET = "0x6533C94869D28fAA8dF77cc63f9e2b2D6Cf77eBA"
 // Default registration duration (1 year in seconds)
 const REGISTRATION_DURATION = "31557600";
 
+// Relevant ABI for L2 Resolver Contract.
+const L2_RESOLVER_ABI = [
+  {
+    inputs: [
+      { internalType: "bytes32", name: "node", type: "bytes32" },
+      { internalType: "address", name: "a", type: "address" },
+    ],
+    name: "setAddr",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "bytes32", name: "node", type: "bytes32" },
+      { internalType: "string", name: "newName", type: "string" },
+    ],
+    name: "setName",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
+// Relevant ABI for Basenames Registrar Controller Contract.
+const REGISTRAR_ABI = [
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "duration",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "resolver",
+            type: "address",
+          },
+          {
+            internalType: "bytes[]",
+            name: "data",
+            type: "bytes[]",
+          },
+          {
+            internalType: "bool",
+            name: "reverseRecord",
+            type: "bool",
+          },
+        ],
+        internalType: "struct RegistrarController.RegisterRequest",
+        name: "request",
+        type: "tuple",
+      },
+    ],
+    name: "register",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+];
+
 /**
  * Input schema for registering a Basename.
  */
-export const RegisterBasenameInput = z
+const RegisterBasenameInput = z
   .object({
     basename: z.string().describe("The Basename to assign to the agent"),
-    amount: z.number().default(0.002).describe("The amount of ETH to pay for registration"),
+    amount: z.string().default("0.002").describe("The amount of ETH to pay for registration"),
   })
   .strip()
   .describe("Instructions for registering a Basename");
@@ -43,46 +115,33 @@ function createRegisterContractMethodArgs(
   baseName: string,
   addressId: string,
   isMainnet: boolean,
-): Record<string, unknown> {
-  const web3 = new Web3();
-  const nameHash = namehash(baseName);
-
-  const resolverAddress = isMainnet ? L2_RESOLVER_ADDRESS_MAINNET : L2_RESOLVER_ADDRESS_TESTNET;
+): object {
+  const l2ResolverAddress = isMainnet ? L2_RESOLVER_ADDRESS_MAINNET : L2_RESOLVER_ADDRESS_TESTNET;
   const suffix = isMainnet ? ".base.eth" : ".basetest.eth";
 
-  return {
+  const addressData = encodeFunctionData({
+    abi: L2_RESOLVER_ABI,
+    functionName: "setAddr",
+    args: [namehash(baseName), addressId],
+  });
+  const nameData = encodeFunctionData({
+    abi: L2_RESOLVER_ABI,
+    functionName: "setName",
+    args: [namehash(baseName), baseName],
+  });
+
+  const registerArgs = {
     request: [
       baseName.replace(suffix, ""),
       addressId,
       REGISTRATION_DURATION,
-      resolverAddress,
-      [
-        web3.eth.abi.encodeFunctionCall(
-          {
-            name: "setAddr",
-            type: "function",
-            inputs: [
-              { type: "bytes32", name: "node" },
-              { type: "address", name: "a" },
-            ],
-          },
-          [nameHash, addressId],
-        ),
-        web3.eth.abi.encodeFunctionCall(
-          {
-            name: "setName",
-            type: "function",
-            inputs: [
-              { type: "bytes32", name: "node" },
-              { type: "string", name: "newName" },
-            ],
-          },
-          [nameHash, baseName],
-        ),
-      ],
+      l2ResolverAddress,
+      [addressData, nameData],
       true,
     ],
   };
+
+  return registerArgs;
 }
 
 /**
@@ -97,7 +156,7 @@ export async function registerBasename(
   args: z.infer<typeof RegisterBasenameInput>,
 ): Promise<string> {
   const addressId = (await wallet.getDefaultAddress()).getId();
-  const isMainnet = wallet.getNetworkId() === "base-mainnet";
+  const isMainnet = wallet.getNetworkId() === Coinbase.networks.BaseMainnet;
 
   const suffix = isMainnet ? ".base.eth" : ".basetest.eth";
   if (!args.basename.endsWith(suffix)) {
