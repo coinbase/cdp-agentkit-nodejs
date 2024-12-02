@@ -1,88 +1,90 @@
-import { Coinbase, SmartContract, SmartContractType, Wallet } from "@coinbase/coinbase-sdk";
+import { Wallet } from "@coinbase/coinbase-sdk";
 
 import { deployToken, DeployTokenInput } from "../../actions/cdp/deploy_token";
 
-import { newSmartContractFactory } from "../factories/smart_contract";
-import { newWalletFactory } from "../factories/wallet";
-import { newWalletAddressFactory } from "../factories/wallet_address";
-import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
-import {
-  generateERC20SmartContractData,
-  generateERC20SmartContractFromData,
-} from "../utils/smart_contract";
-import { generateWalletData } from "../utils/wallet";
+jest.mock("@coinbase/coinbase-sdk", () => ({
+    Wallet: jest.fn(),
+}));
 
 const MOCK_TOKEN_NAME = "Test Token";
 const MOCK_TOKEN_SYMBOL = "TEST";
 const MOCK_TOKEN_SUPPLY = 100;
 
-const MOCK_OPTIONS = {
-  name: MOCK_TOKEN_NAME,
-  symbol: MOCK_TOKEN_SYMBOL,
-  totalSupply: MOCK_TOKEN_SUPPLY,
-};
+describe("Deploy Token", () => {
+  let contract: any;
+  let mockContract: any;
+  let mockWallet: jest.Mocked<Wallet>;
 
-describe("Deploy Token Input", () => {
-  it("should successfully parse valid input", () => {
-    const result = DeployTokenInput.safeParse(MOCK_OPTIONS);
+  beforeEach(() => {
+    mockContract = {
+      wait: jest.fn(),
+    };
 
-    expect(result.success).toBe(true);
-    expect(result.data).toEqual(MOCK_OPTIONS);
+    mockWallet = {
+      deployToken: jest.fn(),
+    } as unknown as jest.Mocked<Wallet>;
+
+    contract = {
+      getContractAddress: jest.fn().mockReturnValue("0x123456789abcdef"),
+      getTransaction: jest.fn().mockReturnValue({
+        getTransactionLink: jest.fn().mockReturnValue("https://etherscan.io/tx/0xabcdef123456789"),
+      }),
+    };
+
+    mockContract.wait.mockResolvedValue(contract);
+    mockWallet.deployToken.mockResolvedValue(mockContract);
   });
 
-  it("sould fail parsing empty input", () => {
-    const emptyInput = {};
-    const result = DeployTokenInput.safeParse(emptyInput);
+  describe("input", () => {
+    it("should successfully parse valid input", () => {
+      const validInput = {
+        name: MOCK_TOKEN_NAME,
+        symbol: MOCK_TOKEN_SYMBOL,
+        totalSupply: MOCK_TOKEN_SUPPLY,
+      };
 
-    expect(result.success).toBe(false);
-  });
-});
+      const result = DeployTokenInput.safeParse(validInput);
 
-describe("Deploy NFT Action", () => {
-  let contract: SmartContract;
-  let wallet: Wallet;
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(validInput);
+    });
 
-  beforeAll(async () => {
-    const walletData = generateWalletData();
-    const walletAddresses = [walletData.address];
+    it("sould fail parsing empty input", () => {
+      const emptyInput = {};
+      const result = DeployTokenInput.safeParse(emptyInput);
 
-    Coinbase.apiClients.address = newWalletAddressFactory(walletAddresses);
-    Coinbase.apiClients.wallet = newWalletFactory(walletData);
-    Coinbase.useServerSigner = false;
-
-    wallet = await Wallet.create();
-
-    const contractData = generateERC20SmartContractData(wallet, MOCK_OPTIONS);
-
-    contract = generateERC20SmartContractFromData(contractData);
-
-    Coinbase.apiClients.smartContract = newSmartContractFactory();
-    Coinbase.apiClients.smartContract.getSmartContract = mockReturnValue(contractData);
-  });
-
-  beforeEach(async () => {
-    (await wallet.getDefaultAddress()).deployToken = jest.fn().mockResolvedValue(contract);
+      expect(result.success).toBe(false);
+    });
   });
 
   it("should successfully respond", async () => {
-    const response = await deployToken(wallet, MOCK_OPTIONS);
-    const expected = `Deployed ERC20 token contract ${MOCK_TOKEN_NAME} (${MOCK_TOKEN_SYMBOL}) with total supply of ${MOCK_TOKEN_SUPPLY} tokens at address ${contract.getContractAddress()}. Transaction link: ${contract.getTransaction().getTransactionLink()}`;
+    const args = {
+      name: MOCK_TOKEN_NAME,
+      symbol: MOCK_TOKEN_SYMBOL,
+      totalSupply: MOCK_TOKEN_SUPPLY,
+    };
 
-    expect((await wallet.getDefaultAddress()).deployToken).toHaveBeenCalledTimes(1);
-    expect((await wallet.getDefaultAddress()).deployToken).toHaveBeenCalledWith(MOCK_OPTIONS);
-    expect(response).toEqual(expected);
+    const response = await deployToken(mockWallet, args);
+
+    expect(mockWallet.deployToken).toHaveBeenCalledWith(args);
+    expect(mockContract.wait).toHaveBeenCalled();
+    expect(response).toContain(`Deployed ERC20 token contract ${MOCK_TOKEN_NAME} (${MOCK_TOKEN_SYMBOL}) with total supply of ${MOCK_TOKEN_SUPPLY} tokens at address ${contract.getContractAddress()}.`);
+    expect(response).toContain(`Transaction link: ${contract.getTransaction().getTransactionLink()}`);
   });
 
   it("should fail with an error", async () => {
-    const error = new Error("Invalid model type");
+    const args = {
+      name: MOCK_TOKEN_NAME,
+      symbol: MOCK_TOKEN_SYMBOL,
+      totalSupply: MOCK_TOKEN_SUPPLY,
+    };
 
-    Coinbase.apiClients.smartContract!.getSmartContract = mockReturnRejectedValue(error);
+    const error = new Error("An error has occured");
+    mockWallet.deployToken.mockRejectedValue(error);
 
-    const response = await deployToken(wallet, MOCK_OPTIONS);
-    const expected = `Error deploying token: ${error.message}`;
+    const response = await deployToken(mockWallet, args);
 
-    expect((await wallet.getDefaultAddress()).deployToken).toHaveBeenCalledTimes(1);
-    expect((await wallet.getDefaultAddress()).deployToken).toHaveBeenCalledWith(MOCK_OPTIONS);
-    expect(response).toEqual(expected);
+    expect(mockWallet.deployToken).toHaveBeenCalledWith(args);
+    expect(response).toContain(`Error deploying token: ${error.message}`);
   });
 });
