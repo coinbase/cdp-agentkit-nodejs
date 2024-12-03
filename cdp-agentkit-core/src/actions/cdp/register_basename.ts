@@ -1,5 +1,5 @@
 import { CdpAction } from "./cdp_action";
-import { Amount, Coinbase, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
 import { encodeFunctionData, namehash } from "viem";
 import { z } from "zod";
 import { Decimal } from "decimal.js";
