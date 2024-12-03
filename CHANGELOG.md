@@ -1,9 +1,9 @@
-# CDP Node.js AgentKit Changelog
+# CDP Agentkit.js Core Changelog
 
 ## Unreleased
 
-## [0.0.5] - 2024-11-29
+## [0.0.6] - 2024-12-03
 
 ### Added
 
-- Initial release of the CDP Node.js AgentKit.
+- Initial release of the CDP Agentkit.js Core.
