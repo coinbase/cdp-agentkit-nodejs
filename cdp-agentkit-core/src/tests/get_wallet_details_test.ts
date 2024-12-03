@@ -1,6 +1,6 @@
 import { Coinbase, Wallet, WalletAddress } from "@coinbase/coinbase-sdk";
 
-import { getWalletDetails, GetWalletDetailsInput } from "../../actions/cdp/get_wallet_details";
+import { getWalletDetails, GetWalletDetailsInput } from "../actions/cdp/get_wallet_details";
 
 describe("Wallet Details Input", () => {
   it("should successfully parse empty input", () => {

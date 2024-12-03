@@ -1,6 +1,6 @@
 import { Coinbase, Trade, Wallet } from "@coinbase/coinbase-sdk";
 
-import { trade as createTrade, TradeInput } from "../../actions/cdp/trade";
+import { trade as createTrade, TradeInput } from "../actions/cdp/trade";
 
 const MOCK_TRADE_AMOUNT = 0.123;
 const MOCK_TRADE_ASSET_ID_FROM = Coinbase.assets.Eth;

@@ -1,9 +1,6 @@
 import { Coinbase, FaucetTransaction, SmartContract, Wallet } from "@coinbase/coinbase-sdk";
 
-import {
-  requestFaucetFunds,
-  RequestFaucetFundsInput,
-} from "../../actions/cdp/request_faucet_funds";
+import { requestFaucetFunds, RequestFaucetFundsInput } from "../actions/cdp/request_faucet_funds";
 
 const MOCK_ASSET_ID = Coinbase.assets.Usdc;
 

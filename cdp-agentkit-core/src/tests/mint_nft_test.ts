@@ -1,6 +1,6 @@
 import { Coinbase, ContractInvocation, Transaction, Wallet } from "@coinbase/coinbase-sdk";
 
-import { mintNft, MintNftInput } from "../../actions/cdp/mint_nft";
+import { mintNft, MintNftInput } from "../actions/cdp/mint_nft";
 
 const MOCK_CONTRACT_ADDRESS = "0x123456789abcdef";
 const MOCK_CONTRACT_DESTINATION = "0xabcdef123456789";

@@ -1,6 +1,6 @@
 import { Wallet, WalletAddress } from "@coinbase/coinbase-sdk";
 
-import { getBalance, GetBalanceInput } from "../../actions/cdp/get_balance";
+import { getBalance, GetBalanceInput } from "../actions/cdp/get_balance";
 
 const MOCK_ASSET_ID = crypto.randomUUID();
 const MOCK_BALANCE = 1000000000000000000;

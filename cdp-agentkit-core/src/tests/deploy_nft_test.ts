@@ -1,6 +1,6 @@
 import { Coinbase, SmartContract, Wallet } from "@coinbase/coinbase-sdk";
 
-import { deployNft, DeployNftInput } from "../../actions/cdp/deploy_nft";
+import { deployNft, DeployNftInput } from "../actions/cdp/deploy_nft";
 
 const MOCK_NFT_BASE_URI = "https://www.test.xyz/metadata/";
 const MOCK_NFT_NAME = "Test Token";

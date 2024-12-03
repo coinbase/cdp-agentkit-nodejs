@@ -1,6 +1,6 @@
 import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
 
-import { registerBasename, RegisterBasenameInput } from "../../actions/cdp/register_basename";
+import { registerBasename, RegisterBasenameInput } from "../actions/cdp/register_basename";
 
 const MOCK_AMMOUNT = 0.123;
 const MOCK_BASENAME = "test-basename";
@@ -96,7 +96,7 @@ describe("Register Basename Action", () => {
     const error = new Error("Failed to register basename");
     mockWallet.invokeContract.mockRejectedValue(error);
 
-    const response = mockWallet.invokeContract.mockRejectedValue(error);
+    const response = await registerBasename(mockWallet, args);
 
     expect(mockWallet.invokeContract).toHaveBeenCalled();
     expect(`Error registering basename: ${error.message}`);

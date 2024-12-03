@@ -1,6 +1,6 @@
 import { SmartContract, Wallet } from "@coinbase/coinbase-sdk";
 
-import { deployToken, DeployTokenInput } from "../../actions/cdp/deploy_token";
+import { deployToken, DeployTokenInput } from "../actions/cdp/deploy_token";
 
 const MOCK_TOKEN_NAME = "Test Token";
 const MOCK_TOKEN_SYMBOL = "TEST";
