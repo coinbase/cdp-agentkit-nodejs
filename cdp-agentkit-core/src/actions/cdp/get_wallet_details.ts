@@ -20,8 +20,12 @@ export async function getWalletDetails(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _: z.infer<typeof GetWalletDetailsInput>,
 ): Promise<string> {
-  const defaultAddress = await wallet.getDefaultAddress();
-  return `Wallet: ${wallet.getId()} on network: ${wallet.getNetworkId()} with default address: ${defaultAddress.getId()}`;
+  try {
+    const defaultAddress = await wallet.getDefaultAddress();
+    return `Wallet: ${wallet.getId()} on network: ${wallet.getNetworkId()} with default address: ${defaultAddress.getId()}`;
+  } catch (error) {
+    return `Error getting wallet details: ${error instanceof Error ? error.message : String(error)}`;
+  }
 }
 
 /**
