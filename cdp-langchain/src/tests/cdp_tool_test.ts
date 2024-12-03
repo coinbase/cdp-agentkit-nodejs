@@ -29,8 +29,8 @@ describe("CdpTool", () => {
       const tool = expect(
         new CdpTool(
           {
-            name: "",
-            description: "",
+            name: "test-tool",
+            description: "test-tool-description",
             argsSchema: z.object({}),
             func: jest.fn().mockReturnValue({}),
           },
