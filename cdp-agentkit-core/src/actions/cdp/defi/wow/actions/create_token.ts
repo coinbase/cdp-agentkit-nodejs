@@ -10,7 +10,7 @@ This tool will create a Zora Wow ERC20 memecoin using the WoW factory. This tool
 /**
  * Input schema for create token action.
  */
-const WowCreateTokenInput = z
+export const WowCreateTokenInput = z
   .object({
     name: z.string().describe("The name of the token to create, e.g. WowCoin"),
     symbol: z.string().describe("The symbol of the token to create, e.g. WOW"),
@@ -31,7 +31,7 @@ const WowCreateTokenInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the token creation details.
  */
-async function wowCreateToken(
+export async function wowCreateToken(
   wallet: Wallet,
   args: z.infer<typeof WowCreateTokenInput>,
 ): Promise<string> {

@@ -26,7 +26,7 @@ describe("Get Balance Input", () => {
 });
 
 describe("Get Balance Action", () => {
-  const WALLET_ID = crypto.randomUUID();
+  const WALLET_ID = "0x123456789abcdef";
 
   let addresses: jest.Mocked<WalletAddress[]>;
   let mockWallet: jest.Mocked<Wallet>;

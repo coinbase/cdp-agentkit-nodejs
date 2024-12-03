@@ -12,7 +12,7 @@ This tool will sell a Zora Wow ERC20 memecoin for ETH. This tool takes the WOW t
 /**
  * Input schema for sell token action.
  */
-const WowSellTokenInput = z
+export const WowSellTokenInput = z
   .object({
     contractAddress: z
       .string()
@@ -35,7 +35,7 @@ const WowSellTokenInput = z
  * @param args - The input arguments for the action.
  * @returns A message confirming the sale with the transaction hash.
  */
-async function wowSellToken(
+export async function wowSellToken(
   wallet: Wallet,
   args: z.infer<typeof WowSellTokenInput>,
 ): Promise<string> {
