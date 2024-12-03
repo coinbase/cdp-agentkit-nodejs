@@ -62,7 +62,6 @@ describe("Wow Sell Token Input", () => {
 describe("Wow Sell Token Action", () => {
   const ADDRESS_ID = "0xabcdef123456789";
   const NETWORK_ID = Coinbase.networks.BaseSepolia;
-  const RECIPIENT_ID = "0x123456789abcdef";
   const TRANSACTION_HASH = "0xghijkl987654321";
 
   let mockContractInvocation: jest.Mocked<ContractInvocation>;

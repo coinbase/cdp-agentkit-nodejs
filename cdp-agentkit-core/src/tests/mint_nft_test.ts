@@ -1,4 +1,4 @@
-import { Coinbase, ContractInvocation, Transaction, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, ContractInvocation, Wallet } from "@coinbase/coinbase-sdk";
 
 import { mintNft, MintNftInput } from "../actions/cdp/mint_nft";
 

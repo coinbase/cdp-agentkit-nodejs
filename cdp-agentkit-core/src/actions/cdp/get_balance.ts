@@ -23,7 +23,10 @@ export const GetBalanceInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the balance information.
  */
-export async function getBalance(wallet: Wallet, args: z.infer<typeof GetBalanceInput>): Promise<string> {
+export async function getBalance(
+  wallet: Wallet,
+  args: z.infer<typeof GetBalanceInput>,
+): Promise<string> {
   const balances: Record<string, Decimal> = {};
 
   try {

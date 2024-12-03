@@ -24,7 +24,10 @@ export const DeployNftInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the NFT token deployment details.
  */
-export async function deployNft(wallet: Wallet, args: z.infer<typeof DeployNftInput>): Promise<string> {
+export async function deployNft(
+  wallet: Wallet,
+  args: z.infer<typeof DeployNftInput>,
+): Promise<string> {
   try {
     const nftContract = await wallet.deployNFT({
       name: args.name,

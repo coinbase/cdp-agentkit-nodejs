@@ -1,16 +1,12 @@
-import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
-
+import { Wallet } from "@coinbase/coinbase-sdk";
 import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
-
 import { CdpToolkit } from "../toolkits/cdp_toolkit";
 
 describe("CdpToolkit", () => {
   const WALLET_ID = "0x123456789abcdef";
   const WALLET_SEED = "0xc746290109d0b86162c428be6e27f552";
-  const WALLET_JSON = `{\"defaultAddressId\":\"0xabcdef123456789\", \"seed\":\"0xc746290109d0b86162c428be6e27f552\", \"walletId\":\"${WALLET_ID}\"}`;
+  const WALLET_JSON = `{"defaultAddressId":"0xabcdef123456789", "seed":"${WALLET_SEED}", "walletId":"${WALLET_ID}"}`;
 
-  let agentkit: CdpAgentkit;
-  let toolkit: CdpToolkit;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(async () => {
@@ -41,12 +37,12 @@ describe("CdpToolkit", () => {
 
     it("should successfully init with wallet data", async () => {
       const options = {
-        cdpWalletData: "{}",
+        cdpWalletData: WALLET_JSON,
       };
 
       jest.spyOn(Wallet, "import").mockResolvedValue(mockWallet);
 
-      await expect(CdpAgentkit.configureWithWallet(options)).toBeDefined();
+      expect(await CdpAgentkit.configureWithWallet(options)).toBeDefined();
     });
 
     it("should fail init without env", async () => {

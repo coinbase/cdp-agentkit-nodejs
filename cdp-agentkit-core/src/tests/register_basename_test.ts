@@ -168,7 +168,7 @@ describe("Register Basename Action", () => {
     const error = new Error("Failed to register basename");
     mockWallet.invokeContract.mockRejectedValue(error);
 
-    const response = await registerBasename(mockWallet, args);
+    await registerBasename(mockWallet, args);
 
     expect(mockWallet.invokeContract).toHaveBeenCalled();
     expect(`Error registering basename: ${error}`);

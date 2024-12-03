@@ -1,6 +1,6 @@
-import baseConfig from "../jest.config.base.js";
+const baseConfig = require("../jest.config.base.cjs");
 
-export default {
+module.exports = {
   ...baseConfig,
   coveragePathIgnorePatterns: ["node_modules", "dist", "docs", "index.ts"],
   coverageThreshold: {

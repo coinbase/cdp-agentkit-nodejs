@@ -1,8 +1,7 @@
 import { Wallet, WalletAddress } from "@coinbase/coinbase-sdk";
-
 import { getBalance, GetBalanceInput } from "../actions/cdp/get_balance";
 
-const MOCK_ASSET_ID = crypto.randomUUID();
+const MOCK_ASSET_ID = "test-asset-id";
 const MOCK_BALANCE = 1000000000000000000;
 
 describe("Get Balance Input", () => {
@@ -34,15 +33,15 @@ describe("Get Balance Action", () => {
   beforeEach(() => {
     mockAddresses = [
       {
-        getId: jest.fn().mockReturnValue(crypto.randomUUID()),
+        getId: jest.fn().mockReturnValue("test-address-id-1"),
         getBalance: jest.fn().mockReturnValue(MOCK_BALANCE),
       } as unknown as jest.Mocked<WalletAddress>,
       {
-        getId: jest.fn().mockReturnValue(crypto.randomUUID()),
+        getId: jest.fn().mockReturnValue("test-address-id-2"),
         getBalance: jest.fn().mockReturnValue(0.0),
       } as unknown as jest.Mocked<WalletAddress>,
       {
-        getId: jest.fn().mockReturnValue(crypto.randomUUID()),
+        getId: jest.fn().mockReturnValue("test-address-id-3"),
         getBalance: jest.fn().mockReturnValue(MOCK_BALANCE),
       } as unknown as jest.Mocked<WalletAddress>,
     ] as unknown as jest.Mocked<WalletAddress>[];

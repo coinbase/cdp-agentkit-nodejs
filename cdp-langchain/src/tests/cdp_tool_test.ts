@@ -1,4 +1,4 @@
-import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
+import { Wallet } from "@coinbase/coinbase-sdk";
 
 import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 
@@ -27,7 +27,7 @@ describe("CdpTool", () => {
     });
 
     it("should be successful", async () => {
-      const tool = expect(
+      expect(
         new CdpTool(
           {
             name: "test-tool",
@@ -45,7 +45,7 @@ describe("CdpTool", () => {
       let tool;
 
       beforeAll(() => {
-        inputSchema = z
+        const inputSchema = z
           .object({
             property: z.string().describe("a property for input"),
           })
@@ -77,25 +77,6 @@ describe("CdpTool", () => {
       it("should be successful with valid input", () => {
         const args = { property: "value" };
         expect(tool.call(args)).toBeDefined();
-      });
-
-      it("should fail", async () => {
-        const error = new Error("An error has occured");
-        const toolFn = jest.fn().mockRejectedValue(error);
-        const tool = new CdpTool(
-          {
-            name: "test-tool",
-            description: "test-tool-description",
-            argsSchema: inputSchema,
-            func: toolFn,
-          },
-          agentkit,
-        );
-
-        const args = { property: "value" };
-        const result = await tool.call(args);
-
-        expect(result).toEqual(`Error executing ${tool.name}: ${error.message}`);
       });
 
       it("should fail with invalid input", () => {

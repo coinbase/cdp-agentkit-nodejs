@@ -25,7 +25,10 @@ export const TransferInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the transfer details.
  */
-export async function transfer(wallet: Wallet, args: z.infer<typeof TransferInput>): Promise<string> {
+export async function transfer(
+  wallet: Wallet,
+  args: z.infer<typeof TransferInput>,
+): Promise<string> {
   try {
     const transferResult = await wallet.createTransfer({
       amount: args.amount,

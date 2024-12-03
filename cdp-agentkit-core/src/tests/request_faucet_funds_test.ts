@@ -1,4 +1,4 @@
-import { Coinbase, FaucetTransaction, SmartContract, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, FaucetTransaction, Wallet } from "@coinbase/coinbase-sdk";
 
 import { requestFaucetFunds, RequestFaucetFundsInput } from "../actions/cdp/request_faucet_funds";
 

@@ -46,6 +46,5 @@
     "jsdoc/require-returns-description": "error",
     "jsdoc/require-returns-type": "off",
     "jsdoc/require-hyphen-before-param-description": ["error", "always"]
-  },
-  "ignorePatterns": ["src/**/tests/**", "src/**/*.test.ts"]
+  }
 }

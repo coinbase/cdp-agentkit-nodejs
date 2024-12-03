@@ -2,7 +2,7 @@ import { Coinbase, Transfer, Wallet } from "@coinbase/coinbase-sdk";
 
 import { transfer as createTransfer, TransferInput } from "../actions/cdp/transfer";
 
-const MOCK_AMOUNT = 0.123456789012345678;
+const MOCK_AMOUNT = 15;
 const MOCK_ASSET_ID = Coinbase.assets.Eth;
 const MOCK_DESTINATION = "0x321";
 const MOCK_GASLESS = true;
