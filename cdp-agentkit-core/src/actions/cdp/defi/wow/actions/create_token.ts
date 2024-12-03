@@ -54,7 +54,7 @@ export async function wowCreateToken(
     const result = await invocation.wait();
     return `Created WoW ERC20 memecoin ${args.name} with symbol ${args.symbol} on network ${wallet.getNetworkId()}.\nTransaction hash for the token creation: ${result.getTransaction().getTransactionHash()}`;
   } catch (error) {
-    return `Error creating Zora Wow ERC20 memecoin ${error}`;
+    return `Error creating Zora Wow ERC20 memecoin: ${error}`;
   }
 }
 
