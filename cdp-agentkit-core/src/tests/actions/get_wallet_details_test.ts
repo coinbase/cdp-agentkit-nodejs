@@ -1,51 +1,65 @@
-import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, Wallet, WalletAddress } from "@coinbase/coinbase-sdk";
 
-import {
-  getWalletDetails,
-  GetWalletDetailsInput,
-} from "../../actions/cdp/get_wallet_details";
+import { getWalletDetails, GetWalletDetailsInput } from "../../actions/cdp/get_wallet_details";
 
-import { newWalletFactory } from "../factories/wallet";
-import { newWalletAddressFactory } from "../factories/wallet_address";
-import { generateWalletData } from "../utils/wallet";
-
-const MOCK_OPTIONS = {};
-
-describe("Wallet Details Input", () => {
-  it("sould successfully parse empty input", () => {
-    const result = GetWalletDetailsInput.safeParse(MOCK_OPTIONS);
-
-    expect(result.success).toBe(true);
-    expect(result.data).toEqual(MOCK_OPTIONS);
-  });
-
-  it("sould successfully parse empty input", () => {
-    const emptyInput = {};
-
-    const result = GetWalletDetailsInput.safeParse(emptyInput);
-
-    expect(result.success).toBe(true);
-    expect(result.data).toEqual(emptyInput);
-  });
-});
+const MOCK_ADDRESS_ID = "0xabcdef123456789";
+const MOCK_NETWORK_ID = Coinbase.networks.BaseSepolia;
+const MOCK_WALLET_ID = "0x123456789abcdef";
 
 describe("Wallet Details Action", () => {
-  let wallet: Wallet;
+  let mockWalletAddress: jest.Mocked<WalletAddress>;
+  let mockWallet: jest.Mocked<Wallet>;
 
-  beforeAll(async () => {
-    const walletData = generateWalletData();
+  beforeEach(() => {
+    // wallet mock
 
-    Coinbase.apiClients.address = newWalletAddressFactory([walletData.address]);
-    Coinbase.apiClients.wallet = newWalletFactory(walletData);
-    Coinbase.useServerSigner = false;
+    mockWallet = {
+      getDefaultAddress: jest.fn(),
+      getId: jest.fn(), //.mockReturnValue(crypto.randomUUID()),
+      getNetworkId: jest.fn(), //.mockReturnValue(Coinbase.networks.BaseSepolia),
+    } as unknown as jest.Mocked<Wallet>;
 
-    wallet = await Wallet.create();
+    // wallet address mock
+
+    mockWalletAddress = {
+      getId: jest.fn(),
+    } as unknown as jest.Mocked<WalletAddress>;
+
+    mockWalletAddress.getId.mockReturnValue(MOCK_ADDRESS_ID);
+
+    mockWallet.getDefaultAddress.mockResolvedValue(mockWalletAddress);
+    mockWallet.getId.mockReturnValue(MOCK_WALLET_ID);
+    mockWallet.getNetworkId.mockReturnValue(MOCK_NETWORK_ID);
+  });
+
+  describe("input", () => {
+    it("sould successfully parse empty input", () => {
+      const emptyInput = {};
+      const result = GetWalletDetailsInput.safeParse(emptyInput);
+
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(emptyInput);
+    });
   });
 
   it("should successfully respond", async () => {
-    const response = await getWalletDetails(wallet, MOCK_OPTIONS);
-    const expected = `Wallet: ${wallet.getId()} on network: ${wallet.getNetworkId()} with default address: ${(await wallet.getDefaultAddress()).getId()}`;
+    const args = {};
+    const response = await getWalletDetails(mockWallet, args);
 
-    expect(response).toEqual(expected);
+    expect(mockWallet.getDefaultAddress).toHaveBeenCalled();
+    expect(response).toContain(`Wallet: ${MOCK_WALLET_ID}`);
+    expect(response).toContain(`on network: ${MOCK_NETWORK_ID}`);
+    expect(response).toContain(`with default address: ${MOCK_ADDRESS_ID}`);
+  });
+
+  it("should fail with an error", async () => {
+    const args = {};
+
+    const error = new Error("An error has occured");
+    mockWallet.getDefaultAddress.mockRejectedValue(error);
+
+    const response = await getWalletDetails(mockWallet, args);
+    expect(mockWallet.getDefaultAddress).toHaveBeenCalled();
+    expect(response).toContain(`Error getting wallet details: ${error.message}`);
   });
 });
