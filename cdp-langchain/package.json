@@ -1,0 +1,46 @@
+{
+  "name": "@coinbase/cdp-langchain",
+  "version": "0.0.7",
+  "description": "Langchain Toolkit extension of CDP Agentkit",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "npx --yes eslint -c .eslintrc.json src/**/*.ts",
+    "lint:fix": "npx --yes eslint -c .eslintrc.json src/**/*.ts --fix",
+    "format": "npx --yes prettier -c .prettierrc --write \"**/*.{ts,js,cjs,json,md}\"",
+    "format-check": "npx --yes prettier -c .prettierrc --check \"**/*.{ts,js,cjs,json,md}\"",
+    "check": "tsc --noEmit",
+    "test": "npx --yes jest --no-cache  --testMatch=**/*_test.ts",
+    "test:dry-run": "npm install && npm ci && npm publish --dry-run",
+    "test:e2e": "npx jest --no-cache --testMatch=**/e2e.ts --coverageThreshold '{}'",
+    "test:types": "tsd --files src/tests/types.test-d.ts",
+    "clean": "rm -rf dist/*",
+    "prepack": "tsc",
+    "docs": "npx --yes typedoc --entryPoints ./src --entryPointStrategy expand --exclude ./src/tests/**/*.ts",
+    "docs:serve": "http-server ./docs",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "coinbase",
+    "sdk",
+    "crypto",
+    "cdp",
+    "agentkit",
+    "ai",
+    "agent",
+    "nodejs",
+    "typescript",
+    "langchain"
+  ],
+  "dependencies": {
+    "@coinbase/cdp-agentkit-core": "^0.0.5",
+    "@coinbase/coinbase-sdk": "^0.11.0",
+    "@langchain/core": "^0.3.19",
+    "@langchain/openai": "^0.3.14",
+    "zod": "^3.22.4"
+  }
+}
