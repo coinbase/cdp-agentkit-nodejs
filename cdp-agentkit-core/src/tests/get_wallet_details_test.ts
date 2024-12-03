@@ -13,9 +13,9 @@ describe("Wallet Details Input", () => {
 });
 
 describe("Wallet Details Action", () => {
-  const MOCK_ADDRESS_ID = "0xabcdef123456789";
-  const MOCK_NETWORK_ID = Coinbase.networks.BaseSepolia;
-  const MOCK_WALLET_ID = "0x123456789abcdef";
+  const ADDRESS_ID = "0xabcdef123456789";
+  const NETWORK_ID = Coinbase.networks.BaseSepolia;
+  const WALLET_ID = "0x123456789abcdef";
 
   let mockWallet: jest.Mocked<Wallet>;
   let mockWalletAddress: jest.Mocked<WalletAddress>;
@@ -23,12 +23,12 @@ describe("Wallet Details Action", () => {
   beforeEach(() => {
     mockWallet = {
       getDefaultAddress: jest.fn(),
-      getId: jest.fn().mockReturnValue(MOCK_WALLET_ID),
-      getNetworkId: jest.fn().mockReturnValue(MOCK_NETWORK_ID),
+      getId: jest.fn().mockReturnValue(WALLET_ID),
+      getNetworkId: jest.fn().mockReturnValue(NETWORK_ID),
     } as unknown as jest.Mocked<Wallet>;
 
     mockWalletAddress = {
-      getId: jest.fn().mockReturnValue(MOCK_ADDRESS_ID),
+      getId: jest.fn().mockReturnValue(ADDRESS_ID),
     } as unknown as jest.Mocked<WalletAddress>;
 
     mockWallet.getDefaultAddress.mockResolvedValue(mockWalletAddress);
@@ -39,9 +39,9 @@ describe("Wallet Details Action", () => {
     const response = await getWalletDetails(mockWallet, args);
 
     expect(mockWallet.getDefaultAddress).toHaveBeenCalled();
-    expect(response).toContain(`Wallet: ${MOCK_WALLET_ID}`);
-    expect(response).toContain(`on network: ${MOCK_NETWORK_ID}`);
-    expect(response).toContain(`with default address: ${MOCK_ADDRESS_ID}`);
+    expect(response).toContain(`Wallet: ${WALLET_ID}`);
+    expect(response).toContain(`on network: ${NETWORK_ID}`);
+    expect(response).toContain(`with default address: ${ADDRESS_ID}`);
   });
 
   it("should fail with an error", async () => {
