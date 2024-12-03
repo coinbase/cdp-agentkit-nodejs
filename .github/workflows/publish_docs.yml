@@ -14,13 +14,13 @@ jobs:
           cache: "npm"
       
       # Install dependencies in parent directory first
-      - run: npm ci
+      - run: npm install
 
       # Build cdp-agentkit-core docs
       - name: Build AgentKit Core docs
         run: |
           cd cdp-agentkit-core
-          npm ci
+          npm install
           npm run docs
           cd ..
           mkdir -p docs/cdp-agentkit-core
@@ -30,7 +30,7 @@ jobs:
       - name: Build LangChain docs
         run: |
           cd cdp-langchain
-          npm ci
+          npm install
           npm run docs
           cd ..
           mkdir -p docs/cdp-langchain

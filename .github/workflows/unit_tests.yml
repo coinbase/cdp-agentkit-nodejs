@@ -15,12 +15,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       # Install dependencies in parent directory first
-      - run: npm ci
+      - run: npm install
       # Then install and test in working directory
       - name: Install and test agentkit
         working-directory: ./cdp-agentkit-core
         run: |
-          npm ci
+          npm install
           npm run test:unit
 
   test-langchain:
@@ -35,10 +35,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       # Install dependencies in parent directory first
-      - run: npm ci
+      - run: npm install
       # Then install and test in working directory
       - name: Install and test langchain
         working-directory: ./cdp-langchain
         run: |
-          npm ci
+          npm install
           npm run test:unit 
