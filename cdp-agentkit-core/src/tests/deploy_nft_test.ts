@@ -30,7 +30,6 @@ describe("Deploy NFT Input", () => {
 
 describe("Deploy NFT Action", () => {
   const CONTRACT_ADDRESS = "0x123456789abcdef";
-  const CONTRACT_DESTINATION = "0xabcdef123456789";
   const NETWORK_ID = Coinbase.networks.BaseSepolia;
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
