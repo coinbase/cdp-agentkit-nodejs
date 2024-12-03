@@ -1,26 +1,17 @@
-import { Coinbase, Wallet, WalletCreateOptions } from "@coinbase/coinbase-sdk";
+import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
 
 import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 
 import { CdpTool } from "../tools/cdp_tool";
 
-import { newWalletMock, newWalletAddressMock } from "./mocks";
-import { generateWalletData } from "./utils";
-
 import { z } from "zod";
 
 describe("CdpTool", () => {
   let agentkit: CdpAgentkit;
-  let wallet: Wallet;
+  let mockWallet: jest.Mocked<Wallet>;
 
   beforeAll(async () => {
-    const walletData = generateWalletData();
-
-    Coinbase.apiClients.address = newWalletAddressMock([walletData.address]);
-    Coinbase.apiClients.wallet = newWalletMock(walletData);
-    Coinbase.useServerSigner = false;
-
-    wallet = await Wallet.create();
+    mockWallet = {} as unknown as jest.Mocked<Wallet>;
   });
 
   describe("initialization", () => {
@@ -28,7 +19,7 @@ describe("CdpTool", () => {
       const options = {
         cdpApiKeyName: "test-key",
         cdpApiKeyPrivateKey: "test-private-key",
-        wallet: wallet,
+        wallet: mockWallet,
       };
 
       agentkit = await CdpAgentkit.configureWithWallet(options);
