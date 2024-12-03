@@ -98,7 +98,7 @@ const REGISTRAR_ABI = [
 export const RegisterBasenameInput = z
   .object({
     basename: z.string().describe("The Basename to assign to the agent"),
-    amount: z.custom<Amount>().default(0.002).describe("The amount of the from asset to trade"),
+    amount: z.string().default("0.002").describe("The amount of the from asset to trade"),
   })
   .strip()
   .describe("Instructions for registering a Basename");
@@ -175,7 +175,7 @@ export async function registerBasename(
       method: "register",
       args: registerArgs,
       abi: REGISTRAR_ABI,
-      amount: args.amount,
+      amount: new Decimal(args.amount),
       assetId: "eth",
     });
 
