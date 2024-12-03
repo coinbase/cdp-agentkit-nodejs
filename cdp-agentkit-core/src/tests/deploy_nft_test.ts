@@ -34,7 +34,7 @@ describe("Deploy NFT Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let mockSmartContract: any;
+  let mockSmartContract: jest.Mocked<SmartContract>;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(() => {
