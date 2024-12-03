@@ -12,11 +12,11 @@ const MOCK_NFT_SYMBOL = "TEST";
 
 describe("Deploy NFT Action", () => {
   let contract: any;
-  let mockContract: any;
+  let mockResult: any;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(() => {
-    mockContract = {
+    mockResult = {
       wait: jest.fn(),
     };
 
@@ -33,14 +33,11 @@ describe("Deploy NFT Action", () => {
       }),
     };
 
-    mockContract.wait.mockResolvedValue(contract);
-    mockWallet.deployNFT.mockResolvedValue(mockContract);
+    mockResult.wait.mockResolvedValue(contract);
+    mockWallet.deployNFT.mockResolvedValue(mockResult);
   });
 
   describe("input", () => {
-    beforeEach(() => {
-    });
-
     it("should successfully parse valid input", () => {
       const validInput = {
         name: "token-name",
@@ -72,7 +69,7 @@ describe("Deploy NFT Action", () => {
     const response = await deployNft(mockWallet, args);
 
     expect(mockWallet.deployNFT).toHaveBeenCalledWith(args);
-    expect(mockContract.wait).toHaveBeenCalled();
+    expect(mockResult.wait).toHaveBeenCalled();
     expect(response).toContain(`Deployed NFT Collection ${MOCK_NFT_NAME} to address ${contract.getContractAddress()} on network ${mockWallet.getNetworkId()}.`);
     expect(response).toContain(`Transaction hash for the deployment: ${contract.getTransaction().getTransactionHash()}`);
     expect(response).toContain(`Transaction link for the deployment: ${contract.getTransaction().getTransactionLink()}`);
