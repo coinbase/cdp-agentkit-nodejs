@@ -1,6 +1,7 @@
 name: Unit Tests
 
-on: [pull_request]
+on:
+  workflow_dispatch:
 
 jobs:
   test-agentkit:
@@ -21,7 +22,7 @@ jobs:
         working-directory: ./cdp-agentkit-core
         run: |
           npm install
-          npm run test:unit
+          npm run test
 
   test-langchain:
     runs-on: ubuntu-latest
@@ -41,4 +42,4 @@ jobs:
         working-directory: ./cdp-langchain
         run: |
           npm install
-          npm run test:unit 
+          npm run test
