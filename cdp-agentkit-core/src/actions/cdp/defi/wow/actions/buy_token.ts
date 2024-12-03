@@ -63,7 +63,7 @@ export async function wowBuyToken(
     const result = await invocation.wait();
     return `Purchased WoW ERC20 memecoin with transaction hash: ${result.getTransaction().getTransactionHash()}`;
   } catch (error) {
-    return `Error buying Zora Wow ERC20 memecoin ${error}`;
+    return `Error buying Zora Wow ERC20 memecoin: ${error}`;
   }
 }
 

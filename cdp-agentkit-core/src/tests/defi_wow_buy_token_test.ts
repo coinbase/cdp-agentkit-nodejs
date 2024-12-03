@@ -1,7 +1,15 @@
-import { Coinbase, SmartContract, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, ContractInvocation, Wallet } from "@coinbase/coinbase-sdk";
 import { wowBuyToken, WowBuyTokenInput } from "../actions/cdp/defi/wow/actions/buy_token";
 import { getBuyQuote } from "../actions/cdp/defi/wow/utils";
 import { getHasGraduated } from "../actions/cdp/defi/wow/uniswap/utils";
+
+jest.mock("../actions/cdp/defi/wow/utils", () => ({
+  getBuyQuote: jest.fn(),
+}));
+
+jest.mock("../actions/cdp/defi/wow/uniswap/utils", () => ({
+  getHasGraduated: jest.fn(),
+}));
 
 const MOCK_CONTRACT_ADDRESS = "0xabcdef123456789";
 const MOCK_AMOUNT_ETH_IN_WEI = "100000000000000000";
@@ -27,4 +35,65 @@ describe("Wow Buy Token Input", () => {
   });
 });
 
-describe("Wow Buy Token Action", () => {});
+describe("Wow Buy Token Action", () => {
+  const NETWORK_ID = Coinbase.networks.BaseSepolia;
+  const TRANSACTION_HASH = "0xghijkl987654321";
+
+  let mockContractInvocation: jest.Mocked<ContractInvocation>;
+  let mockWallet: jest.Mocked<Wallet>;
+
+  beforeEach(() => {
+    mockWallet = {
+      invokeContract: jest.fn(),
+      getDefaultAddress: jest.fn().mockResolvedValue({
+        getId: jest.fn().mockReturnValue(TRANSACTION_HASH),
+      }),
+      getNetworkId: jest.fn().mockReturnValue(NETWORK_ID),
+    } as unknown as jest.Mocked<Wallet>;
+
+    mockContractInvocation = {
+      wait: jest.fn().mockResolvedValue({
+        getTransaction: jest.fn().mockReturnValue({
+          getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
+        }),
+      }),
+    } as unknown as jest.Mocked<ContractInvocation>;
+
+    mockWallet.invokeContract.mockResolvedValue(mockContractInvocation);
+  });
+
+  it("should successfully buy a token", async () => {
+    const args = {
+      contractAddress: MOCK_CONTRACT_ADDRESS,
+      amountEthInWei: MOCK_AMOUNT_ETH_IN_WEI,
+    };
+
+    (getHasGraduated as jest.Mock).mockResolvedValue(true);
+    (getBuyQuote as jest.Mock).mockResolvedValue(1.0);
+
+    const response = await wowBuyToken(mockWallet, args);
+
+    expect(mockWallet.invokeContract).toHaveBeenCalled();
+    expect(getBuyQuote).toHaveBeenCalled();
+    expect(getHasGraduated).toHaveBeenCalled();
+    expect(response).toContain(
+      `Purchased WoW ERC20 memecoin with transaction hash: ${TRANSACTION_HASH}`,
+    );
+  });
+
+  it("should handle errors when buying a token", async () => {
+    const args = {
+      contractAddress: MOCK_CONTRACT_ADDRESS,
+      amountEthInWei: MOCK_AMOUNT_ETH_IN_WEI,
+    };
+
+    const error = new Error("An error has occurred");
+    mockWallet.invokeContract.mockRejectedValue(error);
+    (getHasGraduated as jest.Mock).mockResolvedValue(true);
+
+    const response = await wowBuyToken(mockWallet, args);
+
+    expect(mockWallet.invokeContract).toHaveBeenCalled();
+    expect(response).toContain(`Error buying Zora Wow ERC20 memecoin: ${error}`);
+  });
+});
