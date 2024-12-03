@@ -33,28 +33,24 @@ describe("Deploy Token Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let contract: jest.Mocked<SmartContract>;
+  let mockSmartContract: any;
   let mockWallet: jest.Mocked<Wallet>;
-  let mockWalletResult: any;
 
   beforeEach(() => {
+    mockSmartContract = {
+      wait: jest.fn().mockResolvedValue({
+        getContractAddress: jest.fn().mockReturnValue(CONTRACT_ADDRESS),
+        getTransaction: jest.fn().mockReturnValue({
+          getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+        }),
+      } as unknown as jest.Mocked<SmartContract>),
+    };
+
     mockWallet = {
       deployToken: jest.fn(),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockWalletResult = {
-      wait: jest.fn(),
-    };
-
-    contract = {
-      getContractAddress: jest.fn().mockReturnValue(CONTRACT_ADDRESS),
-      getTransaction: jest.fn().mockReturnValue({
-        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
-      }),
-    } as unknown as jest.Mocked<SmartContract>;
-
-    mockWalletResult.wait.mockResolvedValue(contract);
-    mockWallet.deployToken.mockResolvedValue(mockWalletResult);
+    mockWallet.deployToken.mockResolvedValue(mockSmartContract);
   });
 
   it("should successfully respond", async () => {
@@ -67,7 +63,7 @@ describe("Deploy Token Action", () => {
     const response = await deployToken(mockWallet, args);
 
     expect(mockWallet.deployToken).toHaveBeenCalledWith(args);
-    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(mockSmartContract.wait).toHaveBeenCalled();
     expect(response).toContain(
       `Deployed ERC20 token contract ${MOCK_TOKEN_NAME} (${MOCK_TOKEN_SYMBOL})`,
     );
@@ -89,6 +85,6 @@ describe("Deploy Token Action", () => {
     const response = await deployToken(mockWallet, args);
 
     expect(mockWallet.deployToken).toHaveBeenCalledWith(args);
-    expect(response).toContain(`Error deploying token: ${error.message}`);
+    expect(response).toContain(`Error deploying token: ${error}`);
   });
 });

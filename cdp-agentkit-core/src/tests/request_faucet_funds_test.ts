@@ -28,25 +28,21 @@ describe("Request Faucet Funds Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let faucetTransaction: jest.Mocked<FaucetTransaction>;
+  let mockFaucetTransaction: any;
   let mockWallet: jest.Mocked<Wallet>;
-  let mockWalletResult: any;
 
   beforeEach(() => {
+    mockFaucetTransaction = {
+      wait: jest.fn().mockResolvedValue({
+        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+      } as unknown as jest.Mocked<FaucetTransaction>),
+    };
+
     mockWallet = {
       faucet: jest.fn(),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockWalletResult = {
-      wait: jest.fn(),
-    };
-
-    faucetTransaction = {
-      getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
-    } as unknown as jest.Mocked<FaucetTransaction>;
-
-    mockWalletResult.wait.mockResolvedValue(faucetTransaction);
-    mockWallet.faucet.mockResolvedValue(mockWalletResult);
+    mockWallet.faucet.mockResolvedValue(mockFaucetTransaction);
   });
 
   it("should successfully request faucet funds", async () => {
@@ -54,7 +50,7 @@ describe("Request Faucet Funds Action", () => {
     const response = await requestFaucetFunds(mockWallet, args);
 
     expect(mockWallet.faucet).toHaveBeenCalled();
-    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(mockFaucetTransaction.wait).toHaveBeenCalled();
     expect(response).toContain(`Received ETH from the faucet. Transaction: ${TRANSACTION_LINK}`);
   });
 
@@ -63,7 +59,7 @@ describe("Request Faucet Funds Action", () => {
     const response = await requestFaucetFunds(mockWallet, args);
 
     expect(mockWallet.faucet).toHaveBeenCalledWith(MOCK_ASSET_ID);
-    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(mockFaucetTransaction.wait).toHaveBeenCalled();
     expect(response).toContain(`Received ${MOCK_ASSET_ID} from the faucet`);
     expect(response).toContain(`Transaction: ${TRANSACTION_LINK}`);
   });
@@ -77,6 +73,6 @@ describe("Request Faucet Funds Action", () => {
     const response = await requestFaucetFunds(mockWallet, args);
 
     expect(mockWallet.faucet).toHaveBeenCalled();
-    expect(response).toContain(`Error requesting faucet funds: ${error.message}`);
+    expect(response).toContain(`Error requesting faucet funds: ${error}`);
   });
 });

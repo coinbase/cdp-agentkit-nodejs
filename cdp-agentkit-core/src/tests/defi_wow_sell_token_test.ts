@@ -129,6 +129,6 @@ describe("Wow Sell Token Action", () => {
     const response = await wowSellToken(mockWallet, args);
 
     expect(mockWallet.invokeContract).toHaveBeenCalled();
-    expect(response).toContain(`Error selling Zora Wow ERC20 memecoin ${error.message}`);
+    expect(response).toContain(`Error selling Zora Wow ERC20 memecoin: ${error}`);
   });
 });

@@ -28,11 +28,11 @@ describe("Get Balance Input", () => {
 describe("Get Balance Action", () => {
   const WALLET_ID = "0x123456789abcdef";
 
-  let addresses: jest.Mocked<WalletAddress[]>;
+  let mockAddresses: jest.Mocked<WalletAddress[]>;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(() => {
-    addresses = [
+    mockAddresses = [
       {
         getId: jest.fn().mockReturnValue(crypto.randomUUID()),
         getBalance: jest.fn().mockReturnValue(MOCK_BALANCE),
@@ -52,7 +52,7 @@ describe("Get Balance Action", () => {
       listAddresses: jest.fn(),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockWallet.listAddresses.mockResolvedValue(addresses);
+    mockWallet.listAddresses.mockResolvedValue(mockAddresses);
   });
 
   it("should successfully respond", async () => {
@@ -63,7 +63,7 @@ describe("Get Balance Action", () => {
     const response = await getBalance(mockWallet, args);
 
     expect(mockWallet.listAddresses).toHaveBeenCalledWith();
-    addresses.forEach(address => {
+    mockAddresses.forEach(address => {
       expect(address.getBalance).toHaveBeenCalledWith(MOCK_ASSET_ID);
       expect(response).toContain(`${address.getId()}: ${address.getBalance(MOCK_ASSET_ID)}`);
     });
@@ -81,8 +81,6 @@ describe("Get Balance Action", () => {
     const response = await getBalance(mockWallet, args);
 
     expect(mockWallet.listAddresses).toHaveBeenCalled();
-    expect(response).toContain(
-      `Error getting balance for all addresses in the wallet: ${error.message}`,
-    );
+    expect(response).toContain(`Error getting balance for all addresses in the wallet: ${error}`);
   });
 });

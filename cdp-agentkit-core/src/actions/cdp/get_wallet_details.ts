@@ -24,7 +24,7 @@ export async function getWalletDetails(
     const defaultAddress = await wallet.getDefaultAddress();
     return `Wallet: ${wallet.getId()} on network: ${wallet.getNetworkId()} with default address: ${defaultAddress.getId()}`;
   } catch (error) {
-    return `Error getting wallet details: ${error instanceof Error ? error.message : String(error)}`;
+    return `Error getting wallet details: ${error}`;
   }
 }
 

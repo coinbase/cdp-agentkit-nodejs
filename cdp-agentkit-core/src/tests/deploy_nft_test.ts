@@ -34,30 +34,26 @@ describe("Deploy NFT Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let contract: jest.Mocked<SmartContract>;
+  let mockSmartContract: any;
   let mockWallet: jest.Mocked<Wallet>;
-  let mockWalletResult: any;
 
   beforeEach(() => {
+    mockSmartContract = {
+      wait: jest.fn().mockResolvedValue({
+        getContractAddress: jest.fn().mockReturnValue(CONTRACT_ADDRESS),
+        getTransaction: jest.fn().mockReturnValue({
+          getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
+          getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+        }),
+      } as unknown as jest.Mocked<SmartContract>),
+    };
+
     mockWallet = {
       deployNFT: jest.fn(),
       getNetworkId: jest.fn().mockReturnValue(NETWORK_ID),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockWalletResult = {
-      wait: jest.fn(),
-    };
-
-    contract = {
-      getContractAddress: jest.fn().mockReturnValue(CONTRACT_ADDRESS),
-      getTransaction: jest.fn().mockReturnValue({
-        getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
-        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
-      }),
-    } as unknown as jest.Mocked<SmartContract>;
-
-    mockWalletResult.wait.mockResolvedValue(contract);
-    mockWallet.deployNFT.mockResolvedValue(mockWalletResult);
+    mockWallet.deployNFT.mockResolvedValue(mockSmartContract);
   });
 
   it("should successfully respond", async () => {
@@ -70,7 +66,7 @@ describe("Deploy NFT Action", () => {
     const response = await deployNft(mockWallet, args);
 
     expect(mockWallet.deployNFT).toHaveBeenCalledWith(args);
-    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(mockSmartContract.wait).toHaveBeenCalled();
     expect(response).toContain(`Deployed NFT Collection ${MOCK_NFT_NAME}`);
     expect(response).toContain(`to address ${CONTRACT_ADDRESS}`);
     expect(response).toContain(`on network ${NETWORK_ID}`);
@@ -91,6 +87,6 @@ describe("Deploy NFT Action", () => {
     const response = await deployNft(mockWallet, args);
 
     expect(mockWallet.deployNFT).toHaveBeenCalledWith(args);
-    expect(response).toContain(`Error deploying NFT: ${error.message}`);
+    expect(response).toContain(`Error deploying NFT: ${error}`);
   });
 });

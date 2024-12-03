@@ -33,29 +33,25 @@ describe("Trade Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let trade: jest.Mocked<Trade>;
+  let mockTrade: any;
   let mockWallet: jest.Mocked<Wallet>;
-  let mockWalletResult: any;
 
   beforeEach(async () => {
+    mockTrade = {
+      wait: jest.fn().mockResolvedValue({
+        getToAmount: jest.fn().mockReturnValue(TO_AMOUNT),
+        getTransaction: jest.fn().mockReturnValue({
+          getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
+          getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+        }),
+      } as unknown as jest.Mocked<Trade>),
+    };
+
     mockWallet = {
       createTrade: jest.fn(),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockWalletResult = {
-      wait: jest.fn(),
-    };
-
-    trade = {
-      getToAmount: jest.fn().mockReturnValue(TO_AMOUNT),
-      getTransaction: jest.fn().mockReturnValue({
-        getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
-        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
-      }),
-    } as unknown as jest.Mocked<Trade>;
-
-    mockWalletResult.wait.mockResolvedValue(trade);
-    mockWallet.createTrade.mockResolvedValue(mockWalletResult);
+    mockWallet.createTrade.mockResolvedValue(mockTrade);
   });
 
   it("should successfully execute the trade", async () => {
@@ -68,7 +64,7 @@ describe("Trade Action", () => {
     const response = await createTrade(mockWallet, args);
 
     expect(mockWallet.createTrade).toHaveBeenCalledWith(args);
-    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(mockTrade.wait).toHaveBeenCalled();
     expect(response).toContain(
       `Traded ${MOCK_TRADE_AMOUNT} of ${MOCK_TRADE_ASSET_ID_FROM} for ${TO_AMOUNT} of ${MOCK_TRADE_ASSET_ID_TO}`,
     );
@@ -89,6 +85,6 @@ describe("Trade Action", () => {
     const response = await createTrade(mockWallet, args);
 
     expect(mockWallet.createTrade).toHaveBeenCalled();
-    expect(response).toContain(`Error trading assets: ${error.message}`);
+    expect(response).toContain(`Error trading assets: ${error}`);
   });
 });

@@ -98,7 +98,7 @@ const REGISTRAR_ABI = [
 export const RegisterBasenameInput = z
   .object({
     basename: z.string().describe("The Basename to assign to the agent"),
-    amount: z.string().default("0.002").describe("The amount of the from asset to trade"),
+    amount: z.string().default("0.002").describe("The amount of ETH to pay for registration"),
   })
   .strip()
   .describe("Instructions for registering a Basename");
@@ -183,7 +183,7 @@ export async function registerBasename(
     return `Successfully registered basename ${args.basename} for address ${addressId}`;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error) {
-    return `Error registering basename: ${error}`;
+    return `Error registering basename: Error: ${error}`;
   }
 }
 

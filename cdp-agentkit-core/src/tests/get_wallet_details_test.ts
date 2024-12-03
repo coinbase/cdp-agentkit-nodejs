@@ -17,21 +17,21 @@ describe("Wallet Details Action", () => {
   const NETWORK_ID = Coinbase.networks.BaseSepolia;
   const WALLET_ID = "0x123456789abcdef";
 
+  let mockAddress: jest.Mocked<WalletAddress>;
   let mockWallet: jest.Mocked<Wallet>;
-  let mockWalletAddress: jest.Mocked<WalletAddress>;
 
   beforeEach(() => {
+    mockAddress = {
+      getId: jest.fn().mockReturnValue(ADDRESS_ID),
+    } as unknown as jest.Mocked<WalletAddress>;
+
     mockWallet = {
       getDefaultAddress: jest.fn(),
       getId: jest.fn().mockReturnValue(WALLET_ID),
       getNetworkId: jest.fn().mockReturnValue(NETWORK_ID),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockWalletAddress = {
-      getId: jest.fn().mockReturnValue(ADDRESS_ID),
-    } as unknown as jest.Mocked<WalletAddress>;
-
-    mockWallet.getDefaultAddress.mockResolvedValue(mockWalletAddress);
+    mockWallet.getDefaultAddress.mockResolvedValue(mockAddress);
   });
 
   it("should successfully respond", async () => {
@@ -53,6 +53,6 @@ describe("Wallet Details Action", () => {
     const response = await getWalletDetails(mockWallet, args);
 
     expect(mockWallet.getDefaultAddress).toHaveBeenCalled();
-    expect(response).toContain(`Error getting wallet details: ${error.message}`);
+    expect(response).toContain(`Error getting wallet details: ${error}`);
   });
 });

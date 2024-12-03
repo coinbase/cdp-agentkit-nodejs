@@ -31,29 +31,25 @@ describe("Mint NFT Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let contractInvocation: jest.Mocked<ContractInvocation>;
+  let mockContractInvocation: any;
   let mockWallet: jest.Mocked<Wallet>;
-  let mockWalletResult: any;
 
   beforeEach(() => {
+    mockContractInvocation = {
+      wait: jest.fn().mockResolvedValue({
+        getTransaction: jest.fn().mockReturnValue({
+          getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
+          getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+        }),
+      } as unknown as jest.Mocked<ContractInvocation>),
+    } as unknown as jest.Mocked<Promise<jest.Mocked<ContractInvocation>>>;
+
     mockWallet = {
       invokeContract: jest.fn(),
       getNetworkId: jest.fn().mockReturnValue(NETWORK_ID),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockWalletResult = {
-      wait: jest.fn(),
-    };
-
-    contractInvocation = {
-      getTransaction: jest.fn().mockReturnValue({
-        getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
-        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
-      }),
-    } as unknown as jest.Mocked<ContractInvocation>;
-
-    mockWalletResult.wait.mockResolvedValue(contractInvocation);
-    mockWallet.invokeContract.mockResolvedValue(mockWalletResult);
+    mockWallet.invokeContract.mockResolvedValue(mockContractInvocation);
   });
 
   it("should successfully respond", async () => {
@@ -65,7 +61,7 @@ describe("Mint NFT Action", () => {
     const response = await mintNft(mockWallet, args);
 
     expect(mockWallet.invokeContract).toHaveBeenCalled();
-    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(mockContractInvocation.wait).toHaveBeenCalled();
     expect(response).toContain(`Minted NFT from contract ${MOCK_CONTRACT_ADDRESS}`);
     expect(response).toContain(`to address ${MOCK_CONTRACT_DESTINATION}`);
     expect(response).toContain(`on network ${NETWORK_ID}`);
@@ -85,6 +81,6 @@ describe("Mint NFT Action", () => {
     const response = await mintNft(mockWallet, args);
 
     expect(mockWallet.invokeContract).toHaveBeenCalled();
-    expect(response).toContain(`Error minting NFT: ${error.message}`);
+    expect(response).toContain(`Error minting NFT: ${error}`);
   });
 });

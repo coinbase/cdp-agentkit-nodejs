@@ -1,4 +1,4 @@
-import { Coinbase, Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, ContractInvocation, Wallet } from "@coinbase/coinbase-sdk";
 
 import { registerBasename, RegisterBasenameInput } from "../actions/cdp/register_basename";
 
@@ -37,10 +37,14 @@ describe("Register Basename Action", () => {
    */
   const MOCK_ADDRESS_ID = "0xe6b2af36b3bb8d47206a129ff11d5a2de2a63c83";
 
+  let mockContractInvocation: any;
   let mockWallet: jest.Mocked<Wallet>;
-  let mockWalletResult: any;
 
   beforeEach(() => {
+    mockContractInvocation = {
+      wait: jest.fn().mockResolvedValue({} as unknown as jest.Mocked<ContractInvocation>),
+    };
+
     mockWallet = {
       getDefaultAddress: jest.fn().mockResolvedValue({
         getId: jest.fn().mockReturnValue(MOCK_ADDRESS_ID),
@@ -49,12 +53,7 @@ describe("Register Basename Action", () => {
       invokeContract: jest.fn(),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockWalletResult = {
-      wait: jest.fn(),
-    };
-
-    mockWalletResult.wait.mockResolvedValue({});
-    mockWallet.invokeContract.mockResolvedValue(mockWalletResult);
+    mockWallet.invokeContract.mockResolvedValue(mockContractInvocation);
   });
 
   it(`should Successfully respond with ${MOCK_BASENAME}.base.eth for network: base-mainnet`, async () => {
@@ -66,7 +65,7 @@ describe("Register Basename Action", () => {
     const response = await registerBasename(mockWallet, args);
 
     expect(mockWallet.invokeContract).toHaveBeenCalled();
-    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(mockContractInvocation.wait).toHaveBeenCalled();
     expect(response).toContain(`Successfully registered basename ${MOCK_BASENAME}.base.eth`);
     expect(response).toContain(`for address ${MOCK_ADDRESS_ID}`);
   });
@@ -82,7 +81,7 @@ describe("Register Basename Action", () => {
     const response = await registerBasename(mockWallet, args);
 
     expect(mockWallet.invokeContract).toHaveBeenCalled();
-    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(mockContractInvocation.wait).toHaveBeenCalled();
     expect(response).toContain(`Successfully registered basename ${MOCK_BASENAME}.basetest.eth`);
     expect(response).toContain(`for address ${MOCK_ADDRESS_ID}`);
   });
@@ -99,6 +98,6 @@ describe("Register Basename Action", () => {
     const response = await registerBasename(mockWallet, args);
 
     expect(mockWallet.invokeContract).toHaveBeenCalled();
-    expect(`Error registering basename: ${error.message}`);
+    expect(`Error registering basename: ${error}`);
   });
 });

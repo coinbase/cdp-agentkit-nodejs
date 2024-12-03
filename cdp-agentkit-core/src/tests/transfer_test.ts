@@ -34,26 +34,22 @@ describe("Transfer Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let trade: jest.Mocked<Transfer>;
+  let mockTransfer: any;
   let mockWallet: jest.Mocked<Wallet>;
-  let mockWalletResult: any;
 
   beforeEach(async () => {
+    mockTransfer = {
+      wait: jest.fn().mockResolvedValue({
+        getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
+        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+      } as unknown as jest.Mocked<Transfer>),
+    };
+
     mockWallet = {
       createTransfer: jest.fn(),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockWalletResult = {
-      wait: jest.fn(),
-    };
-
-    trade = {
-      getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
-      getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
-    } as unknown as jest.Mocked<Transfer>;
-
-    mockWalletResult.wait.mockResolvedValue(trade);
-    mockWallet.createTransfer.mockResolvedValue(mockWalletResult);
+    mockWallet.createTransfer.mockResolvedValue(mockTransfer);
   });
 
   it("should successfully respond", async () => {
@@ -67,7 +63,7 @@ describe("Transfer Action", () => {
     const response = await createTransfer(mockWallet, args);
 
     expect(mockWallet.createTransfer).toHaveBeenCalled();
-    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(mockTransfer.wait).toHaveBeenCalled();
     expect(response).toContain(
       `Transferred ${MOCK_AMOUNT} of ${MOCK_ASSET_ID} to ${MOCK_DESTINATION}`,
     );
@@ -89,6 +85,6 @@ describe("Transfer Action", () => {
     const response = await createTransfer(mockWallet, args);
 
     expect(mockWallet.createTransfer).toHaveBeenCalled();
-    expect(response).toContain(`Error transferring the asset: ${error.message}`);
+    expect(response).toContain(`Error transferring the asset: ${error}`);
   });
 });
