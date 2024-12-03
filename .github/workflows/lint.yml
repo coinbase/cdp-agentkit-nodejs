@@ -1,0 +1,40 @@
+name: Lint
+
+on: [pull_request]
+
+jobs:
+  lint-agentkit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+      # Install dependencies in parent directory first
+      - run: npm ci
+      # Then install and lint in working directory
+      - name: Install and lint agentkit
+        working-directory: ./cdp-agentkit-core
+        run: |
+          npm ci
+          npm run lint
+          npm run format
+
+  lint-langchain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+      # Install dependencies in parent directory first  
+      - run: npm ci
+      # Then install and lint in working directory
+      - name: Install and lint langchain
+        working-directory: ./cdp-langchain
+        run: |
+          npm ci
+          npm run lint
+          npm run format
