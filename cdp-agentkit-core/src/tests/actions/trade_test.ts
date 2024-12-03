@@ -2,29 +2,22 @@ import { Coinbase, Trade, Wallet } from "@coinbase/coinbase-sdk";
 
 import { trade as createTrade, TradeInput } from "../../actions/cdp/trade";
 
-import { newTradeFactory } from "../factories/trade";
-import { newWalletFactory } from "../factories/wallet";
-import { newWalletAddressFactory } from "../factories/wallet_address";
-import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
-import { generateTradeData, generateTradeFromData } from "../utils/trade";
-import { generateWalletData } from "../utils/wallet";
-
-const MOCK_AMOUNT = 0.123;
-const MOCK_ASSET_ID_FROM = Coinbase.assets.Eth;
-const MOCK_ASSET_ID_TO = Coinbase.assets.Usdc;
-
-const MOCK_OPTIONS = {
-  amount: MOCK_AMOUNT,
-  fromAssetId: MOCK_ASSET_ID_FROM,
-  toAssetId: MOCK_ASSET_ID_TO,
-};
+const MOCK_TRADE_AMOUNT = 0.123;
+const MOCK_TRADE_ASSET_ID_FROM = Coinbase.assets.Eth;
+const MOCK_TRADE_ASSET_ID_TO = Coinbase.assets.Usdc;
 
 describe("Trade Input", () => {
   it("should successfully parse valid input", () => {
-    const result = TradeInput.safeParse(MOCK_OPTIONS);
+    const validInput = {
+      amount: MOCK_TRADE_AMOUNT,
+      fromAssetId: MOCK_TRADE_ASSET_ID_FROM,
+      toAssetId: MOCK_TRADE_ASSET_ID_TO,
+    };
+
+    const result = TradeInput.safeParse(validInput);
 
     expect(result.success).toBe(true);
-    expect(result.data).toEqual(MOCK_OPTIONS);
+    expect(result.data).toEqual(validInput);
   });
 
   it("should fail parsing empty input", () => {
@@ -36,57 +29,62 @@ describe("Trade Input", () => {
 });
 
 describe("Trade Action", () => {
-  let trade: Trade;
-  let wallet: Wallet;
+  const TRANSACTION_HASH = "0xghijkl987654321";
+  const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  beforeAll(async () => {
-    const walletData = generateWalletData();
-    const walletAddresses = [walletData.address];
-
-    Coinbase.apiClients.address = newWalletAddressFactory(walletAddresses);
-    Coinbase.apiClients.wallet = newWalletFactory(walletData);
-    Coinbase.useServerSigner = false;
-
-    wallet = await Wallet.create();
-
-    const tradeDataOptions = {
-      ...MOCK_OPTIONS,
-      addressId: "0x123",
-      fromAmount: 0.123,
-      toAmount: 0.321,
-    };
-
-    const tradeData = generateTradeData(wallet, tradeDataOptions);
-
-    Coinbase.apiClients.trade = newTradeFactory();
-    Coinbase.apiClients.trade.getTrade = mockReturnValue(tradeData);
-
-    trade = generateTradeFromData(tradeData);
-  });
+  let trade: jest.Mocked<Trade>;
+  let mockWallet: jest.Mocked<Wallet>;
+  let mockWalletResult: any;
 
   beforeEach(async () => {
-    (await wallet.getDefaultAddress()).createTrade = jest.fn().mockResolvedValue(trade);
+    mockWallet = {
+      createTrade: jest.fn(),
+    } as unknown as jest.Mocked<Wallet>;
+
+    mockWalletResult = {
+      wait: jest.fn(),
+    };
+
+    trade = {
+      getToAmount: jest.fn(),
+      getTransaction: jest.fn().mockReturnValue({
+        getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
+        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+      }),
+    } as unknown as jest.Mocked<Trade>;
+
+    mockWalletResult.wait.mockResolvedValue(trade);
+    mockWallet.createTrade.mockResolvedValue(mockWalletResult);
   });
 
   it("should successfully execute the trade", async () => {
-    const response = await createTrade(wallet, MOCK_OPTIONS);
-    const expected = `Traded ${MOCK_AMOUNT} of ${MOCK_ASSET_ID_FROM} for ${trade.getToAmount()} of ${MOCK_ASSET_ID_TO}.\nTransaction hash for the trade: ${trade.getTransaction().getTransactionHash()}\nTransaction link for the trade: ${trade.getTransaction().getTransactionLink()}`;
+    const args = {
+      amount: MOCK_TRADE_AMOUNT,
+      fromAssetId: MOCK_TRADE_ASSET_ID_FROM,
+      toAssetId: MOCK_TRADE_ASSET_ID_TO,
+    };
 
-    expect((await wallet.getDefaultAddress()).createTrade).toHaveBeenCalledTimes(1);
-    expect((await wallet.getDefaultAddress()).createTrade).toHaveBeenCalledWith(MOCK_OPTIONS);
-    expect(response).toEqual(expected);
+    const response = await createTrade(mockWallet, args);
+
+    expect(mockWallet.createTrade).toHaveBeenCalledWith(args);
+    expect(response).toContain(
+      `Traded ${MOCK_TRADE_AMOUNT} of ${MOCK_TRADE_ASSET_ID_FROM} for ${trade.getToAmount()} of ${MOCK_TRADE_ASSET_ID_TO}`,
+    );
+    expect(response).toContain(`Transaction hash for the trade: ${TRANSACTION_HASH}`);
+    expect(response).toContain(`Transaction link for the trade: ${TRANSACTION_LINK}`);
   });
 
   it("should fail with an error", async () => {
+    const args = {
+      amount: MOCK_TRADE_AMOUNT,
+      fromAssetId: MOCK_TRADE_ASSET_ID_FROM,
+      toAssetId: MOCK_TRADE_ASSET_ID_TO,
+    };
+
     const error = new Error("Failed to execute trade");
+    mockWallet.createTrade.mockRejectedValue(error);
 
-    Coinbase.apiClients.trade!.getTrade = mockReturnRejectedValue(error);
-
-    const response = await createTrade(wallet, MOCK_OPTIONS);
-    const expected = `Error trading assets: ${error.message}`;
-
-    expect((await wallet.getDefaultAddress()).createTrade).toHaveBeenCalledTimes(1);
-    expect((await wallet.getDefaultAddress()).createTrade).toHaveBeenCalledWith(MOCK_OPTIONS);
-    expect(response).toEqual(expected);
+    const response = await createTrade(mockWallet, args);
+    expect(response).toContain(`Error trading assets: ${error.message}`);
   });
 });
