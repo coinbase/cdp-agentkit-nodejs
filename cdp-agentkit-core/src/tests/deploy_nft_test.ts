@@ -45,8 +45,8 @@ describe("Deploy NFT Action", () => {
           getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
           getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
         }),
-      } as unknown as jest.Mocked<SmartContract>),
-    };
+      }),
+    } as unknown as jest.Mocked<SmartContract>;
 
     mockWallet = {
       deployNFT: jest.fn(),

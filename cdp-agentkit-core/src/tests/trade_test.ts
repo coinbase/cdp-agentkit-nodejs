@@ -33,7 +33,7 @@ describe("Trade Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let mockTrade: any;
+  let mockTrade: jest.Mocked<Trade>;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(async () => {
@@ -44,8 +44,8 @@ describe("Trade Action", () => {
           getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
           getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
         }),
-      } as unknown as jest.Mocked<Trade>),
-    };
+      }),
+    } as unknown as jest.Mocked<Trade>;
 
     mockWallet = {
       createTrade: jest.fn(),

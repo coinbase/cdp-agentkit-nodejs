@@ -37,13 +37,13 @@ describe("Register Basename Action", () => {
    */
   const MOCK_ADDRESS_ID = "0xe6b2af36b3bb8d47206a129ff11d5a2de2a63c83";
 
-  let mockContractInvocation: any;
+  let mockContractInvocation: jest.Mocked<ContractInvocation>;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(() => {
     mockContractInvocation = {
-      wait: jest.fn().mockResolvedValue({} as unknown as jest.Mocked<ContractInvocation>),
-    };
+      wait: jest.fn().mockResolvedValue({}),
+    } as unknown as jest.Mocked<ContractInvocation>;
 
     mockWallet = {
       getDefaultAddress: jest.fn().mockResolvedValue({

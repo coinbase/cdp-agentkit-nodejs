@@ -33,7 +33,7 @@ describe("Deploy Token Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let mockSmartContract: any;
+  let mockSmartContract: jest.Mocked<SmartContract>;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(() => {
@@ -43,8 +43,8 @@ describe("Deploy Token Action", () => {
         getTransaction: jest.fn().mockReturnValue({
           getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
         }),
-      } as unknown as jest.Mocked<SmartContract>),
-    };
+      }),
+    } as unknown as jest.Mocked<SmartContract>;
 
     mockWallet = {
       deployToken: jest.fn(),

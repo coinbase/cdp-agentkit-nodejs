@@ -56,7 +56,7 @@ describe("Wow Create Token Action", () => {
   const NETWORK_ID = Coinbase.networks.BaseSepolia;
   const TRANSACTION_HASH = "0xghijkl987654321";
 
-  let mockContractInvocation: any;
+  let mockContractInvocation: jest.Mocked<ContractInvocation>;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(() => {

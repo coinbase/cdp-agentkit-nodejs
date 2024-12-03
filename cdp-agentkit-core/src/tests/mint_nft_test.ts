@@ -31,7 +31,7 @@ describe("Mint NFT Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let mockContractInvocation: any;
+  let mockContractInvocation: jest.Mocked<ContractInvocation>;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(() => {
@@ -41,8 +41,8 @@ describe("Mint NFT Action", () => {
           getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
           getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
         }),
-      } as unknown as jest.Mocked<ContractInvocation>),
-    } as unknown as jest.Mocked<Promise<jest.Mocked<ContractInvocation>>>;
+      }),
+    } as unknown as jest.Mocked<ContractInvocation>;
 
     mockWallet = {
       invokeContract: jest.fn(),

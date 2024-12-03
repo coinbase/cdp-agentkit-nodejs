@@ -28,15 +28,15 @@ describe("Request Faucet Funds Action", () => {
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  let mockFaucetTransaction: any;
+  let mockFaucetTransaction: jest.Mocked<FaucetTransaction>;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(() => {
     mockFaucetTransaction = {
       wait: jest.fn().mockResolvedValue({
         getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
-      } as unknown as jest.Mocked<FaucetTransaction>),
-    };
+      }),
+    } as unknown as jest.Mocked<FaucetTransaction>;
 
     mockWallet = {
       faucet: jest.fn(),
