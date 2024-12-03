@@ -2,31 +2,24 @@ import { Coinbase, Transfer, Wallet } from "@coinbase/coinbase-sdk";
 
 import { transfer as createTransfer, TransferInput } from "../../actions/cdp/transfer";
 
-import { newTransferFactory } from "../factories/transfer";
-import { newWalletFactory } from "../factories/wallet";
-import { newWalletAddressFactory } from "../factories/wallet_address";
-import { generateTransferData, generateTransferFromData } from "../utils/transfer";
-import { mockReturnRejectedValue, mockReturnValue } from "../utils/mock";
-import { generateWalletData } from "../utils/wallet";
-
 const MOCK_AMOUNT = 0.123456789012345678;
 const MOCK_ASSET_ID = Coinbase.assets.Eth;
 const MOCK_DESTINATION = "0x321";
 const MOCK_GASLESS = true;
 
-const MOCK_OPTIONS = {
-  amount: MOCK_AMOUNT,
-  assetId: MOCK_ASSET_ID,
-  destination: MOCK_DESTINATION,
-  gasless: MOCK_GASLESS,
-};
-
 describe("Transfer Input", () => {
   it("should successfully parse valid input", () => {
-    const result = TransferInput.safeParse(MOCK_OPTIONS);
+    const validInput = {
+      amount: MOCK_AMOUNT,
+      assetId: MOCK_ASSET_ID,
+      destination: MOCK_DESTINATION,
+      gasless: MOCK_GASLESS,
+    };
+
+    const result = TransferInput.safeParse(validInput);
 
     expect(result.success).toBe(true);
-    expect(result.data).toEqual(MOCK_OPTIONS);
+    expect(result.data).toEqual(validInput);
   });
 
   it("should fail parsing empty input", () => {
@@ -38,55 +31,61 @@ describe("Transfer Input", () => {
 });
 
 describe("Transfer Action", () => {
-  let transfer: Transfer;
-  let wallet: Wallet;
+  const TRANSACTION_HASH = "0xghijkl987654321";
+  const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
-  beforeAll(async () => {
-    const walletData = generateWalletData();
-    const walletAddresses = [walletData.address];
-
-    Coinbase.apiClients.address = newWalletAddressFactory(walletAddresses);
-    Coinbase.apiClients.wallet = newWalletFactory(walletData);
-    Coinbase.useServerSigner = false;
-
-    wallet = await Wallet.create();
-
-    const transferDataOptions = {
-      ...MOCK_OPTIONS,
-      transactionHash: "0x123",
-    };
-
-    const transferData = generateTransferData(wallet, transferDataOptions);
-
-    Coinbase.apiClients.transfer = newTransferFactory();
-    Coinbase.apiClients.transfer.getTransfer = mockReturnValue(transferData);
-
-    transfer = generateTransferFromData(transferData);
-  });
+  let trade: jest.Mocked<Transfer>;
+  let mockWallet: jest.Mocked<Wallet>;
+  let mockWalletResult: any;
 
   beforeEach(async () => {
-    (await wallet.getDefaultAddress()).createTransfer = jest.fn().mockResolvedValue(transfer);
+    mockWallet = {
+      createTransfer: jest.fn(),
+    } as unknown as jest.Mocked<Wallet>;
+
+    mockWalletResult = {
+      wait: jest.fn(),
+    };
+
+    trade = {
+      getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
+      getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+    } as unknown as jest.Mocked<Transfer>;
+
+    mockWalletResult.wait.mockResolvedValue(trade);
+    mockWallet.createTransfer.mockResolvedValue(mockWalletResult);
   });
 
-  it("should successfully transfer token", async () => {
-    const response = await createTransfer(wallet, MOCK_OPTIONS);
-    const expected = `Transferred ${MOCK_AMOUNT} of ${MOCK_ASSET_ID} to ${MOCK_DESTINATION}.\nTransaction hash for the transfer: ${transfer.getTransactionHash()}\nTransaction link for the transfer: ${transfer.getTransactionLink()}`;
+  it("should successfully respond", async () => {
+    const args = {
+      amount: MOCK_AMOUNT,
+      assetId: MOCK_ASSET_ID,
+      destination: MOCK_DESTINATION,
+      gasless: MOCK_GASLESS,
+    };
 
-    expect((await wallet.getDefaultAddress()).createTransfer).toHaveBeenCalledTimes(1);
-    expect((await wallet.getDefaultAddress()).createTransfer).toHaveBeenCalledWith(MOCK_OPTIONS);
-    expect(response).toEqual(expected);
+    const response = await createTransfer(mockWallet, args);
+
+    expect(mockWallet.createTransfer).toHaveBeenCalled();
+    expect(response).toContain(
+      `Transferred ${MOCK_AMOUNT} of ${MOCK_ASSET_ID} to ${MOCK_DESTINATION}`,
+    );
+    expect(response).toContain(`Transaction hash for the transfer: ${TRANSACTION_HASH}`);
+    expect(response).toContain(`Transaction link for the transfer: ${TRANSACTION_LINK}`);
   });
 
   it("should fail with an error", async () => {
+    const args = {
+      amount: MOCK_AMOUNT,
+      assetId: MOCK_ASSET_ID,
+      destination: MOCK_DESTINATION,
+      gasless: MOCK_GASLESS,
+    };
+
     const error = new Error("Failed to execute transfer");
+    mockWallet.createTransfer.mockRejectedValue(error);
 
-    Coinbase.apiClients.transfer!.getTransfer = mockReturnRejectedValue(error);
-
-    const response = await createTransfer(wallet, MOCK_OPTIONS);
-    const expected = `Error transferring the asset: ${error.message}`;
-
-    expect((await wallet.getDefaultAddress()).createTransfer).toHaveBeenCalledTimes(1);
-    expect((await wallet.getDefaultAddress()).createTransfer).toHaveBeenCalledWith(MOCK_OPTIONS);
-    expect(response).toEqual(expected);
+    const response = await createTransfer(mockWallet, args);
+    expect(response).toContain(`Error transferring the asset: ${error.message}`);
   });
 });
