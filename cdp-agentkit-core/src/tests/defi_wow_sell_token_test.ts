@@ -12,13 +12,14 @@ jest.mock("../actions/cdp/defi/wow/uniswap/utils", () => ({
   getHasGraduated: jest.fn(),
 }));
 
-const CONTRACT_ADDRESS = "0x036cbd53842c5426634e7929541ec2318f3dcf7e";
+const MOCK_CONTRACT_ADDRESS = "0x036cbd53842c5426634e7929541ec2318f3dcf7e";
+const MOCK_AMOUNT_TOKENS_IN_WEI = "1000000000000000000";
 
 describe("Wow Sell Token Input", () => {
   it("should successfully parse valid input", () => {
     const validInput = {
-      contractAddress: CONTRACT_ADDRESS,
-      amountTokensInWei: "1000000000000000000",
+      contractAddress: MOCK_CONTRACT_ADDRESS,
+      amountTokensInWei: MOCK_AMOUNT_TOKENS_IN_WEI,
     };
 
     const result = WowSellTokenInput.safeParse(validInput);
@@ -29,7 +30,7 @@ describe("Wow Sell Token Input", () => {
 
   it("should fail with missing amountTokensInWei", () => {
     const invalidInput = {
-      contractAddress: CONTRACT_ADDRESS,
+      contractAddress: MOCK_CONTRACT_ADDRESS,
     };
     const result = WowSellTokenInput.safeParse(invalidInput);
 
@@ -38,8 +39,8 @@ describe("Wow Sell Token Input", () => {
 
   it("does not fail with invalid contract address", () => {
     const invalidInput = {
-      contractAddress: CONTRACT_ADDRESS,
-      amountTokensInWei: "1000000000000000000",
+      contractAddress: MOCK_CONTRACT_ADDRESS,
+      amountTokensInWei: MOCK_AMOUNT_TOKENS_IN_WEI,
     };
     const result = WowSellTokenInput.safeParse(invalidInput);
 
@@ -48,7 +49,7 @@ describe("Wow Sell Token Input", () => {
 
   it("does not fail with non-numeric amountTokensInWei", () => {
     const invalidInput = {
-      contractAddress: CONTRACT_ADDRESS,
+      contractAddress: MOCK_CONTRACT_ADDRESS,
       amountTokensInWei: "not_a_number",
     };
     const result = WowSellTokenInput.safeParse(invalidInput);
@@ -88,8 +89,8 @@ describe("Wow Sell Token Action", () => {
 
   it("should successfully sell tokens", async () => {
     const args = {
-      contractAddress: CONTRACT_ADDRESS,
-      amountTokensInWei: "1000000000000000000",
+      contractAddress: MOCK_CONTRACT_ADDRESS,
+      amountTokensInWei: MOCK_AMOUNT_TOKENS_IN_WEI,
     };
 
     (getHasGraduated as jest.Mock).mockResolvedValue(true);
@@ -117,8 +118,8 @@ describe("Wow Sell Token Action", () => {
 
   it("should handle errors when selling tokens", async () => {
     const args = {
-      contractAddress: CONTRACT_ADDRESS,
-      amountTokensInWei: "1000000000000000000",
+      contractAddress: MOCK_CONTRACT_ADDRESS,
+      amountTokensInWei: MOCK_AMOUNT_TOKENS_IN_WEI,
     };
 
     const error = new Error("An error has occurred");
