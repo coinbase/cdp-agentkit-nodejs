@@ -64,7 +64,7 @@ describe("Wow Sell Token Action", () => {
   const RECIPIENT_ID = "0x123456789abcdef";
   const TRANSACTION_HASH = "0xghijkl987654321";
 
-  let mockInvocation: jest.Mocked<ContractInvocation>;
+  let mockContractInvocation: jest.Mocked<ContractInvocation>;
   let mockWallet: jest.Mocked<Wallet>;
 
   beforeEach(() => {
@@ -76,7 +76,7 @@ describe("Wow Sell Token Action", () => {
       }),
     } as unknown as jest.Mocked<Wallet>;
 
-    mockInvocation = {
+    mockContractInvocation = {
       wait: jest.fn().mockResolvedValue({
         getTransaction: jest.fn().mockReturnValue({
           getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
@@ -84,7 +84,7 @@ describe("Wow Sell Token Action", () => {
       }),
     } as unknown as jest.Mocked<ContractInvocation>;
 
-    mockWallet.invokeContract.mockResolvedValue(mockInvocation);
+    mockWallet.invokeContract.mockResolvedValue(mockContractInvocation);
   });
 
   it("should successfully sell tokens", async () => {
@@ -98,16 +98,6 @@ describe("Wow Sell Token Action", () => {
 
     const response = await wowSellToken(mockWallet, args);
 
-    // expect(mockWallet.invokeContract).toHaveBeenCalledWith({
-    //   contractAddress: args.contractAddress,
-    //   method: "sell",
-    //   abi: expect.anything(),
-    //   args: expect.objectContaining({
-    //     tokensToSell: args.amountTokensInWei,
-    //     recipient: "0x123",
-    //   }),
-    // });
-    //
     expect(mockWallet.invokeContract).toHaveBeenCalled();
     expect(getSellQuote).toHaveBeenCalled();
     expect(getHasGraduated).toHaveBeenCalled();
