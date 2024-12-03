@@ -45,7 +45,7 @@ describe("CdpTool", () => {
       let tool;
 
       beforeAll(() => {
-        const inputSchema = z
+        inputSchema = z
           .object({
             property: z.string().describe("a property for input"),
           })
