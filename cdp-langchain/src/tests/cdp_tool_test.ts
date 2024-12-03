@@ -12,6 +12,7 @@ describe("CdpTool", () => {
 
   beforeAll(async () => {
     mockWallet = {} as unknown as jest.Mocked<Wallet>;
+    jest.spyOn(Wallet, "create").mockResolvedValue(mockWallet);
   });
 
   describe("initialization", () => {

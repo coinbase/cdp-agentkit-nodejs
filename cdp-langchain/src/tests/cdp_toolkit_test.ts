@@ -18,14 +18,12 @@ describe("CdpToolkit", () => {
     process.env.CDP_API_KEY_PRIVATE_KEY = "test-private-key";
 
     mockWallet = {} as unknown as jest.Mocked<Wallet>;
+    jest.spyOn(Wallet, "create").mockResolvedValue(mockWallet);
   });
 
   describe("initialization", () => {
     it("should successfully init with env", async () => {
-      const options = {
-        wallet: mockWallet,
-      };
-
+      const options = {};
       await expect(CdpAgentkit.configureWithWallet(options)).resolves.toBeDefined();
     });
 
@@ -33,19 +31,10 @@ describe("CdpToolkit", () => {
       const options = {
         cdpApiKeyName: "test-key",
         cdpApiKeyPrivateKey: "test-private-key",
-        wallet: mockWallet,
       };
 
       process.env.CDP_API_KEY_NAME = "";
       process.env.CDP_API_KEY_PRIVATE_KEY = "";
-
-      await expect(CdpAgentkit.configureWithWallet(options)).resolves.toBeDefined();
-    });
-
-    it("should successfully init with wallet", async () => {
-      const options = {
-        wallet: mockWallet,
-      };
 
       await expect(CdpAgentkit.configureWithWallet(options)).resolves.toBeDefined();
     });
@@ -61,9 +50,7 @@ describe("CdpToolkit", () => {
     });
 
     it("should fail init without env", async () => {
-      const options = {
-        wallet: mockWallet,
-      };
+      const options = {};
 
       process.env.CDP_API_KEY_NAME = "";
       process.env.CDP_API_KEY_PRIVATE_KEY = "";
@@ -76,7 +63,6 @@ describe("CdpToolkit", () => {
     const options = {
       cdpApiKeyName: "test-key",
       cdpApiKeyPrivateKey: "test-private-key",
-      wallet: mockWallet,
     };
 
     const agentkit = await CdpAgentkit.configureWithWallet(options);
