@@ -12,7 +12,7 @@ This tool will buy a Zora Wow ERC20 memecoin with ETH. This tool takes the WOW t
 /**
  * Input schema for buy token action.
  */
-const WowBuyTokenInput = z
+export const WowBuyTokenInput = z
   .object({
     contractAddress: z.string().describe("The WOW token contract address"),
     amountEthInWei: z.string().describe("Amount of ETH to spend (in wei)"),
@@ -27,7 +27,7 @@ const WowBuyTokenInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the token purchase details.
  */
-async function wowBuyToken(
+export async function wowBuyToken(
   wallet: Wallet,
   args: z.infer<typeof WowBuyTokenInput>,
 ): Promise<string> {
@@ -63,7 +63,7 @@ async function wowBuyToken(
     const result = await invocation.wait();
     return `Purchased WoW ERC20 memecoin with transaction hash: ${result.getTransaction().getTransactionHash()}`;
   } catch (error) {
-    return `Error buying Zora Wow ERC20 memecoin ${error}`;
+    return `Error buying Zora Wow ERC20 memecoin: ${error}`;
   }
 }
 

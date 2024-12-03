@@ -8,7 +8,7 @@ This tool will trade a specified amount of a from asset to a to asset for the wa
 /**
  * Input schema for trade action.
  */
-const TradeInput = z
+export const TradeInput = z
   .object({
     amount: z.custom<Amount>().describe("The amount of the from asset to trade"),
     fromAssetId: z.string().describe("The from asset ID to trade"),
@@ -24,7 +24,7 @@ const TradeInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the trade details.
  */
-async function trade(wallet: Wallet, args: z.infer<typeof TradeInput>): Promise<string> {
+export async function trade(wallet: Wallet, args: z.infer<typeof TradeInput>): Promise<string> {
   try {
     const tradeResult = await wallet.createTrade({
       amount: args.amount,

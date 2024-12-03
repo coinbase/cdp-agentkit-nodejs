@@ -8,7 +8,7 @@ This tool will mint an NFT (ERC-721) to a specified destination address onchain 
 /**
  * Input schema for mint NFT action.
  */
-const MintNftInput = z
+export const MintNftInput = z
   .object({
     contractAddress: z.string().describe("The contract address of the NFT to mint"),
     destination: z.string().describe("The destination address that will receive the NFT"),
@@ -23,7 +23,7 @@ const MintNftInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the NFT mint details.
  */
-async function mintNft(wallet: Wallet, args: z.infer<typeof MintNftInput>): Promise<string> {
+export async function mintNft(wallet: Wallet, args: z.infer<typeof MintNftInput>): Promise<string> {
   const mintArgs = {
     to: args.destination,
     quantity: "1",

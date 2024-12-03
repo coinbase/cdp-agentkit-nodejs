@@ -8,7 +8,7 @@ This tool will transfer an asset from the wallet to another onchain address. It 
 /**
  * Input schema for transfer action.
  */
-const TransferInput = z
+export const TransferInput = z
   .object({
     amount: z.custom<Amount>().describe("The amount of the asset to transfer"),
     assetId: z.string().describe("The asset ID to transfer"),
@@ -25,7 +25,10 @@ const TransferInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the transfer details.
  */
-async function transfer(wallet: Wallet, args: z.infer<typeof TransferInput>): Promise<string> {
+export async function transfer(
+  wallet: Wallet,
+  args: z.infer<typeof TransferInput>,
+): Promise<string> {
   try {
     const transferResult = await wallet.createTransfer({
       amount: args.amount,

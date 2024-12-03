@@ -9,7 +9,7 @@ This tool will get the balance of all the addresses in the wallet for a given as
 /**
  * Input schema for get balance action.
  */
-const GetBalanceInput = z
+export const GetBalanceInput = z
   .object({
     assetId: z.string().describe("The asset ID to get the balance for"),
   })
@@ -23,7 +23,10 @@ const GetBalanceInput = z
  * @param args - The input arguments for the action.
  * @returns A message containing the balance information.
  */
-async function getBalance(wallet: Wallet, args: z.infer<typeof GetBalanceInput>): Promise<string> {
+export async function getBalance(
+  wallet: Wallet,
+  args: z.infer<typeof GetBalanceInput>,
+): Promise<string> {
   const balances: Record<string, Decimal> = {};
 
   try {

@@ -11,7 +11,7 @@ from another wallet and provide the user with your wallet details.`;
 /**
  * Input schema for request faucet funds action.
  */
-const RequestFaucetFundsInput = z
+export const RequestFaucetFundsInput = z
   .object({
     assetId: z.string().optional().describe("The optional asset ID to request from faucet"),
   })
@@ -25,7 +25,7 @@ const RequestFaucetFundsInput = z
  * @param args - The input arguments for the action.
  * @returns A confirmation message with transaction details.
  */
-async function requestFaucetFunds(
+export async function requestFaucetFunds(
   wallet: Wallet,
   args: z.infer<typeof RequestFaucetFundsInput>,
 ): Promise<string> {
@@ -34,9 +34,9 @@ async function requestFaucetFunds(
     const faucetTx = await wallet.faucet(args.assetId || undefined);
 
     // Wait for the faucet transaction to be confirmed
-    await faucetTx.wait();
+    const result = await faucetTx.wait();
 
-    return `Received ${args.assetId || "ETH"} from the faucet. Transaction: ${faucetTx.getTransactionLink()}`;
+    return `Received ${args.assetId || "ETH"} from the faucet. Transaction: ${result.getTransactionLink()}`;
   } catch (error) {
     return `Error requesting faucet funds: ${error}`;
   }

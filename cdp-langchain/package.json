@@ -4,9 +4,7 @@
   "description": "Langchain Toolkit extension of CDP Agentkit",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsc",
     "lint": "npx --yes eslint -c .eslintrc.json src/**/*.ts",
@@ -14,7 +12,7 @@
     "format": "npx --yes prettier -c .prettierrc --write \"**/*.{ts,js,cjs,json,md}\"",
     "format-check": "npx --yes prettier -c .prettierrc --check \"**/*.{ts,js,cjs,json,md}\"",
     "check": "tsc --noEmit",
-    "test": "npx --yes jest --no-cache --testMatch=**/*_test.ts",
+    "test": "npx jest --no-cache --testMatch='**/*_test.ts'",
     "test:dry-run": "npm install && npm ci && npm publish --dry-run",
     "test:e2e": "npx jest --no-cache --testMatch=**/e2e.ts --coverageThreshold '{}'",
     "test:types": "tsd --files src/tests/types.test-d.ts",
@@ -41,5 +39,8 @@
     "@coinbase/coinbase-sdk": "^0.11.0",
     "@langchain/core": "^0.3.19",
     "zod": "^3.22.4"
+  },
+  "peerDependencies": {
+    "@coinbase/coinbase-sdk": "^0.11.0"
   }
 }
