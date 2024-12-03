@@ -5,29 +5,68 @@ import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 import { CdpToolkit } from "../toolkits/cdp_toolkit";
 
 describe("CdpToolkit", () => {
+  const WALLET_ID = "0x123456789abcdef";
+  const WALLET_SEED = "0xc746290109d0b86162c428be6e27f552";
+  const WALLET_JSON = `{\"defaultAddressId\":\"0xabcdef123456789\", \"seed\":\"0xc746290109d0b86162c428be6e27f552\", \"walletId\":\"${WALLET_ID}\"}`;
+
   let agentkit: CdpAgentkit;
   let toolkit: CdpToolkit;
   let mockWallet: jest.Mocked<Wallet>;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    process.env.CDP_API_KEY_NAME = "test-key";
+    process.env.CDP_API_KEY_PRIVATE_KEY = "test-private-key";
+
     mockWallet = {} as unknown as jest.Mocked<Wallet>;
   });
 
   describe("initialization", () => {
     it("should successfully init with env", async () => {
       const options = {
-        cdpApiKeyName: "test-key",
-        cdpApiKeyPrivateKey: "test-private-key",
         wallet: mockWallet,
       };
 
       await expect(CdpAgentkit.configureWithWallet(options)).resolves.toBeDefined();
     });
 
+    it("should successfully init with options and without env", async () => {
+      const options = {
+        cdpApiKeyName: "test-key",
+        cdpApiKeyPrivateKey: "test-private-key",
+        wallet: mockWallet,
+      };
+
+      process.env.CDP_API_KEY_NAME = "";
+      process.env.CDP_API_KEY_PRIVATE_KEY = "";
+
+      await expect(CdpAgentkit.configureWithWallet(options)).resolves.toBeDefined();
+    });
+
+    it("should successfully init with wallet", async () => {
+      const options = {
+        wallet: mockWallet,
+      };
+
+      await expect(CdpAgentkit.configureWithWallet(options)).resolves.toBeDefined();
+    });
+
+    it("should successfully init with wallet data", async () => {
+      const options = {
+        cdpWalletData: "{}",
+      };
+
+      jest.spyOn(Wallet, "import").mockResolvedValue(mockWallet);
+
+      await expect(CdpAgentkit.configureWithWallet(options)).toBeDefined();
+    });
+
     it("should fail init without env", async () => {
       const options = {
         wallet: mockWallet,
       };
+
+      process.env.CDP_API_KEY_NAME = "";
+      process.env.CDP_API_KEY_PRIVATE_KEY = "";
 
       await expect(CdpAgentkit.configureWithWallet(options)).rejects.toThrow();
     });

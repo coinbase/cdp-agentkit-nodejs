@@ -52,7 +52,7 @@ describe("CdpTool", () => {
           .describe("mock tool input");
 
         const toolFn = async (input: z.infer<typeof inputSchema>) => {
-          return "expected-return";
+          return `expected-return with property: ${input.property}`;
         };
 
         tool = new CdpTool(
@@ -67,20 +67,20 @@ describe("CdpTool", () => {
       });
 
       it("should be successful", async () => {
-        const input = { property: "value" };
-        const result = await tool.call(input);
+        const args = { property: "value" };
+        const result = await tool.call(args);
 
-        expect(result).toEqual("expected-return");
+        expect(result).toEqual(`expected-return with property: ${args.property}`);
       });
 
       it("should be successful with valid input", () => {
-        const input = { property: "value" };
-        expect(tool.call(input)).toBeDefined();
+        const args = { property: "value" };
+        expect(tool.call(args)).toBeDefined();
       });
 
       it("should fail", async () => {
-        const toolErr = new Error("An error has occured");
-        const toolFn = jest.fn().mockRejectedValue(toolErr);
+        const error = new Error("An error has occured");
+        const toolFn = jest.fn().mockRejectedValue(error);
         const tool = new CdpTool(
           {
             name: "test-tool",
@@ -91,16 +91,15 @@ describe("CdpTool", () => {
           agentkit,
         );
 
-        const input = { property: "value" };
-        const result = await tool.call(input);
-        const expected = `Error executing ${tool.name}: ${toolErr.message}`;
+        const args = { property: "value" };
+        const result = await tool.call(args);
 
-        expect(result).toEqual(expected);
+        expect(result).toEqual(`Error executing ${tool.name}: ${error.message}`);
       });
 
       it("should fail with invalid input", () => {
-        const input = {};
-        expect(tool.call(input)).rejects.toThrow();
+        const args = {};
+        expect(tool.call(args)).rejects.toThrow();
       });
     });
   });
