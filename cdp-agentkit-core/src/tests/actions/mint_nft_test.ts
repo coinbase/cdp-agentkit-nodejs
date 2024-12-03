@@ -4,9 +4,6 @@ import { mintNft, MintNftInput } from "../../actions/cdp/mint_nft";
 
 const MOCK_CONTRACT_ADDRESS = "0x123456789abcdef";
 const MOCK_CONTRACT_DESTINATION = "0xabcdef123456789";
-const MOCK_TRANSACTION_HASH = "0xghijkl987654321";
-const MOCK_TRANSACTION_LINK = `https://etherscan.io/tx/${MOCK_TRANSACTION_HASH}`;
-const MOCK_WALLET_NETWORK_ID = Coinbase.networks.BaseSepolia;
 
 describe("Mint NFT Input", () => {
   it("should successfully parse valid input", () => {
@@ -21,7 +18,7 @@ describe("Mint NFT Input", () => {
     expect(result.data).toEqual(validInput);
   });
 
-  it("sould fail parsing empty input", () => {
+  it("should fail parsing empty input", () => {
     const emptyInput = {};
     const result = MintNftInput.safeParse(emptyInput);
 
@@ -30,15 +27,18 @@ describe("Mint NFT Input", () => {
 });
 
 describe("Mint NFT Action", () => {
+  const NETWORK_ID = Coinbase.networks.BaseSepolia;
+  const TRANSACTION_HASH = "0xghijkl987654321";
+  const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
+
   let contractInvocation: jest.Mocked<ContractInvocation>;
-  let contractInvocationTransaction: jest.Mocked<Transaction>;
   let mockWallet: jest.Mocked<Wallet>;
   let mockWalletResult: any;
 
   beforeEach(() => {
     mockWallet = {
       invokeContract: jest.fn(),
-      getNetworkId: jest.fn().mockReturnValue(MOCK_WALLET_NETWORK_ID),
+      getNetworkId: jest.fn().mockReturnValue(NETWORK_ID),
     } as unknown as jest.Mocked<Wallet>;
 
     mockWalletResult = {
@@ -46,18 +46,11 @@ describe("Mint NFT Action", () => {
     };
 
     contractInvocation = {
-      getTransaction: jest.fn(),
+      getTransaction: jest.fn().mockReturnValue({
+        getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
+        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+      }),
     } as unknown as jest.Mocked<ContractInvocation>;
-
-    contractInvocationTransaction = {
-      getTransactionHash: jest.fn(),
-      getTransactionLink: jest.fn(),
-    } as unknown as jest.Mocked<Transaction>;
-
-    contractInvocationTransaction.getTransactionHash.mockReturnValue(MOCK_TRANSACTION_HASH);
-    contractInvocationTransaction.getTransactionLink.mockReturnValue(MOCK_TRANSACTION_LINK);
-
-    contractInvocation.getTransaction.mockReturnValue(contractInvocationTransaction);
 
     mockWalletResult.wait.mockResolvedValue(contractInvocation);
     mockWallet.invokeContract.mockResolvedValue(mockWalletResult);
@@ -71,11 +64,13 @@ describe("Mint NFT Action", () => {
 
     const response = await mintNft(mockWallet, args);
 
+    expect(mockWallet.invokeContract).toHaveBeenCalled();
+    expect(mockWalletResult.wait).toHaveBeenCalled();
     expect(response).toContain(`Minted NFT from contract ${MOCK_CONTRACT_ADDRESS}`);
     expect(response).toContain(`to address ${MOCK_CONTRACT_DESTINATION}`);
-    expect(response).toContain(`on network ${mockWallet.getNetworkId()}`);
-    expect(response).toContain(`Transaction hash for the mint: ${MOCK_TRANSACTION_HASH}`);
-    expect(response).toContain(`Transaction link for the mint: ${MOCK_TRANSACTION_LINK}`);
+    expect(response).toContain(`on network ${NETWORK_ID}`);
+    expect(response).toContain(`Transaction hash for the mint: ${TRANSACTION_HASH}`);
+    expect(response).toContain(`Transaction link for the mint: ${TRANSACTION_LINK}`);
   });
 
   it("should fail with an error", async () => {
@@ -88,6 +83,8 @@ describe("Mint NFT Action", () => {
     mockWallet.invokeContract.mockRejectedValue(error);
 
     const response = await mintNft(mockWallet, args);
+
+    expect(mockWallet.invokeContract).toHaveBeenCalled();
     expect(response).toContain(`Error minting NFT: ${error.message}`);
   });
 });

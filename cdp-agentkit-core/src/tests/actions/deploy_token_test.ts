@@ -1,60 +1,60 @@
-import { Wallet } from "@coinbase/coinbase-sdk";
+import { SmartContract, Wallet } from "@coinbase/coinbase-sdk";
 
 import { deployToken, DeployTokenInput } from "../../actions/cdp/deploy_token";
-
-jest.mock("@coinbase/coinbase-sdk", () => ({
-    Wallet: jest.fn(),
-}));
 
 const MOCK_TOKEN_NAME = "Test Token";
 const MOCK_TOKEN_SYMBOL = "TEST";
 const MOCK_TOKEN_SUPPLY = 100;
 
-describe("Deploy Token", () => {
-  let contract: any;
-  let mockContract: any;
-  let mockWallet: jest.Mocked<Wallet>;
-
-  beforeEach(() => {
-    mockContract = {
-      wait: jest.fn(),
+describe("Deploy Token Input", () => {
+  it("should successfully parse valid input", () => {
+    const validInput = {
+      name: MOCK_TOKEN_NAME,
+      symbol: MOCK_TOKEN_SYMBOL,
+      totalSupply: MOCK_TOKEN_SUPPLY,
     };
 
+    const result = DeployTokenInput.safeParse(validInput);
+
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual(validInput);
+  });
+
+  it("should fail parsing empty input", () => {
+    const emptyInput = {};
+    const result = DeployTokenInput.safeParse(emptyInput);
+
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("Deploy Token Action", () => {
+  const CONTRACT_ADDRESS = "0x123456789abcdef";
+  const TRANSACTION_HASH = "0xghijkl987654321";
+  const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
+
+  let contract: jest.Mocked<SmartContract>;
+  let mockWallet: jest.Mocked<Wallet>;
+  let mockWalletResult: any;
+
+  beforeEach(() => {
     mockWallet = {
       deployToken: jest.fn(),
     } as unknown as jest.Mocked<Wallet>;
 
-    contract = {
-      getContractAddress: jest.fn().mockReturnValue("0x123456789abcdef"),
-      getTransaction: jest.fn().mockReturnValue({
-        getTransactionLink: jest.fn().mockReturnValue("https://etherscan.io/tx/0xabcdef123456789"),
-      }),
+    mockWalletResult = {
+      wait: jest.fn(),
     };
 
-    mockContract.wait.mockResolvedValue(contract);
-    mockWallet.deployToken.mockResolvedValue(mockContract);
-  });
+    contract = {
+      getContractAddress: jest.fn().mockReturnValue(CONTRACT_ADDRESS),
+      getTransaction: jest.fn().mockReturnValue({
+        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
+      }),
+    } as unknown as jest.Mocked<SmartContract>;
 
-  describe("input", () => {
-    it("should successfully parse valid input", () => {
-      const validInput = {
-        name: MOCK_TOKEN_NAME,
-        symbol: MOCK_TOKEN_SYMBOL,
-        totalSupply: MOCK_TOKEN_SUPPLY,
-      };
-
-      const result = DeployTokenInput.safeParse(validInput);
-
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(validInput);
-    });
-
-    it("sould fail parsing empty input", () => {
-      const emptyInput = {};
-      const result = DeployTokenInput.safeParse(emptyInput);
-
-      expect(result.success).toBe(false);
-    });
+    mockWalletResult.wait.mockResolvedValue(contract);
+    mockWallet.deployToken.mockResolvedValue(mockWalletResult);
   });
 
   it("should successfully respond", async () => {
@@ -67,9 +67,13 @@ describe("Deploy Token", () => {
     const response = await deployToken(mockWallet, args);
 
     expect(mockWallet.deployToken).toHaveBeenCalledWith(args);
-    expect(mockContract.wait).toHaveBeenCalled();
-    expect(response).toContain(`Deployed ERC20 token contract ${MOCK_TOKEN_NAME} (${MOCK_TOKEN_SYMBOL}) with total supply of ${MOCK_TOKEN_SUPPLY} tokens at address ${contract.getContractAddress()}.`);
-    expect(response).toContain(`Transaction link: ${contract.getTransaction().getTransactionLink()}`);
+    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(response).toContain(
+      `Deployed ERC20 token contract ${MOCK_TOKEN_NAME} (${MOCK_TOKEN_SYMBOL})`,
+    );
+    expect(response).toContain(`with total supply of ${MOCK_TOKEN_SUPPLY}`);
+    expect(response).toContain(`tokens at address ${CONTRACT_ADDRESS}`);
+    expect(response).toContain(`Transaction link: ${TRANSACTION_LINK}`);
   });
 
   it("should fail with an error", async () => {

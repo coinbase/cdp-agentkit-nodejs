@@ -57,6 +57,7 @@ describe("Request Faucet Funds Action", () => {
     const response = await requestFaucetFunds(mockWallet, args);
 
     expect(mockWallet.faucet).toHaveBeenCalled();
+    expect(mockWalletResult.wait).toHaveBeenCalled();
     expect(response).toContain(`Received ETH from the faucet. Transaction: ${TRANSACTION_LINK}`);
   });
 
@@ -65,12 +66,13 @@ describe("Request Faucet Funds Action", () => {
     const response = await requestFaucetFunds(mockWallet, args);
 
     expect(mockWallet.faucet).toHaveBeenCalledWith(MOCK_ASSET_ID);
+    expect(mockWalletResult.wait).toHaveBeenCalled();
     expect(response).toContain(`Received ${MOCK_ASSET_ID} from the faucet`);
     expect(response).toContain(`Transaction: ${TRANSACTION_LINK}`);
   });
 
   it("should fail with an error", async () => {
-    const args = {};
+    const args = { assetId: MOCK_ASSET_ID };
 
     const error = new Error("Failed to request funds");
     mockWallet.faucet.mockRejectedValue(error);

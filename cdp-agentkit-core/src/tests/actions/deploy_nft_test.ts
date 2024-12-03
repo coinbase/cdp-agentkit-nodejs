@@ -1,66 +1,68 @@
-import { Wallet } from "@coinbase/coinbase-sdk";
+import { Coinbase, SmartContract, Wallet } from "@coinbase/coinbase-sdk";
 
 import { deployNft, DeployNftInput } from "../../actions/cdp/deploy_nft";
-
-jest.mock("@coinbase/coinbase-sdk", () => ({
-    Wallet: jest.fn(),
-}));
 
 const MOCK_NFT_BASE_URI = "https://www.test.xyz/metadata/";
 const MOCK_NFT_NAME = "Test Token";
 const MOCK_NFT_SYMBOL = "TEST";
 
+describe("Deploy NFT Input", () => {
+  it("should successfully parse valid input", () => {
+    const validInput = {
+      baseURI: MOCK_NFT_BASE_URI,
+      name: MOCK_NFT_NAME,
+      symbol: MOCK_NFT_SYMBOL,
+    };
+
+    const result = DeployNftInput.safeParse(validInput);
+
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual(validInput);
+  });
+
+  it("sould fail parsing empty input", () => {
+    const emptyInput = {};
+    const result = DeployNftInput.safeParse(emptyInput);
+
+    expect(result.success).toBe(false);
+  });
+});
+
 describe("Deploy NFT Action", () => {
-  let contract: any;
-  let mockResult: any;
+  const CONTRACT_ADDRESS = "0x123456789abcdef";
+  const CONTRACT_DESTINATION = "0xabcdef123456789";
+  const NETWORK_ID = Coinbase.networks.BaseSepolia;
+  const TRANSACTION_HASH = "0xghijkl987654321";
+  const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
+
+  let contract: jest.Mocked<SmartContract>;
   let mockWallet: jest.Mocked<Wallet>;
+  let mockWalletResult: any;
 
   beforeEach(() => {
-    mockResult = {
+    mockWallet = {
+      deployNFT: jest.fn(),
+      getNetworkId: jest.fn().mockReturnValue(NETWORK_ID),
+    } as unknown as jest.Mocked<Wallet>;
+
+    mockWalletResult = {
       wait: jest.fn(),
     };
 
-    mockWallet = {
-      deployNFT: jest.fn(),
-      getNetworkId: jest.fn().mockReturnValue("testnet"),
-    } as unknown as jest.Mocked<Wallet>;
-
     contract = {
-      getContractAddress: jest.fn().mockReturnValue("0x123456789abcdef"),
+      getContractAddress: jest.fn().mockReturnValue(CONTRACT_ADDRESS),
       getTransaction: jest.fn().mockReturnValue({
-        getTransactionHash: jest.fn().mockReturnValue("0xabcdef123456789"),
-        getTransactionLink: jest.fn().mockReturnValue("https://etherscan.io/tx/0xabcdef123456789"),
+        getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
+        getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
       }),
-    };
+    } as unknown as jest.Mocked<SmartContract>;
 
-    mockResult.wait.mockResolvedValue(contract);
-    mockWallet.deployNFT.mockResolvedValue(mockResult);
-  });
-
-  describe("input", () => {
-    it("should successfully parse valid input", () => {
-      const validInput = {
-        name: "token-name",
-        symbol: "token-symbol",
-        baseURI: "https://token-base-uri",
-      };
-
-      const result = DeployNftInput.safeParse(validInput);
-
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(validInput);
-    });
-
-    it("sould fail parsing empty input", () => {
-      const emptyInput = {};
-      const result = DeployNftInput.safeParse(emptyInput);
-
-      expect(result.success).toBe(false);
-    });
+    mockWalletResult.wait.mockResolvedValue(contract);
+    mockWallet.deployNFT.mockResolvedValue(mockWalletResult);
   });
 
   it("should successfully respond", async () => {
-    const args= {
+    const args = {
       name: MOCK_NFT_NAME,
       symbol: MOCK_NFT_SYMBOL,
       baseURI: MOCK_NFT_BASE_URI,
@@ -69,17 +71,19 @@ describe("Deploy NFT Action", () => {
     const response = await deployNft(mockWallet, args);
 
     expect(mockWallet.deployNFT).toHaveBeenCalledWith(args);
-    expect(mockResult.wait).toHaveBeenCalled();
-    expect(response).toContain(`Deployed NFT Collection ${MOCK_NFT_NAME} to address ${contract.getContractAddress()} on network ${mockWallet.getNetworkId()}.`);
-    expect(response).toContain(`Transaction hash for the deployment: ${contract.getTransaction().getTransactionHash()}`);
-    expect(response).toContain(`Transaction link for the deployment: ${contract.getTransaction().getTransactionLink()}`);
+    expect(mockWalletResult.wait).toHaveBeenCalled();
+    expect(response).toContain(`Deployed NFT Collection ${MOCK_NFT_NAME}`);
+    expect(response).toContain(`to address ${CONTRACT_ADDRESS}`);
+    expect(response).toContain(`on network ${NETWORK_ID}`);
+    expect(response).toContain(`Transaction hash for the deployment: ${TRANSACTION_HASH}`);
+    expect(response).toContain(`Transaction link for the deployment: ${TRANSACTION_LINK}`);
   });
 
   it("should fail with an error", async () => {
-    const args= {
+    const args = {
+      baseURI: MOCK_NFT_BASE_URI,
       name: MOCK_NFT_NAME,
       symbol: MOCK_NFT_SYMBOL,
-      baseURI: MOCK_NFT_BASE_URI,
     };
 
     const error = new Error("An error has occured");

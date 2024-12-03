@@ -29,6 +29,7 @@ describe("Trade Input", () => {
 });
 
 describe("Trade Action", () => {
+  const TO_AMOUNT = 3661.08;
   const TRANSACTION_HASH = "0xghijkl987654321";
   const TRANSACTION_LINK = `https://etherscan.io/tx/${TRANSACTION_HASH}`;
 
@@ -46,7 +47,7 @@ describe("Trade Action", () => {
     };
 
     trade = {
-      getToAmount: jest.fn(),
+      getToAmount: jest.fn().mockReturnValue(TO_AMOUNT),
       getTransaction: jest.fn().mockReturnValue({
         getTransactionHash: jest.fn().mockReturnValue(TRANSACTION_HASH),
         getTransactionLink: jest.fn().mockReturnValue(TRANSACTION_LINK),
@@ -67,8 +68,9 @@ describe("Trade Action", () => {
     const response = await createTrade(mockWallet, args);
 
     expect(mockWallet.createTrade).toHaveBeenCalledWith(args);
+    expect(mockWalletResult.wait).toHaveBeenCalled();
     expect(response).toContain(
-      `Traded ${MOCK_TRADE_AMOUNT} of ${MOCK_TRADE_ASSET_ID_FROM} for ${trade.getToAmount()} of ${MOCK_TRADE_ASSET_ID_TO}`,
+      `Traded ${MOCK_TRADE_AMOUNT} of ${MOCK_TRADE_ASSET_ID_FROM} for ${TO_AMOUNT} of ${MOCK_TRADE_ASSET_ID_TO}`,
     );
     expect(response).toContain(`Transaction hash for the trade: ${TRANSACTION_HASH}`);
     expect(response).toContain(`Transaction link for the trade: ${TRANSACTION_LINK}`);
@@ -85,6 +87,8 @@ describe("Trade Action", () => {
     mockWallet.createTrade.mockRejectedValue(error);
 
     const response = await createTrade(mockWallet, args);
+
+    expect(mockWallet.createTrade).toHaveBeenCalled();
     expect(response).toContain(`Error trading assets: ${error.message}`);
   });
 });
