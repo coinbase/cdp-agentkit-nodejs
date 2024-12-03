@@ -14,6 +14,9 @@
     "@coinbase/cdp-agentkit-core": "^0.0.5",
     "@coinbase/cdp-langchain": "^0.0.7",
     "@langchain/langgraph": "^0.2.21",
+    "@langchain/openai": "^0.3.14",
+    "@langchain/core": "^0.3.19",
+    
     "dotenv": "^16.4.5",
     "zod": "^3.22.4"
   },
