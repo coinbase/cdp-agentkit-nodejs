@@ -1,5 +1,15 @@
 import { Coinbase, ContractInvocation, Wallet } from "@coinbase/coinbase-sdk";
+
+import {
+  getFactoryAddress,
+  GENERIC_TOKEN_METADATA_URI,
+  WOW_FACTORY_ABI,
+} from "../actions/cdp/defi/wow/constants";
 import { wowCreateToken, WowCreateTokenInput } from "../actions/cdp/defi/wow/actions/create_token";
+
+jest.mock("../actions/cdp/defi/wow/constants", () => ({
+  getFactoryAddress: jest.fn(),
+}));
 
 const MOCK_NAME = "Test Token";
 const MOCK_SYMBOL = "TEST";
@@ -53,8 +63,10 @@ describe("Wow Create Token Input", () => {
 });
 
 describe("Wow Create Token Action", () => {
+  const CONTRACT_ADDRESS = "0xabcdef123456789";
   const NETWORK_ID = Coinbase.networks.BaseSepolia;
   const TRANSACTION_HASH = "0xghijkl987654321";
+  const WALLET_ID = "0x123456789abcdef";
 
   let mockContractInvocation: jest.Mocked<ContractInvocation>;
   let mockWallet: jest.Mocked<Wallet>;
@@ -63,7 +75,7 @@ describe("Wow Create Token Action", () => {
     mockWallet = {
       invokeContract: jest.fn(),
       getDefaultAddress: jest.fn().mockResolvedValue({
-        getId: jest.fn().mockReturnValue(TRANSACTION_HASH),
+        getId: jest.fn().mockReturnValue(WALLET_ID),
       }),
       getNetworkId: jest.fn().mockReturnValue(NETWORK_ID),
     } as unknown as jest.Mocked<Wallet>;
@@ -86,9 +98,22 @@ describe("Wow Create Token Action", () => {
       tokenUri: MOCK_URI,
     };
 
+    (getFactoryAddress as jest.Mock).mockReturnValue(CONTRACT_ADDRESS);
+
     const response = await wowCreateToken(mockWallet, args);
 
-    expect(mockWallet.invokeContract).toHaveBeenCalled();
+    expect(mockWallet.invokeContract).toHaveBeenCalledWith({
+      contractAddress: CONTRACT_ADDRESS,
+      method: "deploy",
+      abi: WOW_FACTORY_ABI,
+      args: {
+        _tokenCreator: WALLET_ID,
+        _platformReferrer: "0x0000000000000000000000000000000000000000",
+        _tokenURI: args.tokenUri || GENERIC_TOKEN_METADATA_URI,
+        _name: args.name,
+        _symbol: args.symbol,
+      },
+    });
     expect(mockContractInvocation.wait).toHaveBeenCalled();
     expect(response).toContain(`Created WoW ERC20 memecoin ${MOCK_NAME}`);
     expect(response).toContain(`with symbol ${MOCK_SYMBOL}`);

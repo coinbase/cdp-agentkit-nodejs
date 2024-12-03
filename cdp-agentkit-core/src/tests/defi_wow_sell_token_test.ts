@@ -1,5 +1,6 @@
 import { Coinbase, ContractInvocation, Wallet } from "@coinbase/coinbase-sdk";
 
+import { WOW_ABI } from "../actions/cdp/defi/wow/constants";
 import { wowSellToken, WowSellTokenInput } from "../actions/cdp/defi/wow/actions/sell_token";
 import { getSellQuote } from "../actions/cdp/defi/wow/utils";
 import { getHasGraduated } from "../actions/cdp/defi/wow/uniswap/utils";
@@ -98,7 +99,20 @@ describe("Wow Sell Token Action", () => {
 
     const response = await wowSellToken(mockWallet, args);
 
-    expect(mockWallet.invokeContract).toHaveBeenCalled();
+    expect(mockWallet.invokeContract).toHaveBeenCalledWith({
+      contractAddress: MOCK_CONTRACT_ADDRESS,
+      method: "sell",
+      abi: WOW_ABI,
+      args: {
+        tokensToSell: MOCK_AMOUNT_TOKENS_IN_WEI,
+        recipient: expect.any(String),
+        orderReferrer: "0x0000000000000000000000000000000000000000",
+        comment: "",
+        expectedMarketType: "1",
+        minPayoutSize: expect.any(String),
+        sqrtPriceLimitX96: "0",
+      },
+    });
     expect(getSellQuote).toHaveBeenCalled();
     expect(getHasGraduated).toHaveBeenCalled();
     expect(response).toContain(

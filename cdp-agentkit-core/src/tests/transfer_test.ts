@@ -62,7 +62,7 @@ describe("Transfer Action", () => {
 
     const response = await createTransfer(mockWallet, args);
 
-    expect(mockWallet.createTransfer).toHaveBeenCalled();
+    expect(mockWallet.createTransfer).toHaveBeenCalledWith(args);
     expect(mockTransfer.wait).toHaveBeenCalled();
     expect(response).toContain(
       `Transferred ${MOCK_AMOUNT} of ${MOCK_ASSET_ID} to ${MOCK_DESTINATION}`,
@@ -84,7 +84,7 @@ describe("Transfer Action", () => {
 
     const response = await createTransfer(mockWallet, args);
 
-    expect(mockWallet.createTransfer).toHaveBeenCalled();
+    expect(mockWallet.createTransfer).toHaveBeenCalledWith(args);
     expect(response).toContain(`Error transferring the asset: ${error}`);
   });
 });

@@ -60,7 +60,14 @@ describe("Mint NFT Action", () => {
 
     const response = await mintNft(mockWallet, args);
 
-    expect(mockWallet.invokeContract).toHaveBeenCalled();
+    expect(mockWallet.invokeContract).toHaveBeenCalledWith({
+      contractAddress: MOCK_CONTRACT_ADDRESS,
+      method: "mint",
+      args: {
+        to: MOCK_CONTRACT_DESTINATION,
+        quantity: "1",
+      },
+    });
     expect(mockContractInvocation.wait).toHaveBeenCalled();
     expect(response).toContain(`Minted NFT from contract ${MOCK_CONTRACT_ADDRESS}`);
     expect(response).toContain(`to address ${MOCK_CONTRACT_DESTINATION}`);

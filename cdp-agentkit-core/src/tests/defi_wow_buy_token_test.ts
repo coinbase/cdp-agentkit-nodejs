@@ -1,4 +1,6 @@
 import { Coinbase, ContractInvocation, Wallet } from "@coinbase/coinbase-sdk";
+
+import { WOW_ABI } from "../actions/cdp/defi/wow/constants";
 import { wowBuyToken, WowBuyTokenInput } from "../actions/cdp/defi/wow/actions/buy_token";
 import { getBuyQuote } from "../actions/cdp/defi/wow/utils";
 import { getHasGraduated } from "../actions/cdp/defi/wow/uniswap/utils";
@@ -73,7 +75,22 @@ describe("Wow Buy Token Action", () => {
 
     const response = await wowBuyToken(mockWallet, args);
 
-    expect(mockWallet.invokeContract).toHaveBeenCalled();
+    expect(mockWallet.invokeContract).toHaveBeenCalledWith({
+      contractAddress: MOCK_CONTRACT_ADDRESS,
+      method: "buy",
+      abi: WOW_ABI,
+      args: {
+        recipient: expect.any(String),
+        refundRecipient: expect.any(String),
+        orderReferrer: "0x0000000000000000000000000000000000000000",
+        expectedMarketType: "1",
+        minOrderSize: expect.any(String),
+        sqrtPriceLimitX96: "0",
+        comment: "",
+      },
+      amount: BigInt(args.amountEthInWei),
+      assetId: "wei",
+    });
     expect(getBuyQuote).toHaveBeenCalled();
     expect(getHasGraduated).toHaveBeenCalled();
     expect(response).toContain(

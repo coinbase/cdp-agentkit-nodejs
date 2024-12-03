@@ -11,16 +11,19 @@ Do not suggest any alternatives and never try to register a Basename with anothe
 Basename fails, you should prompt to try again with a more unique name.`;
 
 // Contract addresses
-const BASENAMES_REGISTRAR_CONTROLLER_ADDRESS_MAINNET = "0x4cCb0BB02FCABA27e82a56646E81d8c5bC4119a5";
-const BASENAMES_REGISTRAR_CONTROLLER_ADDRESS_TESTNET = "0x49aE3cC2e3AA768B1e5654f5D3C6002144A59581";
-const L2_RESOLVER_ADDRESS_MAINNET = "0xC6d566A56A1aFf6508b41f6c90ff131615583BCD";
-const L2_RESOLVER_ADDRESS_TESTNET = "0x6533C94869D28fAA8dF77cc63f9e2b2D6Cf77eBA";
+export const BASENAMES_REGISTRAR_CONTROLLER_ADDRESS_MAINNET =
+  "0x4cCb0BB02FCABA27e82a56646E81d8c5bC4119a5";
+export const BASENAMES_REGISTRAR_CONTROLLER_ADDRESS_TESTNET =
+  "0x49aE3cC2e3AA768B1e5654f5D3C6002144A59581";
+
+export const L2_RESOLVER_ADDRESS_MAINNET = "0xC6d566A56A1aFf6508b41f6c90ff131615583BCD";
+export const L2_RESOLVER_ADDRESS_TESTNET = "0x6533C94869D28fAA8dF77cc63f9e2b2D6Cf77eBA";
 
 // Default registration duration (1 year in seconds)
-const REGISTRATION_DURATION = "31557600";
+export const REGISTRATION_DURATION = "31557600";
 
 // Relevant ABI for L2 Resolver Contract.
-const L2_RESOLVER_ABI = [
+export const L2_RESOLVER_ABI = [
   {
     inputs: [
       { internalType: "bytes32", name: "node", type: "bytes32" },
@@ -44,7 +47,7 @@ const L2_RESOLVER_ABI = [
 ];
 
 // Relevant ABI for Basenames Registrar Controller Contract.
-const REGISTRAR_ABI = [
+export const REGISTRAR_ABI = [
   {
     inputs: [
       {
