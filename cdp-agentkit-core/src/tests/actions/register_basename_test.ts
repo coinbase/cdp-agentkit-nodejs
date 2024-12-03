@@ -1,36 +1,21 @@
-import {
-  Coinbase,
-  ContractInvocation,
-  CreateContractInvocationOptions,
-  Wallet,
-} from "@coinbase/coinbase-sdk";
+import { Coinbase, ContractInvocation, Wallet } from "@coinbase/coinbase-sdk";
 
 import { registerBasename, RegisterBasenameInput } from "../../actions/cdp/register_basename";
-
-import { newContractInvocationFactory } from "../factories/contract_invocation";
-import { newWalletFactory } from "../factories/wallet";
-import { newWalletAddressFactory } from "../factories/wallet_address";
-import {
-  generateContractInvocationData,
-  generateContractInvocationFromData,
-} from "../utils/contract_invocation";
-import { mockReturnValue, mockReturnRejectedValue } from "../utils/mock";
-import { generateWalletData } from "../utils/wallet";
 
 const MOCK_AMMOUNT = 0.123;
 const MOCK_BASENAME = "test-basename";
 
-const MOCK_OPTIONS = {
-  amount: MOCK_AMMOUNT,
-  basename: MOCK_BASENAME,
-};
-
 describe("Register Basename Input", () => {
   it("should successfully parse valid input", () => {
-    const result = RegisterBasenameInput.safeParse(MOCK_OPTIONS);
+    const validInput = {
+      amount: MOCK_AMMOUNT,
+      basename: MOCK_BASENAME,
+    };
+
+    const result = RegisterBasenameInput.safeParse(validInput);
 
     expect(result.success).toBe(true);
-    expect(result.data).toEqual(MOCK_OPTIONS);
+    expect(result.data).toEqual(validInput);
   });
 
   it("should fail parsing empty input", () => {
@@ -42,128 +27,77 @@ describe("Register Basename Input", () => {
 });
 
 describe("Register Basename Action", () => {
-  let contractInvocation: ContractInvocation;
-  let contractInvocationOptions: CreateContractInvocationOptions;
-  let wallet: Wallet;
+  /**
+   * The default network ID used for testing purposes.
+   * @type {string}
+   * @note This is the default network.
+   */
+  const MOCK_NETWORK_ID = Coinbase.networks.BaseMainnet;
 
-  beforeAll(async () => {
-    const walletData = generateWalletData();
-    const walletAddresses = [walletData.address];
+  /**
+   * Mock address ID for testing purposes.
+   * @type {string}
+   * @note This is a 40 character hexadecimal string that requires lowercase alpha characters.
+   */
+  const MOCK_ADDRESS_ID = "0xe6b2af36b3bb8d47206a129ff11d5a2de2a63c83";
 
-    Coinbase.apiClients.address = newWalletAddressFactory(walletAddresses);
-    Coinbase.apiClients.wallet = newWalletFactory(walletData);
-    Coinbase.useServerSigner = false;
+  let contractInvocation: jest.Mocked<ContractInvocation>;
+  let mockWallet: jest.Mocked<Wallet>;
+  let mockWalletResult: any;
 
-    wallet = await Wallet.create();
+  beforeEach(() => {
+    mockWallet = {
+      getDefaultAddress: jest.fn().mockResolvedValue({
+        getId: jest.fn().mockReturnValue(MOCK_ADDRESS_ID),
+      }),
+      getNetworkId: jest.fn().mockReturnValue(MOCK_NETWORK_ID),
+      invokeContract: jest.fn(),
+    } as unknown as jest.Mocked<Wallet>;
+
+    mockWalletResult = {
+      wait: jest.fn(),
+    };
+
+    mockWalletResult.wait.mockResolvedValue({});
+    mockWallet.invokeContract.mockResolvedValue(mockWalletResult);
+  });
+
+  it(`should Successfully respond with ${MOCK_BASENAME}.base.eth for network: base-mainnet`, async () => {
+    const args = {
+      amount: MOCK_AMMOUNT,
+      basename: MOCK_BASENAME,
+    };
+
+    const response = await registerBasename(mockWallet, args);
+
+    expect(response).toContain(`Successfully registered basename ${MOCK_BASENAME}.base.eth`);
+    expect(response).toContain(`for address ${MOCK_ADDRESS_ID}`);
+  });
+
+  it("should Successfully respond with ${MOCK_BASENAME}.basetest.eth for any other network", async () => {
+    const args = {
+      amount: MOCK_AMMOUNT,
+      basename: MOCK_BASENAME,
+    };
+
+    mockWallet.getNetworkId.mockReturnValue("anything-else");
+
+    const response = await registerBasename(mockWallet, args);
+
+    expect(response).toContain(`Successfully registered basename ${MOCK_BASENAME}.basetest.eth`);
+    expect(response).toContain(`for address ${MOCK_ADDRESS_ID}`);
   });
 
   it("should fail with an error", async () => {
+    const args = {
+      amount: MOCK_AMMOUNT,
+      basename: MOCK_BASENAME,
+    };
+
     const error = new Error("Failed to register basename");
+    mockWallet.invokeContract.mockRejectedValue(error);
 
-    (await wallet.getDefaultAddress()).invokeContract = mockReturnRejectedValue(error)
-
-    const response = await registerBasename(wallet, {...MOCK_OPTIONS});
+    const response = await registerBasename(mockWallet, args);
     const expected = `Error registering basename: ${error.message}`;
-
-    expect(response).toEqual(expected);
-  });
-});
-// TODO: additional network testing?
-
-describe("Register Basename Action on base.eth", () => {
-  let contractInvocation: ContractInvocation;
-  let contractInvocationOptions: CreateContractInvocationOptions;
-  let wallet: Wallet;
-
-  beforeAll(async () => {
-    const walletDataOptions = {
-      networkId: Coinbase.networks.BaseMainnet
-    }
-
-    const walletData = generateWalletData(walletDataOptions);
-    const walletAddresses = [walletData.address];
-
-    Coinbase.apiClients.address = newWalletAddressFactory(walletAddresses);
-    Coinbase.apiClients.wallet = newWalletFactory(walletData);
-    Coinbase.useServerSigner = false;
-
-    wallet = await Wallet.create();
-  });
-
-  beforeEach(async () => {
-    (await wallet.getDefaultAddress()).invokeContract = jest
-      .fn()
-      .mockImplementation(async (params) => {
-        const contractInvocationData = generateContractInvocationData(wallet, params);
-
-        contractInvocation = generateContractInvocationFromData(params);
-        contractInvocationOptions = params;
-
-        Coinbase.apiClients.contractInvocation = newContractInvocationFactory();
-        Coinbase.apiClients.contractInvocation.getContractInvocation =
-          mockReturnValue(contractInvocationData);
-
-        return generateContractInvocationFromData(contractInvocationData);
-      });
-  });
-
-  it("should successfully respond", async () => {
-    const response = await registerBasename(wallet, {...MOCK_OPTIONS});
-    const expected = `Successfully registered basename ${MOCK_BASENAME}.base.eth for address ${(await wallet.getDefaultAddress()).getId()}`;
-
-    expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledTimes(1);
-    expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledWith(
-      contractInvocationOptions,
-    );
-    expect(response).toBe(expected);
-  });
-});
-
-describe("Register Basename Action on basetest.eth", () => {
-  let contractInvocation: ContractInvocation;
-  let contractInvocationOptions: CreateContractInvocationOptions;
-  let wallet: Wallet;
-
-  beforeAll(async () => {
-    const walletDataOptions = {
-      networkId: "basetest.eth, or any value not base-mainnet",
-    }
-
-    const walletData = generateWalletData(walletDataOptions);
-    const walletAddresses = [walletData.address];
-
-    Coinbase.apiClients.address = newWalletAddressFactory(walletAddresses);
-    Coinbase.apiClients.wallet = newWalletFactory(walletData);
-    Coinbase.useServerSigner = false;
-
-    wallet = await Wallet.create();
-  });
-
-  beforeEach(async () => {
-    (await wallet.getDefaultAddress()).invokeContract = jest
-      .fn()
-      .mockImplementation(async (params) => {
-        const contractInvocationData = generateContractInvocationData(wallet, params);
-
-        contractInvocation = generateContractInvocationFromData(params);
-        contractInvocationOptions = params;
-
-        Coinbase.apiClients.contractInvocation = newContractInvocationFactory();
-        Coinbase.apiClients.contractInvocation.getContractInvocation =
-          mockReturnValue(contractInvocationData);
-
-        return generateContractInvocationFromData(contractInvocationData);
-      });
-  });
-
-  it("should successfully respond on testnet", async () => {
-    const response = await registerBasename(wallet, {...MOCK_OPTIONS});
-    const expected = `Successfully registered basename ${MOCK_BASENAME}.basetest.eth for address ${(await wallet.getDefaultAddress()).getId()}`;
-
-    expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledTimes(1);
-    expect((await wallet.getDefaultAddress()).invokeContract).toHaveBeenCalledWith(
-      contractInvocationOptions,
-    );
-    expect(response).toBe(expected);
   });
 });
