@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: "18"
           registry-url: "https://registry.npmjs.org"
-      - run: rm ../package-lock.json
+      - run: rm ./package-lock.json
       - run: npm i
       - name: Install, build and publish langchain
         working-directory: ./cdp-langchain
