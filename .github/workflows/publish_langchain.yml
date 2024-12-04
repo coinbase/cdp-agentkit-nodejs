@@ -18,6 +18,7 @@ jobs:
       - name: Install, build and publish langchain
         working-directory: ./cdp-langchain
         run: |
+          rm ../package-lock.json
           npm i
           npm publish --provenance --access public
         env:
