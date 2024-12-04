@@ -16,8 +16,9 @@ jobs:
           node-version: "18"
           registry-url: "https://registry.npmjs.org"
       - name: Install, build and publish langchain
+        working-directory: ./cdp-langchain
         run: |
-          npm ci
-          npm publish --workspace=cdp-langchain --provenance --access public
+          npm i
+          npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
