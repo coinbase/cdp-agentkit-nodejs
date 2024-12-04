@@ -12,27 +12,22 @@ jobs:
         with:
           node-version: "18"
           cache: "npm"
-      
-      # Install dependencies in parent directory first
-      - run: npm install
 
-      # Build cdp-agentkit-core docs
+      - name: Install and Build Docs
+        run: |
+          npm i
+          npm run build
+          npm run docs
+
+      # Move cdp-agentkit-core docs
       - name: Build AgentKit Core docs
         run: |
-          cd cdp-agentkit-core
-          npm install
-          npm run docs
-          cd ..
           mkdir -p docs/cdp-agentkit-core
           cp -r cdp-agentkit-core/docs/* docs/cdp-agentkit-core/
 
-      # Build cdp-langchain docs
+      # Move cdp-langchain docs
       - name: Build LangChain docs
         run: |
-          cd cdp-langchain
-          npm install
-          npm run docs
-          cd ..
           mkdir -p docs/cdp-langchain
           cp -r cdp-langchain/docs/* docs/cdp-langchain/
 

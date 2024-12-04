@@ -4,6 +4,7 @@
     "cdp-agentkit-core",
     "cdp-langchain"
   ],
+  "packageManager": "npm@8.9.0",
   "scripts": {
     "build": "turbo run build",
     "test": "turbo run test",
@@ -44,7 +45,7 @@
     "jest": "^29.7.0",
     "prettier": "^3.2.5",
     "ts-jest": "^29.2.5",
-    "turbo": "^1.12.4",
+    "turbo": "^2.3.3",
     "typedoc": "^0.27.2",
     "typescript": "^5.4.5"
   },
