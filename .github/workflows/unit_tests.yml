@@ -3,7 +3,7 @@ name: Unit Tests
 on: [pull_request]
 
 jobs:
-  test-agentkit:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -15,30 +15,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       # Install dependencies in parent directory first
-      - run: npm install
-      # Then install and test in working directory
       - name: Install and test agentkit
-        working-directory: ./cdp-agentkit-core
         run: |
-          npm install
-          npm run test
-
-  test-langchain:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: ["18", "20"]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      # Install dependencies in parent directory first
-      - run: npm install
-      # Then install and test in working directory
-      - name: Install and test langchain
-        working-directory: ./cdp-langchain
-        run: |
-          npm install
+          npm i
           npm run test
