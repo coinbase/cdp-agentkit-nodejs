@@ -16,12 +16,12 @@ jobs:
           node-version: "18"
           registry-url: "https://registry.npmjs.org"
       # Install dependencies in parent directory first
-      - run: npm install
+      - run: npm ci
       # Then install, build and publish in working directory
       - name: Install, build and publish agentkit
         working-directory: ./cdp-agentkit-core
         run: |
-          npm install
+          npm ci
           npm run build
           npm publish --provenance --access public
         env:
