@@ -1,11 +1,11 @@
 // Export Twitter (X) actions
 export * from "./actions";
 
-// Export agentkit
+// Export Twitter (X) agentkit
 export { TwitterAgentkit } from "./twitter_agentkit";
 
-// Export tool
+// Export Twitter (X) tool
 export { TwitterTool } from "./twitter_tool";
 
-// Export toolkit
+// Export Twitter (X) toolkit
 export { TwitterToolkit } from "./twitter_toolkit";
