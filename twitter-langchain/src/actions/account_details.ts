@@ -24,7 +24,10 @@ A failure response will return a message with a Twitter API request error:
 /**
  * Input argument schema for the account details action.
  */
-export const AccountDetailsInput = z.object({}).strip().describe("Input schema for retrieving account details");
+export const AccountDetailsInput = z
+  .object({})
+  .strip()
+  .describe("Input schema for retrieving account details");
 
 /**
  * Get the authenticated Twitter (X) user account details.
@@ -47,7 +50,7 @@ export async function accountDetails(
 }
 
 /**
- * AccountDetailsAction
+ * Account Details Action
  */
 export class AccountDetailsAction implements TwitterAction<typeof AccountDetailsInput> {
   public name = "account_details";

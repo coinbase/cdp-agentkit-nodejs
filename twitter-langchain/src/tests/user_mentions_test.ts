@@ -1,7 +1,7 @@
 import { userMentions, UserMentionsInput } from "../actions/user_mentions";
 import { TwitterApi, TwitterApiv2 } from "twitter-api-v2";
 
-const MOCK_USER_ID = "1857479287504584856"
+const MOCK_USER_ID = "1857479287504584856";
 
 describe("User Mentions Input", () => {
   it("should successfully parse valid input", () => {
@@ -55,10 +55,10 @@ describe("User Mentions Action", () => {
   });
 
   it("should successfully retrieve user mentions", async () => {
-    const args = { userId: "1857479287504584856" };
+    const args = { userId: MOCK_USER_ID };
     const response = await userMentions(mockApi, args);
 
-    expect(mockClient.userMentionTimeline).toHaveBeenCalledWith(MOCK_USER_ID);
+    expect(mockApi.v2.userMentionTimeline).toHaveBeenCalledWith(MOCK_USER_ID);
     expect(response).toContain("Successfully retrieved user mentions:");
     expect(response).toContain(JSON.stringify(mockApiResponse));
   });
