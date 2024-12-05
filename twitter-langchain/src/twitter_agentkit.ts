@@ -27,7 +27,7 @@ export class TwitterAgentkit {
 
     if (!this.validateOptions(options)) {
       throw new Error(
-        "Twitter Agentkit options require either bearer token, or all other credentials.",
+        "Twitter (X) Agentkit options require either bearer token, or all other credentials.",
       );
     }
 
