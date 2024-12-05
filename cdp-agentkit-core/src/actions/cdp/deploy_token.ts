@@ -3,7 +3,9 @@ import { Wallet, Amount } from "@coinbase/coinbase-sdk";
 import { z } from "zod";
 
 const DEPLOY_TOKEN_PROMPT = `
-This tool will deploy an ERC20 token smart contract. It takes the token name, symbol, and total supply as input. The token will be deployed using the wallet's default address as the owner and initial token holder.`;
+This tool will deploy an ERC20 token smart contract. It takes the token name, symbol, and total supply as input. 
+The token will be deployed using the wallet's default address as the owner and initial token holder.
+`;
 
 /**
  * Input schema for deploy token action.

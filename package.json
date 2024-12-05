@@ -2,7 +2,8 @@
   "name": "cdp-agentkit-monorepo",
   "workspaces": [
     "cdp-agentkit-core",
-    "cdp-langchain"
+    "cdp-langchain",
+    "cdp-langchain/examples/chatbot"
   ],
   "packageManager": "npm@8.9.0",
   "scripts": {
@@ -50,6 +51,6 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@coinbase/cdp-agentkit-core": "^0.0.5"
+    "@coinbase/cdp-agentkit-core": "^0.0.7"
   }
 }
