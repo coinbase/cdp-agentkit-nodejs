@@ -9,7 +9,7 @@ export type TwitterActionSchemaAny = z.ZodObject<any, any, any, any>;
  */
 export interface TwitterAction<TActionSchema extends TwitterActionSchemaAny> {
   /**
-   * The name of the action
+   * The name of the action.
    */
   name: string;
 

@@ -59,7 +59,7 @@ describe("User Mentions Action", () => {
     const response = await userMentions(mockApi, args);
 
     expect(mockClient.userMentionTimeline).toHaveBeenCalledWith(MOCK_USER_ID);
-    expect(response).toContain("Successfully retrieved user user mentions:");
+    expect(response).toContain("Successfully retrieved user mentions:");
     expect(response).toContain(JSON.stringify(mockApiResponse));
   });
 
@@ -74,7 +74,7 @@ describe("User Mentions Action", () => {
     const response = await userMentions(mockApi, args);
 
     expect(mockApi.v2.userMentionTimeline).toHaveBeenCalledWith(MOCK_USER_ID);
-    expect(response).toContain("Error retrieving authenticated user user mentions:");
+    expect(response).toContain("Error retrieving authenticated user mentions:");
     expect(response).toContain(error.message);
   });
 });
