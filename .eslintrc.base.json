@@ -19,6 +19,12 @@
     "multiline-comment-style": ["error", "starred-block"],
     "prettier/prettier": "error",
     "@typescript-eslint/member-ordering": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_$"
+      }
+    ],
     "jsdoc/tag-lines": ["error", "any", { "startLines": 1 }],
     "jsdoc/check-alignment": "error",
     "jsdoc/no-undefined-types": "off",
