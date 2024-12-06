@@ -37,22 +37,23 @@ export class TwitterAgentkit {
     options.accessTokenSecret ||= process.env.TWITTER_ACCESS_TOKEN_SECRET;
     options.bearerToken ||= process.env.TWITTER_BEARER_TOKEN;
 
+    console.log("options:", options);
     if (!this.validateOptions(options)) {
       throw new Error(
         "Twitter (X) Agentkit options require either bearer token, or all other credentials.",
       );
     }
 
-    if (options.bearerToken) {
-      this.client = new TwitterApi(options.bearerToken);
-    } else {
-      this.client = new TwitterApi({
-        appKey: options.apiKey,
-        appSecret: options.apiSecret,
-        accessToken: options.accessToken,
-        accessSecret: options.accessTokenSecret,
-      } as TwitterApiTokens);
-    }
+    // if (options.bearerToken) {
+    //   this.client = new TwitterApi(options.bearerToken);
+    // } else {
+    this.client = new TwitterApi({
+      appKey: options.apiKey,
+      appSecret: options.apiSecret,
+      accessToken: options.accessToken,
+      accessSecret: options.accessTokenSecret,
+    } as TwitterApiTokens);
+    // }
   }
 
   /**
