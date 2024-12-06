@@ -32,9 +32,9 @@ export const AccountDetailsInput = z
 /**
  * Get the authenticated Twitter (X) user account details.
  *
- * @param {TwitterApi} client - The Twitter (X) client used to authenticate with.
- * @param {z.infer<typeof AccountDetailsInput>} _ - The input arguments for the action.
- * @returns {Promise<string>} A message containing account details for the authenticated user context.
+ * @param client - The Twitter (X) client used to authenticate with.
+ * @param _ - The input arguments for the action.
+ * @returns A message containing account details for the authenticated user context.
  */
 export async function accountDetails(
   client: TwitterApi,

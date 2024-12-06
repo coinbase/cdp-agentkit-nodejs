@@ -37,9 +37,9 @@ export const PostTweetReplyInput = z
 /**
  * Posts a reply to a specified tweet on Twitter (X).
  *
- * @param {TwitterApi} client - The Twitter (X) client used to authenticate with.
- * @param {z.infer<typeof PostTweetReplyInput>} args - The input arguments for the action.
- * @returns {Promise<string>} A message indicating the success or failure of the reply posting.
+ * @param client - The Twitter (X) client used to authenticate with.
+ * @param args - The input arguments for the action.
+ * @returns A message indicating the success or failure of the reply posting.
  */
 export async function postTweet(
   client: TwitterApi,
