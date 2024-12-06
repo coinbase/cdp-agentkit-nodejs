@@ -32,6 +32,7 @@ export const TWITTER_ACTIONS = getAllTwitterActions();
  */
 export {
   TwitterAction,
+  TwitterActionSchemaAny,
   AccountDetailsAction,
   AccountMentionsAction,
   PostTweetAction,
