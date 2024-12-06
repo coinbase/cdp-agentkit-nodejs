@@ -1,7 +1,5 @@
 import { TwitterApi, TwitterApiTokens } from "twitter-api-v2";
 import { z } from "zod";
-
-import { version } from "../package.json";
 import { TwitterAction, TwitterActionSchemaAny } from "./actions/twitter_action";
 
 /**
@@ -9,14 +7,47 @@ import { TwitterAction, TwitterActionSchemaAny } from "./actions/twitter_action"
  */
 export const TwitterAgentkitOptions = z
   .object({
-    apiKey: z.string().optional().describe("The Twitter (X) API key"),
-    apiSecret: z.string().optional().describe("The Twitter (X) API secret"),
-    accessToken: z.string().optional().describe("The Twitter (X) access token"),
-    accessTokenSecret: z.string().optional().describe("The Twitter (X) access token secret"),
-    bearerToken: z.string().optional().describe("The Twitter (X) bearer token"),
+    apiKey: z
+      .string()
+      .min(1, "The Twitter (X) API key is required")
+      .describe("The Twitter (X) API key"),
+    apiSecret: z
+      .string()
+      .min(1, "The Twitter (X) API secret is required")
+      .describe("The Twitter (X) API secret"),
+    accessToken: z
+      .string()
+      .min(1, "The Twitter (X) access token is required")
+      .describe("The Twitter (X) access token"),
+    accessTokenSecret: z
+      .string()
+      .min(1, "The Twitter (X) access token secret is required")
+      .describe("The Twitter (X) access token secret"),
   })
   .strip()
   .describe("Options for initializing TwitterAgentkit");
+
+/**
+ * Schema for the environment variables required for TwitterAgentkit.
+ */
+const EnvSchema = z.object({
+  TWITTER_API_KEY: z
+    .string()
+    .min(1, "TWITTER_API_KEY is required")
+    .describe("The Twitter (X) API key"),
+  TWITTER_API_SECRET: z
+    .string()
+    .min(1, "TWITTER_API_SECRET is required")
+    .describe("The Twitter (X) API secret"),
+  TWITTER_ACCESS_TOKEN: z
+    .string()
+    .min(1, "TWITTER_ACCESS_TOKEN is required")
+    .describe("The Twitter (X) access token"),
+  TWITTER_ACCESS_TOKEN_SECRET: z
+    .string()
+    .min(1, "TWITTER_ACCESS_TOKEN_SECRET is required")
+    .describe("The Twitter (X) access token secret"),
+});
 
 /**
  * Twitter Agentkit
@@ -25,35 +56,41 @@ export class TwitterAgentkit {
   private client: TwitterApi;
 
   /**
-   * Creates an instance of TwitterAgentkit.
+   * Initializes a new instance of TwitterAgentkit with the provided options.
+   * If no options are provided, it attempts to load the required environment variables.
    *
-   * @param {z.infer<typeof TwitterAgentkitOptions>} options - The options for initializing the agent.
-   * @throws {Error} If the provided options are invalid.
+   * @param {z.infer<typeof TwitterAgentkitOptions>} options - Optional. The configuration options for the TwitterAgentkit.
+   * @throws {Error} Throws an error if the provided options are invalid or if the environment variables cannot be loaded.
    */
-  public constructor(options: z.infer<typeof TwitterAgentkitOptions>) {
-    options.apiKey ||= process.env.TWITTER_API_KEY;
-    options.apiSecret ||= process.env.TWITTER_API_SECRET;
-    options.accessToken ||= process.env.TWITTER_ACCESS_TOKEN;
-    options.accessTokenSecret ||= process.env.TWITTER_ACCESS_TOKEN_SECRET;
-    options.bearerToken ||= process.env.TWITTER_BEARER_TOKEN;
+  public constructor(options?: z.infer<typeof TwitterAgentkitOptions>) {
+    if (!options) {
+      try {
+        const env = EnvSchema.parse(process.env);
 
-    console.log("options:", options);
-    if (!this.validateOptions(options)) {
-      throw new Error(
-        "Twitter (X) Agentkit options require either bearer token, or all other credentials.",
-      );
+        options = {
+          apiKey: env.TWITTER_API_KEY!,
+          apiSecret: env.TWITTER_API_SECRET!,
+          accessToken: env.TWITTER_ACCESS_TOKEN!,
+          accessTokenSecret: env.TWITTER_ACCESS_TOKEN_SECRET!,
+        };
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          error.errors.forEach(err => console.log(`Error: ${err.path[0]} is required`));
+        }
+        throw new Error("Twitter (X) ENV could not be loaded.");
+      }
     }
 
-    // if (options.bearerToken) {
-    //   this.client = new TwitterApi(options.bearerToken);
-    // } else {
+    if (!this.validateOptions(options)) {
+      throw new Error("Twitter (X) Agentkit options could not be validated.");
+    }
+
     this.client = new TwitterApi({
       appKey: options.apiKey,
       appSecret: options.apiSecret,
       accessToken: options.accessToken,
       accessSecret: options.accessTokenSecret,
     } as TwitterApiTokens);
-    // }
   }
 
   /**
@@ -63,15 +100,17 @@ export class TwitterAgentkit {
    * @returns {boolean} True if the options are valid, otherwise false.
    */
   validateOptions(options: z.infer<typeof TwitterAgentkitOptions>): boolean {
-    if (options.bearerToken) {
-      return true;
+    try {
+      TwitterAgentkitOptions.parse(options);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach(err => console.log("Error:", err.message));
+      }
+
+      return false;
     }
 
-    if (options.apiKey && options.apiSecret && options.accessToken && options.accessTokenSecret) {
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
   /**
@@ -85,10 +124,6 @@ export class TwitterAgentkit {
     action: TwitterAction<TActionSchema>,
     args: TActionSchema,
   ): Promise<string> {
-    if (action.func.length > 1) {
-      return await action.func(this.client, args);
-    }
-
-    return await (action.func as (args: z.infer<TActionSchema>) => Promise<string>)(args);
+    return await action.func(this.client, args);
   }
 }
