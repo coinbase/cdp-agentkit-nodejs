@@ -26,7 +26,9 @@ describe("Post Tweet Reply Input", () => {
     const result = PostTweetReplyInput.safeParse(invalidInput);
 
     expect(result.success).toBe(false);
-    expect(result.error!.issues[0].message).toBe("The reply to the tweet which must be a maximum of 280 characters.");
+    expect(result.error!.issues[0].message).toBe(
+      "The reply to the tweet which must be a maximum of 280 characters.",
+    );
   });
 });
 
@@ -49,7 +51,7 @@ describe("Post Tweet Reply Action", () => {
 
     mockApi = {
       get v2() {
-        return mockClient;;
+        return mockClient;
       },
     } as unknown as jest.Mocked<TwitterApi>;
   });
@@ -62,7 +64,9 @@ describe("Post Tweet Reply Action", () => {
 
     const response = await postTweet(mockApi, args);
 
-    expect(mockApi.v2.tweet).toHaveBeenCalledWith(MOCK_TWEET_REPLY, {reply: {in_reply_to_tweet_id: MOCK_TWEET_ID}});
+    expect(mockApi.v2.tweet).toHaveBeenCalledWith(MOCK_TWEET_REPLY, {
+      reply: { in_reply_to_tweet_id: MOCK_TWEET_ID },
+    });
     expect(response).toContain("Successfully posted reply to Twitter:");
     expect(response).toContain(JSON.stringify(mockApiResponse));
   });
@@ -78,7 +82,9 @@ describe("Post Tweet Reply Action", () => {
 
     const response = await postTweet(mockApi, args);
 
-    expect(mockApi.v2.tweet).toHaveBeenCalledWith(MOCK_TWEET_REPLY, {reply: {in_reply_to_tweet_id: MOCK_TWEET_ID}});
+    expect(mockApi.v2.tweet).toHaveBeenCalledWith(MOCK_TWEET_REPLY, {
+      reply: { in_reply_to_tweet_id: MOCK_TWEET_ID },
+    });
     expect(response).toContain("Error posting reply to Twitter:");
     expect(response).toContain(error.message);
   });

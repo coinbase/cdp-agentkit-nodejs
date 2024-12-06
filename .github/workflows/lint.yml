@@ -38,3 +38,21 @@ jobs:
           npm install
           npm run lint
           npm run format
+
+  lint-twitter-langchain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+      # Install dependencies in parent directory first  
+      - run: npm install
+      # Then install and lint in working directory
+      - name: Install and lint twitter-langchain
+        working-directory: ./twitter-langchain
+        run: |
+          npm install
+          npm run lint
+          npm run format
