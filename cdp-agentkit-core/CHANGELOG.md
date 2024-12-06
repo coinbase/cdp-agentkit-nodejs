@@ -8,6 +8,10 @@
 
 - Improved prompts for all actions.
 
+## [0.0.6] - 2024-12-03
+
+### Fixed
+
 ## [0.0.5] - 2024-11-29
 
 ### Added
