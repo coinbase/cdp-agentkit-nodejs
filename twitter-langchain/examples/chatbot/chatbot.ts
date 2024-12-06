@@ -30,10 +30,15 @@ async function initialize() {
   const llm = new ChatOpenAI({ model: "gpt-4o-mini" });
 
   // Twitter (X) Agentkit options
-  const options = {};
+  const options = {
+    apiKey: "$TWITTER_API_KEY",
+    apiSecret: "$TWITTER_API_SECRET",
+    accessToken: "$TWITTER_ACCESS_TOKEN",
+    accessTokenSecret: "$TWITTER_ACCESS_TOKEN_SECRET",
+  };
 
   // Twitter (X) Agentkit
-  const twitterAgentkit = new TwitterAgentkit(options);
+  const twitterAgentkit = new TwitterAgentkit(/*options*/);
 
   // Twitter (X) Toolkit
   const twitterToolkit = new TwitterToolkit(twitterAgentkit);
