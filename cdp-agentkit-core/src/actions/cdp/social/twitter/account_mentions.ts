@@ -37,9 +37,9 @@ export const AccountMentionsInput = z
 /**
  * Retrieves mentions for a specified Twitter (X) user.
  *
- * @param {TwitterApi} client - The Twitter (X) client used to authenticate with.
- * @param {z.infer<typeof AccountMentionsInput>} args - The input arguments for the action.
- * @returns {Promise<string>} A message indicating the success or failure of the mention retrieval.
+ * @param client - The Twitter (X) client used to authenticate with.
+ * @param args - The input arguments for the action.
+ * @returns A message indicating the success or failure of the mention retrieval.
  */
 export async function accountMentions(
   client: TwitterApi,

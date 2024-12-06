@@ -59,8 +59,8 @@ export class TwitterAgentkit {
    * Initializes a new instance of TwitterAgentkit with the provided options.
    * If no options are provided, it attempts to load the required environment variables.
    *
-   * @param {z.infer<typeof TwitterAgentkitOptions>} options - Optional. The configuration options for the TwitterAgentkit.
-   * @throws {Error} Throws an error if the provided options are invalid or if the environment variables cannot be loaded.
+   * @param options - Optional. The configuration options for the TwitterAgentkit.
+   * @throws An error if the provided options are invalid or if the environment variables cannot be loaded.
    */
   public constructor(options?: z.infer<typeof TwitterAgentkitOptions>) {
     if (!options) {
@@ -96,8 +96,8 @@ export class TwitterAgentkit {
   /**
    * Validates the provided options for the TwitterAgentkit.
    *
-   * @param {z.infer<typeof TwitterAgentkitOptions>} options - The options to validate.
-   * @returns {boolean} True if the options are valid, otherwise false.
+   * @param options - The options to validate.
+   * @returns True if the options are valid, otherwise false.
    */
   validateOptions(options: z.infer<typeof TwitterAgentkitOptions>): boolean {
     try {
@@ -116,9 +116,9 @@ export class TwitterAgentkit {
   /**
    * Executes a Twitter (X) action.
    *
-   * @param {TwitterAction} action - The Twitter (X) action to execute.
-   * @param {TwitterActionSchemaAny} args - The arguments for the action.
-   * @returns {Promise<string>} The result of the execution.
+   * @param action - The Twitter (X) action to execute.
+   * @param args - The arguments for the action.
+   * @returns The result of the execution.
    */
   async run<TActionSchema extends TwitterActionSchemaAny>(
     action: TwitterAction<TActionSchema>,
