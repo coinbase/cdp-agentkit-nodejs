@@ -1,7 +1,7 @@
 {
   "name": "@coinbase/cdp-langchain-chatbot-example",
   "description": "CDP Agentkit Node.js SDK Chatbot Example",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "author": "Coinbase Inc.",
   "license": "Apache-2.0",
   "scripts": {
