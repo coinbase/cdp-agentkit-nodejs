@@ -1,4 +1,5 @@
-import { TwitterAgentkit, TwitterToolkit } from "@coinbase/twitter-langchain";
+import { TwitterToolkit } from "@coinbase/twitter-langchain";
+import { TwitterAgentkit } from "@coinbase/cdp-agentkit-core";
 import { HumanMessage } from "@langchain/core/messages";
 import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";

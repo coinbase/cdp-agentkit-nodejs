@@ -1,6 +1,5 @@
 import { StructuredToolInterface, BaseToolkit as Toolkit } from "@langchain/core/tools";
-import { TWITTER_ACTIONS } from "./actions/index";
-import { TwitterAgentkit } from "./twitter_agentkit";
+import { TWITTER_ACTIONS, TwitterAgentkit } from "@coinbase/cdp-agentkit-core";
 import { TwitterTool } from "./twitter_tool";
 
 /**
