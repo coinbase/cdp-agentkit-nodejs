@@ -61,8 +61,8 @@ export class TwitterTool<TActionSchema extends TwitterActionSchemaAny> extends S
   /**
    * Executes the Twitter (X) action with the provided input.
    *
-   * @param {z.infer<typeof this.schema> & Record<string, unknown>} input - An object containing either instructions or schema-validated arguments.
-   * @returns {Promise<string>} A promise that resolves to the result of the Twitter (X) action.
+   * @param input - An object containing either instructions or schema-validated arguments.
+   * @returns A promise that resolves to the result of the Twitter (X) action.
    */
   protected async _call(
     input: z.infer<typeof this.schema> & Record<string, unknown>,
