@@ -43,7 +43,7 @@ npm install
 
 ## Run the Chatbot
 
-Ensure the following vars are set in .env;
+Ensure the following vars are set in .env:
 - "OPENAI_API_KEY"
 - "TWITTER_ACCESS_TOKEN"
 - "TWITTER_ACCESS_TOKEN_SECRET"
