@@ -2,8 +2,7 @@
   "name": "cdp-agentkit-monorepo",
   "workspaces": [
     "cdp-agentkit-core",
-    "cdp-langchain",
-    "cdp-langchain/examples/chatbot"
+    "cdp-langchain"
   ],
   "packageManager": "npm@8.9.0",
   "scripts": {
