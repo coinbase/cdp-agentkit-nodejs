@@ -50,9 +50,9 @@ const tools = toolkit.getTools();
 The toolkit provides the following tools:
 
 1. **account_details** - Get the authenticated account details
+4. **account_mentions** - Get mentions for a specified account
 2. **post_tweet** - Post a tweet to the account
 3. **post_tweet_reply** - Post a reply to a tweet on Twitter
-4. **user_mentions** - Get mentions for a specified user
 
 ### Using with an Agent
 
