@@ -86,9 +86,9 @@ export class TwitterTool<TActionSchema extends TwitterActionSchemaAny> extends S
       return await this.agentkit.run(this.action, args);
     } catch (error: unknown) {
       if (error instanceof Error) {
-        return Promise.resolve(`Error executing ${this.name}: ${error.message}`);
+        return `Error executing ${this.name}: ${error.message}`;
       }
-      return Promise.resolve(`Error executing ${this.name}: Unknown error occurred`);
+      return `Error executing ${this.name}: Unknown error occurred`;
     }
   }
 }
