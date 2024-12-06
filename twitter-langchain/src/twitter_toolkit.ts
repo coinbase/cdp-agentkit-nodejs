@@ -10,8 +10,9 @@ import { TwitterTool } from "./twitter_tool";
  * the state of a service; e.g., by creating, deleting, or updating,
  * reading underlying data.
  *
- * For example, this toolkit can be used to get account details, post tweets,
- * post tweet replies, get user mentions, etc.
+ * For example, this toolkit can be used to get account details,
+ * account mentions, post tweets, post tweet replies, and anything,
+ * else you can implement with the Twitter (X) API!
  *
  * Setup:
  * You will need to set the following environment variables:
@@ -39,9 +40,9 @@ import { TwitterTool } from "./twitter_tool";
  *
  * // Available tools include:
  * // - account_details
+ * // - account_mentions
  * // - post_tweet
  * // - post_tweet_reply
- * // - user_mentions
  * ```
  */
 export class TwitterToolkit extends Toolkit {
