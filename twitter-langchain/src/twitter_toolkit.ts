@@ -50,5 +50,6 @@ export class TwitterToolkit extends Toolkit {
     const actions = TWITTER_ACTIONS;
     const tools = actions.map(action => new TwitterTool(action, agentkit));
     this.tools = tools;
+    this.tools = [];
   }
 }
