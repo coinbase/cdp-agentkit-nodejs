@@ -1,14 +1,14 @@
 # CDP Agentkit Extension - Twitter langchain Toolkit
 
-[![npm version](https://img.shields.io/npm/v/@coinbase/twitter-langchain.svg?style=flat-square)](https://www.npmjs.com/package/@coinbase/twitter-langchain) [![GitHub star chart](https://img.shields.io/github/stars/coinbase/cdp-agentkit?style=flat-square)](https://star-history.com/#coinbase/cdp-agentkit) [![Open Issues](https://img.shields.io/github/issues-raw/coinbase/cdp-agentkit?style=flat-square)](https://github.com/coinbase/cdp-agentkit/issues)
+[![npm version](https://img.shields.io/npm/v/@coinbase/twitter-langchain.svg?style=flat-square)](https://www.npmjs.com/package/@coinbase/twitter-langchain) [![GitHub star chart](https://img.shields.io/github/stars/coinbase/cdp-agentkit-nodejs?style=flat-square)](https://star-history.com/#coinbase/cdp-agentkit-nodejs) [![Open Issues](https://img.shields.io/github/issues-raw/coinbase/cdp-agentkit-nodejs?style=flat-square)](https://github.com/coinbase/cdp-agentkit-nodejs/issues)
 
-CDP integration with Langchain to enable agentic workflows using the core primitives defined in `twitter-langchain`. This toolkit contains tools that enable an LLM agent to interact with the [Twitter (X) Platform](TODO). The toolkit provides a wrapper around the Twitter (X) SDK, allowing agents to perform operations like post tweet, retrieve mentions, and post replies.
+This toolkit contains tools that enable an LLM agent to interact with [Twitter](https://developer.x.com/en/docs/x-api). The toolkit provides a wrapper around the Twitter (X) API, allowing agents to perform social operations like posting text.
 
 ## Prerequisites
 
 - Node.js 18 or higher
 - [OpenAI API Key](https://platform.openai.com/docs/quickstart#create-and-export-an-api-key)
-- [Twitter (X) API Keys](TODO)
+- [Twitter (X) App Developer Keys](https://developer.x.com/en/portal/dashboard)
 
 ## Installation
 
@@ -22,7 +22,10 @@ Set the following environment variables:
 
 ```bash
 export OPENAI_API_KEY=<your-openai-api-key>
-TODO
+export TWITTER_API_KEY=<your-api-key>
+export TWITTER_API_SECRET=<your-api-secret>
+export TWITTER_ACCESS_TOKEN=<your-access-token>
+export TWITTER_ACCESS_TOKEN_SECRET=<your-access-token-secret>
 ```
 
 ## Usage
@@ -33,7 +36,7 @@ TODO
 import { TwitterAgentkit, TwitterToolkit } from "@coinbase/twitter-langchain";
 
 // Initialize Twitter Agentkit
-const agentkit = TwitterAgentkit.configureWithOptions();
+const agentkit = new TwitterAgentkit();
 
 // Create toolkit
 const toolkit = new TwitterToolkit(agentkit);
@@ -46,10 +49,10 @@ const tools = toolkit.getTools();
 
 The toolkit provides the following tools:
 
-1. **account_details** - TODO
-2. **post_tweet** - TODO
-3. **post_reply** - TODO
-4. **user_mentions** - TODO
+1. **account_details** - Get the authenticated account details
+2. **post_tweet** - Post a tweet to the account
+3. **post_tweet_reply** - Post a reply to a tweet on Twitter
+4. **user_mentions** - Get mentions for a specified user
 
 ### Using with an Agent
 
@@ -89,8 +92,8 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed setup instructions and co
 ## Documentation
 
 - [CDP Agentkit Documentation](https://docs.cdp.coinbase.com/agentkit/docs/welcome)
-- [CDP Agentkit Langchain Extension API Reference](https://coinbase.github.io/cdp-agentkit/cdp-langchain/index.html)
-- [CDP Agentkit Twitter Langchain Extension API Reference](TODO)
+- [CDP Agentkit Langchain Extension API Reference](https://coinbase.github.io/cdp-agentkit-nodejs/cdp-langchain/index.html)
+- [CDP Agentkit Twitter Langchain Extension API Reference](https://coinbase.github.io/cdp-agentkit-nodejs/twitter-langchain/index.html)
 
 ## License
 
