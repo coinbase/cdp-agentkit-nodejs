@@ -4,9 +4,9 @@
 
 import { TwitterAction, TwitterActionSchemaAny } from "./twitter_action";
 import { AccountDetailsAction } from "./account_details";
+import { AccountMentionsAction } from "./account_mentions";
 import { PostTweetAction } from "./post_tweet";
 import { PostTweetReplyAction } from "./post_tweet_reply";
-import { UserMentionsAction } from "./user_mentions";
 
 /**
  * Retrieve an array of Twitter (X) action instances.
@@ -16,9 +16,9 @@ import { UserMentionsAction } from "./user_mentions";
 export function getAllTwitterActions(): TwitterAction<TwitterActionSchemaAny>[] {
   return [
     new AccountDetailsAction(),
+    new AccountMentionsAction(),
     new PostTweetReplyAction(),
     new PostTweetAction(),
-    new UserMentionsAction(),
   ];
 }
 
@@ -34,7 +34,7 @@ export {
   TwitterAction,
   TwitterActionSchemaAny,
   AccountDetailsAction,
+  AccountMentionsAction,
   PostTweetAction,
   PostTweetReplyAction,
-  UserMentionsAction,
 };
