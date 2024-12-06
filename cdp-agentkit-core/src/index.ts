@@ -13,8 +13,5 @@ export { CdpAction } from "./actions/cdp/cdp_action";
 // Export CDP AgentKit
 export { CdpAgentkit } from "./cdp_agentkit";
 
-// Export Twitter Action
-export { TwitterAction, TwitterActionSchemaAny } from "./actions/cdp/social/twitter/twitter_action";
-
 // Export Twitter AgentKit
 export { TwitterAgentkit } from "./twitter_agentkit";
