@@ -1,4 +1,7 @@
-import { accountMentions, AccountMentionsInput } from "../actions/account_mentions";
+import {
+  accountMentions,
+  AccountMentionsInput,
+} from "../actions/cdp/social/twitter/account_mentions";
 import { TwitterApi, TwitterApiv2 } from "twitter-api-v2";
 
 const MOCK_ACCOUNT_ID = "1857479287504584856";

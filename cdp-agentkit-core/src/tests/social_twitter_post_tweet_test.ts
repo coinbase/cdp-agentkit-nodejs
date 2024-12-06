@@ -1,4 +1,4 @@
-import { postTweet, PostTweetInput } from "../actions/post_tweet";
+import { postTweet, PostTweetInput } from "../actions/cdp/social/twitter/post_tweet";
 import { TwitterApi, TwitterApiv2 } from "twitter-api-v2";
 
 const MOCK_TWEET = "@CDPAgentkit please reply!";
