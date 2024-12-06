@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@coinbase/twitter-langchain.svg?style=flat-square)](https://www.npmjs.com/package/@coinbase/twitter-langchain) [![GitHub star chart](https://img.shields.io/github/stars/coinbase/cdp-agentkit-nodejs?style=flat-square)](https://star-history.com/#coinbase/cdp-agentkit-nodejs) [![Open Issues](https://img.shields.io/github/issues-raw/coinbase/cdp-agentkit-nodejs?style=flat-square)](https://github.com/coinbase/cdp-agentkit-nodejs/issues)
 
-This toolkit contains tools that enable an LLM agent to interact with [Twitter](https://developer.x.com/en/docs/x-api). The toolkit provides a wrapper around the Twitter (X) API, allowing agents to perform social operations like posting text.
+This toolkit contains tools that enable an LLM agent to interact with [Twitter (X)](https://developer.x.com/en/docs/x-api). The toolkit provides a wrapper around the Twitter (X) API, allowing agents to perform social operations like posting text.
 
 ## Prerequisites
 
