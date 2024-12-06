@@ -1,7 +1,10 @@
 import { StructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
-import { TwitterAction, TwitterActionSchemaAny } from "./actions/twitter_action";
-import { TwitterAgentkit } from "./twitter_agentkit";
+import {
+  TwitterAction,
+  TwitterActionSchemaAny,
+  TwitterAgentkit,
+} from "@coinbase/cdp-agentkit-core";
 
 /**
  * This tool allows agents to interact with the Twitter (X) API and control an authenticated Twitter account.

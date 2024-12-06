@@ -1,6 +1,6 @@
 import { TwitterApi, TwitterApiTokens } from "twitter-api-v2";
 import { z } from "zod";
-import { TwitterAction, TwitterActionSchemaAny } from "./actions/twitter_action";
+import { TwitterAction, TwitterActionSchemaAny } from "./actions/cdp/social/twitter";
 
 /**
  * Schema for the options required to initialize the TwitterAgentkit.
