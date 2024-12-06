@@ -1,5 +1,6 @@
 {
   "name": "cdp-agentkit-monorepo",
+  "private": true,
   "workspaces": [
     "cdp-agentkit-core",
     "cdp-langchain"
