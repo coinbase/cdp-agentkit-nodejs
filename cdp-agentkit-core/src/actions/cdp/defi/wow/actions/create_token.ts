@@ -4,7 +4,19 @@ import { WOW_FACTORY_ABI, GENERIC_TOKEN_METADATA_URI, getFactoryAddress } from "
 import { z } from "zod";
 
 const WOW_CREATE_TOKEN_PROMPT = `
-This tool will create a Zora Wow ERC20 memecoin using the WoW factory. This tool takes the token name, token symbol, and optionally a token URI containing metadata about the token. It uses a bonding curve so there is no need to add liquidity to the pool upfront. It is only supported on Base Sepolia and Base Mainnet.
+This tool can only be used to create a Zora Wow ERC20 memecoin (also can be referred to as a bonding curve token) using the WoW factory.
+Do not use this tool for any other purpose, or for creating other types of tokens.
+
+Inputs:
+- Token name (e.g. WowCoin)
+- Token symbol (e.g. WOW) 
+- Token URI (optional) - Contains metadata about the token
+
+Important notes:
+- Uses a bonding curve - no upfront liquidity needed
+- Only supported on the following networks:
+  - Base Sepolia (ie, 'base-sepolia')
+  - Base Mainnet (ie, 'base', 'base-mainnnet')
 `;
 
 /**
