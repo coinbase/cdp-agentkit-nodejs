@@ -12,7 +12,7 @@ const MOCK_NAME = "test_action";
 describe("TwitterTool", () => {
   let mockAgentkit: jest.Mocked<TwitterAgentkit>;
   let mockAction: jest.Mocked<TwitterAction<TwitterActionSchemaAny>>;
-  let twitterTool: TwitterTool<any>;
+  let twitterTool: TwitterTool<TwitterActionSchemaAny>;
 
   beforeEach(() => {
     mockAgentkit = {
