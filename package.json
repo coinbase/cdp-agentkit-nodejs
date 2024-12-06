@@ -3,7 +3,10 @@
   "private": true,
   "workspaces": [
     "cdp-agentkit-core",
-    "cdp-langchain"
+    "cdp-langchain",
+    "cdp-langchain/examples/chatbot",
+    "twitter-langchain",
+    "twitter-langchain/examples/chatbot"
   ],
   "packageManager": "npm@8.9.0",
   "scripts": {
