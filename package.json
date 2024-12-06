@@ -49,8 +49,5 @@
     "turbo": "^2.3.3",
     "typedoc": "^0.27.2",
     "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "@coinbase/cdp-agentkit-core": "^0.0.7"
   }
 }
