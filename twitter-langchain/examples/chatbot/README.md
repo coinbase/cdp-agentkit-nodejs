@@ -12,7 +12,7 @@ This example demonstrates an agent setup as a terminal style chatbot with access
 
 - Node.js 18+
 - [OpenAI API Key](https://platform.openai.com/docs/quickstart#create-and-export-an-api-key)
-- [Twitter (X) API Key's](https://developer.x.com/en/portal/dashboard)
+- [Twitter (X) API Keys](https://developer.x.com/en/portal/dashboard)
 
 ### Twitter Application Setup
 1. Visit the Twitter (X) [Developer Portal](https://developer.x.com/en/portal/dashboard)
