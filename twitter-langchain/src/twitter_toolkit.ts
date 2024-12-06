@@ -16,14 +16,21 @@ import { TwitterTool } from "./twitter_tool";
  * Setup:
  * You will need to set the following environment variables:
  * ```bash
- * TODO
+ * export OPENAI_API_KEY=<your-openai-api-key>
+ * export TWITTER_API_KEY=<your-api-key>
+ * export TWITTER_API_SECRET=<your-api-secret>
+ * export TWITTER_ACCESS_TOKEN=<your-access-token>
+ * export TWITTER_ACCESS_TOKEN_SECRET=<your-access-token-secret>
  * ```
  *
  * Example usage:
  * ```typescript
  * // optional if not available via the ENV
  * const options = {
- *  TODO
+ *  apiKey: "<your-api-key>",
+ *  apiSecret: "<your-api-secret>",
+ *  accessToken: "<your-access-token>",
+ *  accessTokenSecret: "<your-access-token-secret>",
  * };
  *
  * const agentkit = await TwitterAgentkit.configureWithOptions(options);
