@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [0.0.7] - 2024-12-06
+
+### Added
+
+- Improved prompts for all actions.
+
 ## [0.0.6] - 2024-12-03
 
 ### Fixed
