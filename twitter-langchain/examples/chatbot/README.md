@@ -1,19 +1,30 @@
-# CDP Agentkit Langchain Extension Examples - Chatbot
+# CDP Agentkit Twitter Langchain Extension Examples - Chatbot
 
-This example demonstrates an agent setup as a terminal style chatbot with access to the full set of CDP Agentkit actions.
+This example demonstrates an agent setup as a terminal style chatbot with access to Twitter (X) API actions.
 
 ## Ask the chatbot to engage in the Web3 ecosystem!
-
-- "Transfer a portion of your ETH to john2879.base.eth"
-- "Deploy an NFT that will go super viral!"
-- "Choose a name for yourself and register a Basename for your wallet"
-- "Deploy an ERC-20 token with total supply 1 billion"
+- "What are my account details?"
+- "Please post a message for me to Twitter"
+- "Please get my mentions"
+- "Please post responses to my mentions"
 
 ## Requirements
 
 - Node.js 18+
-- [CDP API Key](https://portal.cdp.coinbase.com/access/api)
 - [OpenAI API Key](https://platform.openai.com/docs/quickstart#create-and-export-an-api-key)
+- [Twitter (X) API Key's](https://developer.x.com/en/portal/dashboard)
+
+### Twitter Application Setup
+1. Visit the Twitter (X) [Developer Portal](https://developer.x.com/en/portal/dashboard)
+2. Navigate to your project
+3. Navigate to your application
+4. Edit "User authentication settings"
+5. Set "App permissions" to "Read and write and Direct message"
+6. Set "Type of App" to "Web App, Automated app or Bot"
+7. Set "App info" urls
+8. Save
+9. Navigate to "Keys and tokens"
+10. Regenerate all keys and tokens
 
 ### Checking Node Version
 
@@ -32,13 +43,12 @@ npm install
 
 ## Run the Chatbot
 
-### Set ENV Vars
-
-- Ensure the following ENV Vars are set:
-  - "CDP_API_KEY_NAME"
-  - "CDP_API_KEY_PRIVATE_KEY"
-  - "OPENAI_API_KEY"
-  - "NETWORK_ID" (Defaults to `base-sepolia`)
+Ensure the following vars are set in .env;
+- "OPENAI_API_KEY"
+- "TWITTER_ACCESS_TOKEN"
+- "TWITTER_ACCESS_TOKEN_SECRET"
+- "TWITTER_API_KEY"
+- "TWITTER_API_SECRET"
 
 ```bash
 npm start
