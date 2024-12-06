@@ -59,8 +59,8 @@ export class TwitterAgentkit {
    * Initializes a new instance of TwitterAgentkit with the provided options.
    * If no options are provided, it attempts to load the required environment variables.
    *
-   * @param {z.infer<typeof TwitterAgentkitOptions>} options - Optional. The configuration options for the TwitterAgentkit.
-   * @throws {Error} Throws an error if the provided options are invalid or if the environment variables cannot be loaded.
+   * @param options - Optional. The configuration options for the TwitterAgentkit.
+   * @throws An error if the provided options are invalid or if the environment variables cannot be loaded.
    */
   public constructor(options?: z.infer<typeof TwitterAgentkitOptions>) {
     if (!options) {
