@@ -1,7 +1,16 @@
+/**
+ * This module provides functionality to retrieve account details for the currently authenticated Twitter (X) user.
+ */
+
 import { z } from "zod";
 import { TwitterAction } from "./twitter_action";
 import { TwitterApi } from "twitter-api-v2";
 
+/**
+ * Prompt message describing the account details tool.
+ * A successful response will return account details in JSON format,
+ * while a failure response will indicate an error from the Twitter API.
+ */
 const ACCOUNT_DETAILS_PROMPT = `
 This tool will return account details for the currently authenticated Twitter (X) user context.
 
@@ -12,8 +21,18 @@ A failure response will return a message with a Twitter API request error:
     Error retrieving authenticated user account: 429 Too Many Requests
 `;
 
-export const AccountDetailsInput = z.object({}).strip().describe("");
+/**
+ * Input argument schema for the account details action.
+ */
+export const AccountDetailsInput = z.object({}).strip().describe("Input schema for retrieving account details");
 
+/**
+ * Get the authenticated Twitter (X) user account details.
+ *
+ * @param {TwitterApi} client - The Twitter (X) client used to authenticate with.
+ * @param {z.infer<typeof AccountDetailsInput>} _ - The input arguments for the action.
+ * @returns {Promise<string>} A message containing account details for the authenticated user context.
+ */
 export async function accountDetails(
   client: TwitterApi,
   _: z.infer<typeof AccountDetailsInput>,
@@ -27,6 +46,9 @@ export async function accountDetails(
   }
 }
 
+/**
+ * AccountDetailsAction
+ */
 export class AccountDetailsAction implements TwitterAction<typeof AccountDetailsInput> {
   public name = "account_details";
   public description = ACCOUNT_DETAILS_PROMPT;
