@@ -6,7 +6,8 @@ import { getSellQuote } from "../utils";
 import { z } from "zod";
 
 const WOW_SELL_TOKEN_PROMPT = `
-This tool can only be used to sell a Zora Wow ERC20 memecoin for ETH. Do not use this tool for any other purpose, or trading other assets.
+This tool can only be used to sell a Zora Wow ERC20 memecoin (also can be referred to as a bonding curve token) for ETH.
+Do not use this tool for any other purpose, or trading other assets.
 
 Inputs:
 - WOW token contract address

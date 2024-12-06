@@ -4,7 +4,8 @@ import { WOW_FACTORY_ABI, GENERIC_TOKEN_METADATA_URI, getFactoryAddress } from "
 import { z } from "zod";
 
 const WOW_CREATE_TOKEN_PROMPT = `
-This tool can only be used to create a Zora Wow ERC20 memecoin using the WoW factory. Do not use this tool for any other purpose, or creating other types of tokens.
+This tool can only be used to create a Zora Wow ERC20 memecoin (also can be referred to as a bonding curve token) using the WoW factory.
+Do not use this tool for any other purpose, or for creating other types of tokens.
 
 Inputs:
 - Token name (e.g. WowCoin)

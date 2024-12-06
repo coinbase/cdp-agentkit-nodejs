@@ -6,7 +6,8 @@ import { getBuyQuote } from "../utils";
 import { z } from "zod";
 
 const WOW_BUY_TOKEN_PROMPT = `
-This tool can only be used to buy a Zora Wow ERC20 memecoin with ETH. Do not use this tool for any other purpose, or trading other assets.
+This tool can only be used to buy a Zora Wow ERC20 memecoin (also can be referred to as a bonding curve token) with ETH.
+Do not use this tool for any other purpose, or trading other assets.
 
 Inputs:
 - WOW token contract address
