@@ -92,8 +92,7 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed setup instructions and co
 ## Documentation
 
 - [CDP Agentkit Documentation](https://docs.cdp.coinbase.com/agentkit/docs/welcome)
-- [CDP Agentkit Langchain Extension API Reference](https://coinbase.github.io/cdp-agentkit-nodejs/cdp-langchain/index.html)
-- [CDP Agentkit Twitter Langchain Extension API Reference](https://coinbase.github.io/cdp-agentkit-nodejs/twitter-langchain/index.html)
+- [API Reference: CDP Agentkit Twitter Langchain Extension](https://coinbase.github.io/cdp-agentkit-nodejs/twitter-langchain/index.html)
 
 ## License
 
