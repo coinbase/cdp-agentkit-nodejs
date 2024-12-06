@@ -1,4 +1,4 @@
-import { postTweet, PostTweetReplyInput } from "../actions/post_tweet_reply";
+import { postTweet, PostTweetReplyInput } from "../actions/cdp/social/twitter/post_tweet_reply";
 import { TwitterApi, TwitterApiv2 } from "twitter-api-v2";
 
 const MOCK_TWEET_ID = "0123456789012345678";

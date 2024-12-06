@@ -1,4 +1,4 @@
-import { accountDetails, AccountDetailsInput } from "../actions/account_details";
+import { accountDetails, AccountDetailsInput } from "../actions/cdp/social/twitter/account_details";
 import { TwitterApi, TwitterApiv2 } from "twitter-api-v2";
 
 const MOCK_ID = "1853889445319331840";
