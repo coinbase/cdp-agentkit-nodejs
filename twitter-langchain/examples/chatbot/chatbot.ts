@@ -29,7 +29,7 @@ async function initialize() {
   // Initialize LLM
   const llm = new ChatOpenAI({ model: "gpt-4o-mini" });
 
-  // Twitter (X) Agentkit options
+  // Twitter (X) Agentkit options - these are loaded automatically via the ENV
   const options = {
     apiKey: "$TWITTER_API_KEY",
     apiSecret: "$TWITTER_API_SECRET",
