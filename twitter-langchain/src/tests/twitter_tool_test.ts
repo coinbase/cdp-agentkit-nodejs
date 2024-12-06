@@ -29,13 +29,13 @@ describe("TwitterTool", () => {
     twitterTool = new TwitterTool(mockAction, mockAgentkit);
   });
 
-  test("should initialize with correct properties", () => {
+  it("should initialize with correct properties", () => {
     expect(twitterTool.name).toBe(MOCK_NAME);
     expect(twitterTool.description).toBe(MOCK_DESCRIPTION);
     expect(twitterTool.schema).toEqual(mockAction.argsSchema);
   });
 
-  test("should execute action with valid args", async () => {
+  it("should execute action with valid args", async () => {
     const args = { test_param: "test" };
     const response = await twitterTool.call(args);
 
@@ -43,13 +43,13 @@ describe("TwitterTool", () => {
     expect(response).toBe("success");
   });
 
-  test("should handle schema validation errors", async () => {
+  it("should handle schema validation errors", async () => {
     const invalidargs = { invalid_param: "test" };
     await expect(twitterTool.call(invalidargs)).rejects.toThrow();
     expect(mockAction.func).not.toHaveBeenCalled();
   });
 
-  test("should return error message on action execution failure", async () => {
+  it("should return error message on action execution failure", async () => {
     mockAction.func.mockRejectedValue(new Error("Execution failed"));
     const args = { test_param: "test" };
     const response = await twitterTool.call(args);
