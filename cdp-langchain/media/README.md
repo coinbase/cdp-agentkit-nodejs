@@ -1,6 +1,6 @@
-# CDP Agentkit Langchain Extension Examples - Chatbot
+# CDP AgentKit Langchain Extension Examples - Chatbot
 
-This example demonstrates an agent setup as a terminal style chatbot with access to the full set of CDP Agentkit actions.
+This example demonstrates an agent setup as a terminal style chatbot with access to the full set of CDP AgentKit actions.
 
 ## Ask the chatbot to engage in the Web3 ecosystem!
 
@@ -43,3 +43,7 @@ npm install
 ```bash
 npm start
 ```
+
+## License
+
+Apache-2.0

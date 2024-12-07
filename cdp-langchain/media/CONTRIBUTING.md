@@ -1,6 +1,6 @@
-# CDP Agentkit Contributing Guide
+# CDP AgentKit Contributing Guide
 
-Thank you for your interest in contributing to CDP Agentkit! We welcome all contributions, no matter how big or small. Some of the ways you can contribute include:
+Thank you for your interest in contributing to CDP AgentKit! We welcome all contributions, no matter how big or small. Some of the ways you can contribute include:
 - Adding new actions to the core package
 - Creating new AI framework extensions
 - Adding tests and improving documentation
@@ -70,7 +70,7 @@ To generate documentation:
 npm run docs
 ```
 
-## Adding an Action to Agentkit Core
+## Adding an Action to AgentKit Core
 
 Actions are defined in `cdp-agentkit-core/src/actions` module. See `cdp-agentkit-core/src/actions/mint_nft.ts` for an example.
 
@@ -207,4 +207,4 @@ If you have questions or need help, please:
 2. Search through existing issues
 3. Create a new issue with your question
 
-Thank you for contributing to CDP Agentkit!
+Thank you for contributing to CDP AgentKit!
