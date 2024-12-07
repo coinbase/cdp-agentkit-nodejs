@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "cdp-agentkit-core",
-    "cdp-langchain"
+    "cdp-langchain",
+    "twitter-langchain"
   ],
   "packageManager": "npm@8.9.0",
   "scripts": {

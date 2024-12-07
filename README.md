@@ -9,6 +9,7 @@ The **Coinbase Developer Platform (CDP) AgentKit for Node.js** simplifies bringi
 ## Key Features
 - **Framework-agnostic**: Common AI Agent primitives that can be used with any AI framework.
 - **LangChain.js integration**: Seamless integration with [LangChain.js](https://js.langchain.com/docs/introduction/) for easy agentic workflows. More frameworks coming soon!
+- **Twitter (X) integration**: Seamless integration of Langchain with [Twitter (X)](https://developer.twitter.com/en/docs/twitter-api) for easy agentic workflows.
 - **Support for various on-chain actions**:
 
   - Faucet for testnet funds
@@ -37,6 +38,10 @@ See [CDP AgentKit Core](./cdp-agentkit-core/README.md) to get started!
 LangChain.js Toolkit extension of CDP AgentKit. Enables agentic workflows to interact with onchain actions.
 See [CDP LangChain](./cdp-langchain/README.md) to get started!
 
+### @coinbasetwitter-langchain
+Langchain Toolkit extension for Twitter (X). Enables agentic workflows to interact with Twitter, such as to post a tweet.
+See [Twitter Langchain](./twitter-langchain/README.md) to get started!
+
 ## Contributing
 CDP AgentKit welcomes community contributions.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
@@ -49,6 +54,7 @@ See [SECURITY.md](SECURITY.md) for more information.
 - [CDP AgentKit Documentation](https://docs.cdp.coinbase.com/agentkit/docs/welcome)
 - [API Reference: CDP AgentKit Core](https://coinbase.github.io/cdp-agentkit-nodejs/cdp-agentkit-core/index.html)
 - [API Reference: CDP AgentKit LangChain Extension](https://coinbase.github.io/cdp-agentkit-nodejs/cdp-langchain/index.html)
+- [API Reference: CDP Agentkit Twitter Langchain Extension](https://coinbase.github.io/cdp-agentkit-nodejs/twitter-langchain/index.html)
 
 ## License
 

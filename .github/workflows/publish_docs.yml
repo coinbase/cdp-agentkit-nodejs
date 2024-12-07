@@ -31,6 +31,12 @@ jobs:
           mkdir -p docs/cdp-langchain
           cp -r cdp-langchain/docs/* docs/cdp-langchain/
 
+      # Move twitter-langchain docs
+      - name: Build Twitter LangChain docs
+        run: |
+          mkdir -p docs/twitter-langchain
+          cp -r twitter-langchain/docs/* docs/twitter-langchain/
+
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
