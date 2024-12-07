@@ -33,10 +33,10 @@ export NETWORK_ID=base-sepolia  # Optional: Defaults to base-sepolia
 
 ```typescript
 import { CdpToolkit } from "@coinbase/cdp-langchain";
-import { CdpAgentKit } from "@coinbase/cdp-agentkit-core";
+import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 
 // Initialize CDP AgentKit
-const agentkit = CdpAgentKit.configureWithWallet();
+const agentkit = await CdpAgentkit.configureWithWallet();
 
 // Create toolkit
 const toolkit = new CdpToolkit(agentkit);
@@ -66,7 +66,8 @@ The toolkit provides the following tools:
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
-import { initializeAgentExecutorWithOptions } from "langchain/agents";
+import { HumanMessage } from "@langchain/core/messages";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
 
 // Initialize LLM
 const model = new ChatOpenAI({
@@ -74,17 +75,17 @@ const model = new ChatOpenAI({
 });
 
 // Create agent executor
-const executor = await initializeAgentExecutorWithOptions(toolkit.getTools(), model, {
-  agentType: "chat-conversational-react-description",
-  verbose: true,
+const agent = createReactAgent({
+  llm: model,
+  tools,
 });
 
 // Example usage
-const result = await executor.invoke({
-  input: "Send 0.005 ETH to john2879.base.eth",
+const result = await agent.invoke({
+  messages: [new HumanMessage("Send 0.005 ETH to john2879.base.eth")],
 });
 
-console.log(result.output);
+console.log(result.messages[result.messages.length - 1].content);
 ```
 
 ## CDP Toolkit Specific Features
@@ -98,7 +99,7 @@ The toolkit maintains an MPC wallet that persists between sessions:
 const walletData = await agentkit.exportWallet();
 
 // Import wallet data
-const importedAgentKit = CdpAgentKit.configureWithWallet({ cdpWalletData: walletData });
+const importedAgentkit = await CdpAgentkit.configureWithWallet({ cdpWalletData: walletData });
 ```
 
 ### Network Support
