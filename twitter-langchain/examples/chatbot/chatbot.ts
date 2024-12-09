@@ -38,6 +38,7 @@ async function initialize() {
   };
 
   // Twitter (X) Agentkit
+  // uncomment options below to override the ENV
   const twitterAgentkit = new TwitterAgentkit(/*options*/);
 
   // Twitter (X) Toolkit
