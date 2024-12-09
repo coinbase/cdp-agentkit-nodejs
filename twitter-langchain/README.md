@@ -58,7 +58,7 @@ The toolkit provides the following tools:
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
-import { initializeAgentExecutorWithOptions } from "langchain/agents";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
 
 // Initialize LLM
 const model = new ChatOpenAI({
@@ -66,17 +66,17 @@ const model = new ChatOpenAI({
 });
 
 // Create agent executor
-const executor = await initializeAgentExecutorWithOptions(toolkit.getTools(), model, {
-  agentType: "chat-conversational-react-description",
-  verbose: true,
+const agent = createReactAgent({
+  llm: model,
+  tools,
 });
 
 // Example usage
-const result = await executor.invoke({
-  input: "please post 'hello, world!' to twitter"
+const result = await agent.invoke({
+  messages: [new HumanMessage("please post 'hello, world!' to twitter")],
 });
 
-console.log(result.output);
+console.log(result.messages[result.messages.length - 1].content);
 ```
 
 ## Examples
