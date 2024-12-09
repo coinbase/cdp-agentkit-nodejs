@@ -35,7 +35,7 @@ export TWITTER_ACCESS_TOKEN_SECRET=<your-access-token-secret>
 ```typescript
 import { TwitterAgentkit, TwitterToolkit } from "@coinbase/twitter-langchain";
 
-// Initialize Twitter Agentkit
+// Initialize Twitter AgentKit
 const agentkit = new TwitterAgentkit();
 
 // Create toolkit
@@ -91,8 +91,8 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed setup instructions and co
 
 ## Documentation
 
-- [CDP Agentkit Documentation](https://docs.cdp.coinbase.com/agentkit/docs/welcome)
-- [API Reference: CDP Agentkit Twitter Langchain Extension](https://coinbase.github.io/cdp-agentkit-nodejs/twitter-langchain/index.html)
+- [CDP AgentKit Documentation](https://docs.cdp.coinbase.com/agentkit/docs/welcome)
+- [API Reference: CDP AgentKit Twitter Langchain Extension](https://coinbase.github.io/cdp-agentkit-nodejs/twitter-langchain/index.html)
 
 ## License
 
