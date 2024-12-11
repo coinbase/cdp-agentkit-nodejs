@@ -1,6 +1,6 @@
 # CDP AgentKit Extension - Langchain Toolkit
 
-[![npm version](https://img.shields.io/npm/v/@coinbase/cdp-langchain.svg?style=flat-square)](https://www.npmjs.com/package/@coinbase/cdp-langchain) [![GitHub star chart](https://img.shields.io/github/stars/coinbase/cdp-agentkit?style=flat-square)](https://star-history.com/#coinbase/cdp-agentkit-nodejs) [![Open Issues](https://img.shields.io/github/issues-raw/coinbase/cdp-agentkit?style=flat-square)](https://github.com/coinbase/cdp-agentkit-nodejs/issues)
+[![npm version](https://img.shields.io/npm/v/@coinbase/cdp-langchain.svg?style=flat-square)](https://www.npmjs.com/package/@coinbase/cdp-langchain) [![GitHub star chart](https://img.shields.io/github/stars/coinbase/cdp-agentkit-nodejs?style=flat-square)](https://star-history.com/#coinbase/cdp-agentkit-nodejs) [![Open Issues](https://img.shields.io/github/issues-raw/coinbase/cdp-agentkit-nodejs?style=flat-square)](https://github.com/coinbase/cdp-agentkit-nodejs/issues)
 
 CDP integration with Langchain to enable agentic workflows using the core primitives defined in `cdp-agentkit-core`. This toolkit contains tools that enable an LLM agent to interact with the [Coinbase Developer Platform](https://docs.cdp.coinbase.com/). The toolkit provides a wrapper around the CDP SDK, allowing agents to perform onchain operations like transfers, trades, and smart contract interactions.
 
@@ -63,6 +63,11 @@ The toolkit provides the following tools:
 12. **wow_sell_token** - Sell [Zora Wow](https://wow.xyz/) ERC-20 memecoin for ETH
 
 ### Using with an Agent
+
+#### Additional Installations
+```bash
+npm install @langchain/langgraph @langchain/openai
+```
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";

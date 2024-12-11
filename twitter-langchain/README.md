@@ -33,7 +33,8 @@ export TWITTER_ACCESS_TOKEN_SECRET=<your-access-token-secret>
 ### Basic Setup
 
 ```typescript
-import { TwitterAgentkit, TwitterToolkit } from "@coinbase/twitter-langchain";
+import { TwitterAgentkit } from "@coinbase/cdp-agentkit-core";
+import { TwitterToolkit } from "@coinbase/twitter-langchain";
 
 // Initialize Twitter AgentKit
 const agentkit = new TwitterAgentkit();
@@ -55,6 +56,11 @@ The toolkit provides the following tools:
 3. **post_tweet_reply** - Post a reply to a tweet on Twitter
 
 ### Using with an Agent
+
+#### Additional Installations
+```bash
+npm install @langchain/langgraph @langchain/openai
+```
 
 ```typescript
 import { ChatOpenAI } from "@langchain/openai";
