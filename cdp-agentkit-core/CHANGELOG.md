@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Refactor
+
+- Use `ZodString.min(1)` instead of deprecated `ZodString.nonempty()`
+
 ## [0.0.8] - 2024-12-09
 
 ### Added

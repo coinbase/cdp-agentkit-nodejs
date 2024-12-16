@@ -9,19 +9,19 @@ export const TwitterAgentkitOptions = z
   .object({
     apiKey: z
       .string()
-      .nonempty("The Twitter (X) API key is required")
+      .min(1, "The Twitter (X) API key is required")
       .describe("The Twitter (X) API key"),
     apiSecret: z
       .string()
-      .nonempty("The Twitter (X) API secret is required")
+      .min(1, "The Twitter (X) API secret is required")
       .describe("The Twitter (X) API secret"),
     accessToken: z
       .string()
-      .nonempty("The Twitter (X) access token is required")
+      .min(1, "The Twitter (X) access token is required")
       .describe("The Twitter (X) access token"),
     accessTokenSecret: z
       .string()
-      .nonempty("The Twitter (X) access token secret is required")
+      .min(1, "The Twitter (X) access token secret is required")
       .describe("The Twitter (X) access token secret"),
   })
   .strip()
@@ -33,19 +33,19 @@ export const TwitterAgentkitOptions = z
 const EnvSchema = z.object({
   TWITTER_API_KEY: z
     .string()
-    .nonempty("TWITTER_API_KEY is required")
+    .min(1, "TWITTER_API_KEY is required")
     .describe("The Twitter (X) API key"),
   TWITTER_API_SECRET: z
     .string()
-    .nonempty("TWITTER_API_SECRET is required")
+    .min(1, "TWITTER_API_SECRET is required")
     .describe("The Twitter (X) API secret"),
   TWITTER_ACCESS_TOKEN: z
     .string()
-    .nonempty("TWITTER_ACCESS_TOKEN is required")
+    .min(1, "TWITTER_ACCESS_TOKEN is required")
     .describe("The Twitter (X) access token"),
   TWITTER_ACCESS_TOKEN_SECRET: z
     .string()
-    .nonempty("TWITTER_ACCESS_TOKEN_SECRET is required")
+    .min(1, "TWITTER_ACCESS_TOKEN_SECRET is required")
     .describe("The Twitter (X) access token secret"),
 });
 

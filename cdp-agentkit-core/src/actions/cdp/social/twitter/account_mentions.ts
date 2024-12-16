@@ -28,7 +28,7 @@ export const AccountMentionsInput = z
   .object({
     userId: z
       .string()
-      .nonempty("Account ID is required.")
+      .min(1, "Account ID is required.")
       .describe("The Twitter (X) user id to return mentions for"),
   })
   .strip()
