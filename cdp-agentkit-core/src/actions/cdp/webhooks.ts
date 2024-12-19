@@ -25,35 +25,35 @@ const WebhookEventType = z.enum([
 const WebhookNetworks = z.enum(["base-mainnet", "base-sepolia"]);
 
 // Create a flexible event filters schema
-const EventFilters = z
-  .object({
-    addresses: z
-      .array(z.string())
-      .optional()
-      .describe("List of wallet or contract addresses to monitor"),
-    from_address: z.string().optional().describe("Sender address for token transfers"),
-    to_address: z.string().optional().describe("Recipient address for token transfers"),
-    contract_address: z.string().optional().describe("Contract address for token transfers"),
-  })
-  .refine(
-    data => {
-      // Ensure at least one filter is provided
-      return Object.keys(data).length > 0;
-    },
-    { message: "At least one filter must be provided" },
-  );
+const EventFilters = z.array(
+  z
+    .object({
+      from_address: z.string().optional().describe("Sender address for token transfers"),
+      to_address: z.string().optional().describe("Recipient address for token transfers"),
+      contract_address: z.string().optional().describe("Contract address for token transfers"),
+    })
+    .refine(
+      data => {
+        // Ensure at least one filter is provided
+        return Object.keys(data).length > 0;
+      },
+      { message: "At least one filter must be provided" },
+    ),
+);
+
+const EventTypeFilter = z.object({
+  addresses: z.array(z.string()).describe("List of wallet or contract addresses to monitor"),
+});
 
 /**
  * Input schema for create webhook action.
  */
-const CreateWebhookInput = z.object({
+export const CreateWebhookInput = z.object({
   notificationUri: z.string().url().describe("The callback URL where webhook events will be sent"),
   eventType: WebhookEventType,
-  eventTypeFilter: z.object({
-    addresses: z.array(z.string()).describe("List of wallet or contract addresses to monitor"),
-  }),
+  eventTypeFilter: EventTypeFilter,
   eventFilters: EventFilters.optional(),
-  network: WebhookNetworks,
+  networkId: WebhookNetworks,
 });
 
 /**
@@ -63,18 +63,12 @@ const CreateWebhookInput = z.object({
  * @param args - Object with arguments needed
  * @returns Details of the created webhook
  */
-async function createWebhook(
+export async function createWebhook(
   wallet: Wallet,
   args: z.infer<typeof CreateWebhookInput>,
 ): Promise<string> {
   try {
-    const { notificationUri, eventType, eventTypeFilter, eventFilters } = args;
-    // Use the environment variable for networkId
-    const networkId = process.env.NETWORK_ID;
-
-    if (!networkId) {
-      throw new Error("Network ID is not configured in environment variables");
-    }
+    const { notificationUri, eventType, eventTypeFilter, eventFilters, networkId } = args;
 
     const webhookOptions: CreateWebhookOptions = {
       networkId,
@@ -99,11 +93,13 @@ async function createWebhook(
       case "erc721_transfer":
         webhookOptions.eventFilters = [
           {
-            ...(eventFilters?.contract_address
-              ? { contract_address: eventFilters.contract_address }
+            ...(eventFilters?.[0]?.contract_address
+              ? { contract_address: eventFilters?.[0].contract_address }
               : {}),
-            ...(eventFilters?.from_address ? { from_address: eventFilters.from_address } : {}),
-            ...(eventFilters?.to_address ? { to_address: eventFilters.to_address } : {}),
+            ...(eventFilters?.[0]?.from_address
+              ? { from_address: eventFilters?.[0].from_address }
+              : {}),
+            ...(eventFilters?.[0]?.to_address ? { to_address: eventFilters?.[0].to_address } : {}),
           },
         ];
         break;
@@ -116,7 +112,6 @@ async function createWebhook(
 
     return `The webhook was successfully created: ${webhook?.toString()}\n\n`;
   } catch (error) {
-    console.error("Failed to create webhook:", error);
     return `Error: ${error}`;
   }
 }
