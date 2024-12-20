@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Adding action for support to webhooks creation.
+
 ### Refactor
 
 - Use `ZodString.min(1)` instead of deprecated `ZodString.nonempty()`
