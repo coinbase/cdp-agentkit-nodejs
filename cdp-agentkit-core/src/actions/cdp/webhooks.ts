@@ -10,8 +10,8 @@ Supports monitoring wallet activity or smart contract events by specifying:
 - Addresses to monitor
 Also supports monitoring erc20_transfer or erc721_transfer, when those are defined at least one of these filters needs to be provided (only one of them is required):
 - Contract address to listen for token transfers
-- Sender address for erc20_transfer and erc721_transfer events (listen on transfers originating from this address))
-- Recipient address for erc20_transfer and erc721_transfer events (listen on transfers being made to this address))
+- Sender address for erc20_transfer and erc721_transfer events (listen on transfers originating from this address)
+- Recipient address for erc20_transfer and erc721_transfer events (listen on transfers being made to this address)
 `;
 
 // Define the webhook event types
@@ -22,6 +22,7 @@ const WebhookEventType = z.enum([
   "erc721_transfer",
 ]);
 
+// Networks available for creating webhooks
 const WebhookNetworks = z.enum(["base-mainnet", "base-sepolia"]);
 
 // Create a flexible event filters schema
@@ -41,6 +42,9 @@ const EventFilters = z.array(
     ),
 );
 
+/**
+ * Input schema for event type filter.
+ */
 const EventTypeFilter = z.object({
   addresses: z.array(z.string()).describe("List of wallet or contract addresses to monitor"),
 });
