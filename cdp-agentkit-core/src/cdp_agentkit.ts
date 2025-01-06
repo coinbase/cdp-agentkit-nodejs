@@ -16,13 +16,11 @@ interface CdpAgentkitOptions {
 /**
  * Configuration options for the CDP Agentkit with a Wallet.
  */
-interface ConfigureCdpAgentkitWithWalletOptions {
-  cdpApiKeyName?: string;
-  cdpApiKeyPrivateKey?: string;
-  source?: string;
-  sourceVersion?: string;
+interface ConfigureCdpAgentkitWithWalletOptions extends CdpAgentkitOptions {
   networkId?: string;
   cdpWalletData?: string;
+  mnemonicPhrase?: string;
+  derivationPath?: string;
 }
 
 /**
@@ -76,6 +74,8 @@ export class CdpAgentkit {
       if (config.cdpWalletData) {
         const walletData = JSON.parse(config.cdpWalletData) as WalletData;
         agentkit.wallet = await Wallet.import(walletData);
+      } else if (config.mnemonicPhrase) {
+        console.log("import wallet via mnemonic sentence");
       } else {
         agentkit.wallet = await Wallet.create({ networkId: networkId });
       }
