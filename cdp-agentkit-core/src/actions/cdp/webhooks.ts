@@ -63,14 +63,10 @@ export const CreateWebhookInput = z.object({
 /**
  * Creates a new webhook for monitoring on-chain events
  *
- * @param wallet - The wallet used to create the webhook
  * @param args - Object with arguments needed
  * @returns Details of the created webhook
  */
-export async function createWebhook(
-  wallet: Wallet,
-  args: z.infer<typeof CreateWebhookInput>,
-): Promise<string> {
+export async function createWebhook(args: z.infer<typeof CreateWebhookInput>): Promise<string> {
   try {
     const { notificationUri, eventType, eventTypeFilter, eventFilters, networkId } = args;
 
