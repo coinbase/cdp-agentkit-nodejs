@@ -1,4 +1,4 @@
-import { Webhook, Wallet } from "@coinbase/coinbase-sdk";
+import { Webhook } from "@coinbase/coinbase-sdk";
 
 import { createWebhook, CreateWebhookInput } from "../actions/cdp/webhooks";
 import { z } from "zod";
@@ -54,7 +54,6 @@ describe("Webhook Input", () => {
 
 describe("Create webhook action", () => {
   let mockWebhook: jest.Mocked<Webhook>;
-  let mockWallet: jest.Mocked<Wallet>;
   let mockStaticCreate;
   let mockStaticCreateError;
   const errorMsg = "Failed to create webhook";
@@ -63,15 +62,7 @@ describe("Create webhook action", () => {
     mockStaticCreate = jest.fn().mockResolvedValue(mockWebhook);
     mockStaticCreateError = jest.fn().mockRejectedValue(new Error(errorMsg));
     Webhook.create = mockStaticCreate;
-    mockWebhook = {
-      // create: jest.fn().mockReturnValue(mockWebhook),
-    } as unknown as jest.Mocked<Webhook>;
-
-    mockWallet = {
-      createTransfer: jest.fn(),
-    } as unknown as jest.Mocked<Wallet>;
-
-    // mockWallet.createTransfer.mockResolvedValue(mockWebhook);
+    mockWebhook = {} as unknown as jest.Mocked<Webhook>;
   });
 
   it("should successfully create wallet activity webhook", async () => {
@@ -83,7 +74,7 @@ describe("Create webhook action", () => {
       },
       networkId: MOCK_NETWORK,
     };
-    const response = await createWebhook(mockWallet, args as z.infer<typeof CreateWebhookInput>);
+    const response = await createWebhook(args as z.infer<typeof CreateWebhookInput>);
 
     const expectedResponse = {
       ...args,
@@ -105,7 +96,7 @@ describe("Create webhook action", () => {
       },
       networkId: MOCK_NETWORK,
     };
-    const response = await createWebhook(mockWallet, args as z.infer<typeof CreateWebhookInput>);
+    const response = await createWebhook(args as z.infer<typeof CreateWebhookInput>);
 
     const expectedResponse = {
       ...args,
@@ -131,7 +122,7 @@ describe("Create webhook action", () => {
       ],
       networkId: MOCK_NETWORK,
     };
-    const response = await createWebhook(mockWallet, args as z.infer<typeof CreateWebhookInput>);
+    const response = await createWebhook(args as z.infer<typeof CreateWebhookInput>);
 
     const expectedResponse = {
       notificationUri: args.notificationUri,
@@ -157,7 +148,7 @@ describe("Create webhook action", () => {
       ],
       networkId: MOCK_NETWORK,
     };
-    const response = await createWebhook(mockWallet, args as z.infer<typeof CreateWebhookInput>);
+    const response = await createWebhook(args as z.infer<typeof CreateWebhookInput>);
 
     const expectedResponse = {
       notificationUri: args.notificationUri,
@@ -181,7 +172,7 @@ describe("Create webhook action", () => {
 
     Webhook.create = mockStaticCreateError;
 
-    const response = await createWebhook(mockWallet, args as z.infer<typeof CreateWebhookInput>);
+    const response = await createWebhook(args as z.infer<typeof CreateWebhookInput>);
 
     const expectedResponse = {
       ...args,

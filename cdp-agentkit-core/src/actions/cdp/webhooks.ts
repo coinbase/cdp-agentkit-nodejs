@@ -1,5 +1,5 @@
 import { CdpAction } from "./cdp_action";
-import { CreateWebhookOptions, Wallet, Webhook } from "@coinbase/coinbase-sdk";
+import { CreateWebhookOptions, Webhook } from "@coinbase/coinbase-sdk";
 import { z } from "zod";
 
 const CREATE_WEBHOOK_PROMPT = `
