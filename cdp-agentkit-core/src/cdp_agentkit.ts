@@ -1,4 +1,4 @@
-import { Wallet, WalletData, Coinbase } from "@coinbase/coinbase-sdk";
+import { Coinbase, MnemonicSeedPhrase, Wallet, WalletData } from "@coinbase/coinbase-sdk";
 import { version } from "../package.json";
 import { CdpAction, CdpActionSchemaAny } from "./actions/cdp/cdp_action";
 import { z } from "zod";
@@ -20,7 +20,6 @@ interface ConfigureCdpAgentkitWithWalletOptions extends CdpAgentkitOptions {
   networkId?: string;
   cdpWalletData?: string;
   mnemonicPhrase?: string;
-  derivationPath?: string;
 }
 
 /**
@@ -70,13 +69,17 @@ export class CdpAgentkit {
 
     const networkId = config.networkId || process.env.NETWORK_ID || Coinbase.networks.BaseSepolia;
 
+    // TODO: ask John if i should just remove the log statements or if this is useful for the user?
     try {
       if (config.cdpWalletData) {
+        console.log("importing wallet via wallet data");
         const walletData = JSON.parse(config.cdpWalletData) as WalletData;
         agentkit.wallet = await Wallet.import(walletData);
       } else if (config.mnemonicPhrase) {
-        console.log("import wallet via mnemonic sentence");
+        console.log("importing wallet via mnemonic phrase");
+        agentkit.wallet = await Wallet.import({ mnemonicPhrase: config.mnemonicPhrase });
       } else {
+        console.log("creating wallet");
         agentkit.wallet = await Wallet.create({ networkId: networkId });
       }
     } catch (error) {
