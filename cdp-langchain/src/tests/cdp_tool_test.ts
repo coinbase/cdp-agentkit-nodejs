@@ -1,8 +1,4 @@
-import {
-  CdpAction,
-  CdpActionSchemaAny,
-  CdpAgentkit,
-} from "@coinbase/cdp-agentkit-core";
+import { CdpAction, CdpActionSchemaAny, CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 import { CdpTool } from "../tools/cdp_tool";
 import { z } from "zod";
 
@@ -18,8 +14,8 @@ describe("CdpTool", () => {
     mockAgentkit = {
       run: jest.fn((action, args) => action.func(args)),
       wallet: {
-        getDefaultAddress: jest.fn().mockResolvedValue({ getId: () => "mock-address" })
-      }
+        getDefaultAddress: jest.fn().mockResolvedValue({ getId: () => "mock-address" }),
+      },
     } as unknown as jest.Mocked<CdpAgentkit>;
 
     mockAction = {
@@ -56,6 +52,8 @@ describe("CdpTool", () => {
     mockAction.func.mockRejectedValue(new Error("Failed to retrieve wallet details"));
     const args = { wallet_id: "0x123" };
     const response = await cdpTool.call(args);
-    expect(response).toContain("Error executing get_wallet_details: Failed to retrieve wallet details");
+    expect(response).toContain(
+      "Error executing get_wallet_details: Failed to retrieve wallet details",
+    );
   });
 });

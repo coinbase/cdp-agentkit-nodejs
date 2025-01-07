@@ -1,10 +1,6 @@
 import { CdpToolkit } from "../toolkits/cdp_toolkit";
 import { CdpTool } from "../tools/cdp_tool";
-import {
-  CdpAction,
-  CdpActionSchemaAny,
-  CdpAgentkit,
-} from "@coinbase/cdp-agentkit-core";
+import { CdpAction, CdpActionSchemaAny, CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 import { z } from "zod";
 
 describe("CdpToolkit", () => {
@@ -16,8 +12,8 @@ describe("CdpToolkit", () => {
     mockAgentkit = {
       run: jest.fn((action, args) => action.func(args)),
       wallet: {
-        getDefaultAddress: jest.fn().mockResolvedValue({ getId: () => "mock-address" })
-      }
+        getDefaultAddress: jest.fn().mockResolvedValue({ getId: () => "mock-address" }),
+      },
     } as unknown as jest.Mocked<CdpAgentkit>;
 
     mockActions = [
