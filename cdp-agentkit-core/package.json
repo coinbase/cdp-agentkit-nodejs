@@ -7,9 +7,7 @@
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsc",
     "lint": "npx --yes eslint -c .eslintrc.json src/**/*.ts",
@@ -39,7 +37,7 @@
     "typescript"
   ],
   "dependencies": {
-    "@coinbase/coinbase-sdk": "^0.11.0",
+    "@coinbase/coinbase-sdk": "^0.13.0",
     "twitter-api-v2": "^1.18.2",
     "viem": "^2.21.51",
     "zod": "^3.23.8"

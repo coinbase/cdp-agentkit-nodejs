@@ -19,16 +19,16 @@ describe("TwitterToolkit", () => {
 
     mockActions = [
       {
-        name: "test_action_1",
-        description: "Test Twitter Action 1",
-        argsSchema: z.object({ param1: z.string() }),
-        func: jest.fn().mockResolvedValue("success_1"),
+        name: "account_details",
+        description: "Get Twitter account details",
+        argsSchema: z.object({ userId: z.string() }),
+        func: jest.fn().mockResolvedValue("@user123 - Joined 2023"),
       },
       {
-        name: "test_action_2",
-        description: "Test Twitter Action 2",
-        argsSchema: z.object({ param2: z.string() }),
-        func: jest.fn().mockResolvedValue("success_2"),
+        name: "post_tweet",
+        description: "Post a new tweet",
+        argsSchema: z.object({ content: z.string() }),
+        func: jest.fn().mockResolvedValue("Tweet posted successfully"),
       },
     ];
 
@@ -38,35 +38,35 @@ describe("TwitterToolkit", () => {
 
   it("should initialize with correct tools", () => {
     expect(twitterToolkit.tools).toHaveLength(mockActions.length);
-    expect(twitterToolkit.tools[0].name).toBe("test_action_1");
-    expect(twitterToolkit.tools[1].name).toBe("test_action_2");
+    expect(twitterToolkit.tools[0].name).toBe("account_details");
+    expect(twitterToolkit.tools[1].name).toBe("post_tweet");
   });
 
   it("should execute action from toolkit", async () => {
     const tool = twitterToolkit.tools[0];
-    const args = { param1: "test" };
+    const args = { userId: "user123" };
     const response = await tool.call(args);
 
     expect(mockActions[0].func).toHaveBeenCalledWith(mockAgentkit, args);
-    expect(response).toBe("success_1");
+    expect(response).toBe("@user123 - Joined 2023");
   });
 
   it("should handle action execution failure", async () => {
-    const error = new Error("Execution failed");
+    const error = new Error("Failed to fetch account details");
     mockActions[0].func.mockRejectedValue(error);
 
     const tool = twitterToolkit.tools[0];
-    const args = { param1: "test" };
+    const args = { userId: "user123" };
     const response = await tool.call(args);
 
-    expect(response).toContain(`Error executing test_action_1: ${error.message}`);
+    expect(response).toContain(`Error executing account_details: ${error.message}`);
   });
 
   it("should return all available tools", () => {
     const tools = twitterToolkit.getTools();
 
     expect(tools).toHaveLength(mockActions.length);
-    expect(tools[0].name).toBe("test_action_1");
-    expect(tools[1].name).toBe("test_action_2");
+    expect(tools[0].name).toBe("account_details");
+    expect(tools[1].name).toBe("post_tweet");
   });
 });

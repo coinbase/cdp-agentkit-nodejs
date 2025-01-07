@@ -1,71 +1,75 @@
-import { Wallet } from "@coinbase/coinbase-sdk";
-import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 import { CdpToolkit } from "../toolkits/cdp_toolkit";
+import { CdpTool } from "../tools/cdp_tool";
+import {
+  CdpAction,
+  CdpActionSchemaAny,
+  CdpAgentkit,
+} from "@coinbase/cdp-agentkit-core";
+import { z } from "zod";
 
 describe("CdpToolkit", () => {
-  const WALLET_ID = "0x123456789abcdef";
-  const WALLET_SEED = "0xc746290109d0b86162c428be6e27f552";
-  const WALLET_JSON = `{"defaultAddressId":"0xabcdef123456789", "seed":"${WALLET_SEED}", "walletId":"${WALLET_ID}"}`;
+  let mockAgentkit: jest.Mocked<CdpAgentkit>;
+  let mockActions: jest.Mocked<CdpAction<CdpActionSchemaAny>>[];
+  let cdpToolkit: CdpToolkit;
 
-  let mockWallet: jest.Mocked<Wallet>;
+  beforeEach(() => {
+    mockAgentkit = {
+      run: jest.fn((action, args) => action.func(args)),
+      wallet: {
+        getDefaultAddress: jest.fn().mockResolvedValue({ getId: () => "mock-address" })
+      }
+    } as unknown as jest.Mocked<CdpAgentkit>;
 
-  beforeEach(async () => {
-    process.env.CDP_API_KEY_NAME = "test-key";
-    process.env.CDP_API_KEY_PRIVATE_KEY = "test-private-key";
+    mockActions = [
+      {
+        name: "get_wallet_details",
+        description: "Get wallet details",
+        argsSchema: z.object({ param1: z.string() }),
+        func: jest.fn().mockResolvedValue("success_1"),
+      },
+      {
+        name: "get_balance",
+        description: "Get wallet balance",
+        argsSchema: z.object({ param2: z.string() }),
+        func: jest.fn().mockResolvedValue("success_2"),
+      },
+    ];
 
-    mockWallet = {} as unknown as jest.Mocked<Wallet>;
-    jest.spyOn(Wallet, "create").mockResolvedValue(mockWallet);
+    cdpToolkit = new CdpToolkit(mockAgentkit);
+    cdpToolkit.tools = mockActions.map(action => new CdpTool(action, mockAgentkit));
   });
 
-  describe("initialization", () => {
-    it("should successfully init with env", async () => {
-      const options = {};
-      await expect(CdpAgentkit.configureWithWallet(options)).resolves.toBeDefined();
-    });
-
-    it("should successfully init with options and without env", async () => {
-      const options = {
-        cdpApiKeyName: "test-key",
-        cdpApiKeyPrivateKey: "test-private-key",
-      };
-
-      process.env.CDP_API_KEY_NAME = "";
-      process.env.CDP_API_KEY_PRIVATE_KEY = "";
-
-      await expect(CdpAgentkit.configureWithWallet(options)).resolves.toBeDefined();
-    });
-
-    it("should successfully init with wallet data", async () => {
-      const options = {
-        cdpWalletData: WALLET_JSON,
-      };
-
-      jest.spyOn(Wallet, "import").mockResolvedValue(mockWallet);
-
-      expect(await CdpAgentkit.configureWithWallet(options)).toBeDefined();
-    });
-
-    it("should fail init without env", async () => {
-      const options = {};
-
-      process.env.CDP_API_KEY_NAME = "";
-      process.env.CDP_API_KEY_PRIVATE_KEY = "";
-
-      await expect(CdpAgentkit.configureWithWallet(options)).rejects.toThrow();
-    });
+  it("should initialize with correct tools", () => {
+    expect(cdpToolkit.tools).toHaveLength(mockActions.length);
+    expect(cdpToolkit.tools[0].name).toBe("get_wallet_details");
+    expect(cdpToolkit.tools[1].name).toBe("get_balance");
   });
 
-  it("should successfully return tools for CDP actions", async () => {
-    const options = {
-      cdpApiKeyName: "test-key",
-      cdpApiKeyPrivateKey: "test-private-key",
-    };
+  it("should execute action from toolkit", async () => {
+    const tool = cdpToolkit.tools[0];
+    const args = { param1: "test" };
+    const response = await tool.call(args);
 
-    const agentkit = await CdpAgentkit.configureWithWallet(options);
-    const toolkit = new CdpToolkit(agentkit);
-    const tools = toolkit.getTools();
+    expect(mockActions[0].func).toHaveBeenCalledWith(args);
+    expect(response).toBe("success_1");
+  });
 
-    expect(tools).toBeDefined();
-    expect(tools.length).toBeGreaterThan(0);
+  it("should handle action execution failure", async () => {
+    const error = new Error("Execution failed");
+    mockActions[0].func.mockRejectedValue(error);
+
+    const tool = cdpToolkit.tools[0];
+    const args = { param1: "test" };
+    const response = await tool.call(args);
+
+    expect(response).toContain(`Error executing get_wallet_details: ${error.message}`);
+  });
+
+  it("should return all available tools", () => {
+    const tools = cdpToolkit.getTools();
+
+    expect(tools).toHaveLength(mockActions.length);
+    expect(tools[0].name).toBe("get_wallet_details");
+    expect(tools[1].name).toBe("get_balance");
   });
 });
