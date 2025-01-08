@@ -2,7 +2,7 @@
   "name": "@coinbase/cdp-agentkit-core",
   "description": "CDP Agentkit core primitives",
   "repository": "https://github.com/coinbase/cdp-agentkit-nodejs",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": "Coinbase Inc.",
   "license": "Apache-2.0",
   "main": "dist/index.js",

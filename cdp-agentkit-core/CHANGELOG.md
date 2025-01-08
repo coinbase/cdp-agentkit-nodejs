@@ -2,12 +2,14 @@
 
 ## Unreleased
 
+## [0.0.9] - 2025-01-08
+
 ### Added
 
 - Adding action for support to webhooks creation.
 - Bump coinbase-sdk-nodejs to 0.13.0 from 0.11.0
 
-### Refactor
+### Refactored
 
 - Use `ZodString.min(1)` instead of deprecated `ZodString.nonempty()`
 
