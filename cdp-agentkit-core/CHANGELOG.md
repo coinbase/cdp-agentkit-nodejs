@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [0.0.9] - 2025-01-08
+
 ### Added
 
 - Bump dependency `coinbase-sdk-nodejs` to version `0.13.0`.
