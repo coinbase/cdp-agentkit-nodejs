@@ -67,19 +67,17 @@ export class CdpAgentkit {
   ): Promise<CdpAgentkit> {
     const agentkit = new CdpAgentkit(config);
 
+    const mnemonicPhrase = config.mnemonicPhrase || process.env.MNEMONIC_PHRASE;
     const networkId = config.networkId || process.env.NETWORK_ID || Coinbase.networks.BaseSepolia;
 
-    // TODO: ask John if i should just remove the log statements or if this is useful for the user?
     try {
       if (config.cdpWalletData) {
-        console.log("importing wallet via wallet data");
         const walletData = JSON.parse(config.cdpWalletData) as WalletData;
         agentkit.wallet = await Wallet.import(walletData);
-      } else if (config.mnemonicPhrase) {
-        console.log("importing wallet via mnemonic phrase");
-        agentkit.wallet = await Wallet.import({ mnemonicPhrase: config.mnemonicPhrase });
+      } else if (mnemonicPhrase) {
+        agentkit.wallet = await Wallet.import({ mnemonicPhrase: mnemonicPhrase });
+        console.log(agentkit.wallet);
       } else {
-        console.log("creating wallet");
         agentkit.wallet = await Wallet.create({ networkId: networkId });
       }
     } catch (error) {
