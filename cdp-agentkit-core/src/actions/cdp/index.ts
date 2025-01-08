@@ -9,7 +9,6 @@ import { RequestFaucetFundsAction } from "./request_faucet_funds";
 import { TradeAction } from "./trade";
 import { TransferAction } from "./transfer";
 import { WOW_ACTIONS } from "./defi/wow";
-import { CreateWebhookAction } from "./webhooks";
 
 /**
  * Retrieves all CDP action instances.
@@ -28,7 +27,6 @@ export function getAllCdpActions(): CdpAction<CdpActionSchemaAny>[] {
     new RequestFaucetFundsAction(),
     new TradeAction(),
     new TransferAction(),
-    new CreateWebhookAction(),
   ];
 }
 
@@ -46,5 +44,4 @@ export {
   RequestFaucetFundsAction,
   TradeAction,
   TransferAction,
-  CreateWebhookAction,
 };
