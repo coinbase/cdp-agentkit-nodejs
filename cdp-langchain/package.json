@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cdp-langchain",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Langchain Toolkit extension of CDP Agentkit",
   "repository": "https://github.com/coinbase/cdp-agentkit-nodejs",
   "author": "Coinbase Inc.",
