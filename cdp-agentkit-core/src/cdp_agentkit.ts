@@ -76,7 +76,6 @@ export class CdpAgentkit {
         agentkit.wallet = await Wallet.import(walletData);
       } else if (mnemonicPhrase) {
         agentkit.wallet = await Wallet.import({ mnemonicPhrase: mnemonicPhrase });
-        console.log(agentkit.wallet);
       } else {
         agentkit.wallet = await Wallet.create({ networkId: networkId });
       }
