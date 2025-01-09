@@ -7,6 +7,7 @@
 ### Added
 
 - Bump dependency `coinbase-sdk-nodejs` to version `0.13.0`.
+- Supporting mnemonic phrase wallet import
 
 ### Refactored
 
