@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Removed
+- rogue console.log
+
 ## [0.0.9] - 2025-01-08
 
 ### Added
