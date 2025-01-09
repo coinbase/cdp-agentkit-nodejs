@@ -69,7 +69,7 @@ async function initializeAgent() {
   // agent
   const agentConfig = {
     configurable: {
-      thread_id: "CDP AgentKit Chatbot Example!",
+      thread_id: "CDP AgentKit Wallet Import Example!",
     },
   };
 
