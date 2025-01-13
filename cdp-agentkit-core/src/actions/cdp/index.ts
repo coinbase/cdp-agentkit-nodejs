@@ -8,6 +8,7 @@ import { RegisterBasenameAction } from "./register_basename";
 import { RequestFaucetFundsAction } from "./request_faucet_funds";
 import { TradeAction } from "./trade";
 import { TransferAction } from "./transfer";
+import { WrapEthAction } from "./wrap_eth";
 import { WOW_ACTIONS } from "./defi/wow";
 
 /**
@@ -27,6 +28,7 @@ export function getAllCdpActions(): CdpAction<CdpActionSchemaAny>[] {
     new RequestFaucetFundsAction(),
     new TradeAction(),
     new TransferAction(),
+    new WrapEthAction(),
   ];
 }
 
@@ -44,4 +46,5 @@ export {
   RequestFaucetFundsAction,
   TradeAction,
   TransferAction,
+  WrapEthAction,
 };

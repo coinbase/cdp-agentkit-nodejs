@@ -61,6 +61,7 @@ The toolkit provides the following tools:
 10. **wow_create_token** - Deploy a token using [Zora's Wow Launcher](https://wow.xyz/mechanics) (Bonding Curve)
 11. **wow_buy_token** - Buy [Zora Wow](https://wow.xyz/) ERC-20 memecoin with ETH
 12. **wow_sell_token** - Sell [Zora Wow](https://wow.xyz/) ERC-20 memecoin for ETH
+13. **wrap_eth** - Wrap ETH as WETH
 
 ### Using with an Agent
 
