@@ -1,4 +1,6 @@
-# CDP AgentKit.js
+### CDP AgentKit.js
+
+## This repository is deprecated and Agentkit.js has been migrated to the monorepo [coinbase/agentkit](https://github.com/coinbase/agentkit). 
 
 [![npm downloads](https://img.shields.io/npm/dm/@coinbase/cdp-agentkit-core?style=flat-square)](https://www.npmjs.com/package/@coinbase/cdp-agentkit-core)
 [![GitHub star chart](https://img.shields.io/github/stars/coinbase/cdp-agentkit-nodejs?style=flat-square)](https://star-history.com/#coinbase/cdp-agentkit-nodejs)
